@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/03 13:04:25 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/04 17:56:05 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_scene_info
 	int		A_rgb_code;
 }			t_scene_info;
 
-typedef struct	s_identifier_count
+typedef struct s_identifier_count
 {
 	bool	has_A;
 	bool	has_L;
@@ -34,13 +34,14 @@ typedef struct	s_identifier_count
 }			t_identifier_count;
 
 /*	PARSING	*/
-void		parse_ambient_lighting(t_scene_info *scene_info, char *string);
+int			parse_ambient_lighting(t_scene_info *scene_info, char *string);
 int			parse_rgb(t_scene_info *scene_info, char *string);
 
 /*	PARSE UTILS	*/
 int			count_items_in_split(char **split, int nb_needed);
 double		ft_atof(const char *str, int decimal_nb);
 void		free_split(char **split);
+void		free_split_and_trimmed_rgb(char **split, char *trimmed_rgb);
 
 /*	UTILS	*/
 int			exit_handler(char *error);

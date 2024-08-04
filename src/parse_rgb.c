@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:24:12 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/03 11:08:53 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/04 17:11:23 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,14 @@ int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
 	int	red;
 	int	green;
 	int	blue;
-	int iter;
+	int	iter;
 
 	iter = 0;
 	while ((rgb_split)[iter])
 	{
 		rgb_values[iter] = ft_atoi(rgb_split[iter]);
 		if (!(rgb_values[iter] >= 0 && rgb_values[iter] <= 255))
-		{
-			free_split(rgb_split);
 			return (1);
-		}
 		iter++;
 	}
 	*rgb_code = (rgb_values[0] << 16) | (rgb_values[1] << 8) | rgb_values[2];
@@ -70,19 +67,11 @@ int	parse_rgb(t_scene_info *scene_info, char *string)
 	int		rgb_code;
 
 	rgb_split = ft_split(string, ',');
-	if (count_items_in_split(rgb_split, 3) == 1)
+	if (count_items_in_split(rgb_split, 3) == 1
+		|| check_digits_in_rgb(rgb_split) == 1 || rgb_bit_shift(rgb_split,
+			rgb_values, &rgb_code) == 1)
 	{
 		free_split(rgb_split);
-		return (1);
-	}
-	if (check_digits_in_rgb(rgb_split) == 1)
-	{
-		free_split(rgb_split);
-		return (1);
-	}
-	if (rgb_bit_shift(rgb_split, rgb_values, &rgb_code))
-	{
-		free(rgb_split);
 		return (1);
 	}
 	printf("The rgb code is: %d\n", rgb_code);
