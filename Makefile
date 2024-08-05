@@ -12,7 +12,7 @@ MKDIR			= mkdir -p
 
 SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  parse_rgb.c parse_ambient_lighting.c parse_utils_free.c\
-				  parse_camera.c parse_coordinates.c
+				  parse_camera.c parse_coordinates.c parse_light.c
 
 SOURCES_DIR		= src
 SOURCES			= $(addprefix $(SOURCES_DIR)/, $(SOURCE_FILES))

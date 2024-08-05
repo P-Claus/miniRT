@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:24:12 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 08:46:30 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/05 16:49:27 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
 	return (0);
 }
 
-int	parse_rgb(t_scene_info *scene_info, char *string)
+int	parse_rgb(int *rgb_int, char *string)
 {
 	char	**rgb_split;
 	int		rgb_values[3];
@@ -75,7 +75,7 @@ int	parse_rgb(t_scene_info *scene_info, char *string)
 		return (1);
 	}
 	printf("The rgb code is: %d\n", rgb_code);
-	scene_info->A_rgb_code = rgb_code;
+	*rgb_int = rgb_code;
 	free_split(rgb_split);
 	return (0);
 }

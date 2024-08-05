@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 13:50:23 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/05 16:54:10 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ int	init_scene_info(t_scene_info *scene_info)
 	scene_info->C_coordinates_o.x = 0;
 	scene_info->C_coordinates_o.y = 0;
 	scene_info->C_coordinates_o.z = 0;
+	scene_info->L_cordinates_lp.x = 0;
+	scene_info->L_cordinates_lp.y = 0;
+	scene_info->L_cordinates_lp.z = 0;
+	scene_info->L_brightness = 0;
+	scene_info->L_rgb_code = 0;
 	return (0);
 }
 
@@ -44,18 +49,13 @@ int	check_capital_identifier(t_scene_info *scene_info, char *string,
 		id_count->has_C = true;
 		return (0);
 	}
-	/*
-  else if(string[0] == 'C')
-          printf("it's a C\n");
-  else if(string[0] == 'L')
-          printf("it's an L\n");
-  else if(string[0] == 's' && string[1] == 'p')
-          printf("it's an sp\n");
-  else if(string[0] == 'p' && string[1] == 'l')
-          printf("it's a pl\n");
-  else if(string[0] == 'c' && string[1] == 'y')
-          printf("it's a cy\n");
-          */
+	else if (string[0] == 'L' && string[1] == ' ' && id_count->has_L == false)
+	{
+		if (parse_light(scene_info, string) == 1)
+			return (1);
+		id_count->has_L = true;
+		return (0);
+	}
 	else
 		return (1);
 }
@@ -63,22 +63,18 @@ int	check_capital_identifier(t_scene_info *scene_info, char *string,
 int	read_from_scene(t_scene_info *scene_info, int fd)
 {
 	char						*buffer;
-	static t_identifier_count	*id_count;
+	static t_identifier_count	id_count;
 	int							counter;
 
 	counter = 0;
-	id_count = malloc(sizeof(t_identifier_count));
-	if (!id_count)
-		exit_handler("Malloc error\n");
-	id_count->has_A = false;
-	id_count->has_L = false;
-	id_count->has_C = false;
-	while (counter < 2)
+	id_count.has_A = false;
+	id_count.has_L = false;
+	id_count.has_C = false;
+	while (counter < 3)
 	{
 		buffer = get_next_line(fd);
-		if (check_capital_identifier(scene_info, buffer, id_count) == 1)
+		if (check_capital_identifier(scene_info, buffer, &id_count) == 1)
 		{
-			free(id_count);
 			free(buffer);
 			exit_handler("Error\nFormat error\n");
 		}
@@ -88,13 +84,13 @@ int	read_from_scene(t_scene_info *scene_info, int fd)
 		free(buffer);
 		counter++;
 	}
-	free(id_count);
 	printf("\n--------------------------------------\n");
-	printf("A || lighting ratio: %f || RGB: %d\n", scene_info->A_lighting,
+	printf("A || lighting ratio: %.1f || RGB: %d\n", scene_info->A_lighting,
 			scene_info->A_rgb_code);
-	printf("C || viewpoint coordinates: x:%f, y:%f, z:%f || x:%f, y:%F, z:%f || FOV: %d\n",
+	printf("C || viewpoint coordinates: x:%.1f, y:%.1f, z:%.1f || orientation vector: x:%.1f, y:%.1f, z:%.1f || FOV: %d\n",
 			scene_info->C_coordinates_vp.x, scene_info->C_coordinates_vp.y,
 			scene_info->C_coordinates_vp.z, scene_info->C_coordinates_o.x, scene_info->C_coordinates_o.y, scene_info->C_coordinates_o.z, scene_info->C_fov);
+	printf("L || light coordinates: x%.1f, y:%.1f, z:%.1f || light brightness: %.1f || RGB: %d\n",scene_info->L_cordinates_lp.x, scene_info->L_cordinates_lp.y, scene_info->L_cordinates_lp.z, scene_info->L_brightness, scene_info->L_rgb_code);
 	printf("\n--------------------------------------\n");
 	return (0);
 }
