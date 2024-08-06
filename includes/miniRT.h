@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 16:49:48 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 14:02:21 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,29 @@ typedef struct s_coordinates
 	float			z;
 }					t_coordinates;
 
+typedef struct s_sphere
+{
+	t_coordinates	coordinates;
+	float			diameter;
+	int				rgb_code;
+}	t_sphere;
+
+typedef struct s_plane
+{
+	t_coordinates	coordinates;
+	t_coordinates	vector;
+	int				rgb_code;
+}	t_plane;
+
+typedef struct s_cylinder
+{
+	t_coordinates	coordinates;
+	t_coordinates	vector;
+	float			diameter;
+	float			height;
+	int				rgb_code;
+}	t_cylinder;
+
 typedef struct s_scene_info
 {
 	float			A_lighting;
@@ -38,6 +61,9 @@ typedef struct s_scene_info
 	t_coordinates	L_cordinates_lp;
 	float			L_brightness;
 	int				L_rgb_code;
+	t_sphere		sphere;
+	t_plane			plane;
+	t_cylinder		cylinder;
 }					t_scene_info;
 
 typedef struct s_identifier_count
@@ -54,10 +80,11 @@ int	parse_rgb(int *rgb_int, char *string);
 int	parse_camera(t_scene_info *scene_info,
 					char *string);
 int	parse_coordinates(t_coordinates *coordinates, char *string);
-int	parse_orientation_vector(t_scene_info *scene_info,
-								char *string,
-								int iter);
+int	parse_orientation_vector(t_coordinates *coordinates, char *string, int iter);
 int					parse_light(t_scene_info *scene_info, char *string);
+int	parse_sphere(t_scene_info *scene_info, char *string);
+int	parse_plane(t_scene_info *scene_info, char *string);
+int	parse_cylinder(t_scene_info *scene_info, char *string);
 
 /*	PARSE UTILS	*/
 int	count_items_in_split(char **split,
@@ -67,13 +94,13 @@ void				free_split(char **split);
 void	free_split_and_trimmed_rgb(char **split,
 								char *trimmed_rgb);
 int	check_digits_in_coordinates(char **split);
+void	init_scene_info(t_scene_info *scene_info);
 
 /*	UTILS	*/
 int					exit_handler(char *error);
 
 /*	SRC	*/
 int					main(int argc, char **argv);
-int					init_scene_info(t_scene_info *scene_info);
 int	read_from_scene(t_scene_info *scene_info,
 					int fd);
 

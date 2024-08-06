@@ -6,29 +6,12 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 16:54:10 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 14:03:36 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-int	init_scene_info(t_scene_info *scene_info)
-{
-	scene_info->A_lighting = 0.0;
-	scene_info->A_rgb_code = 0;
-	scene_info->C_coordinates_vp.x = 0;
-	scene_info->C_coordinates_vp.y = 0;
-	scene_info->C_coordinates_vp.z = 0;
-	scene_info->C_coordinates_o.x = 0;
-	scene_info->C_coordinates_o.y = 0;
-	scene_info->C_coordinates_o.z = 0;
-	scene_info->L_cordinates_lp.x = 0;
-	scene_info->L_cordinates_lp.y = 0;
-	scene_info->L_cordinates_lp.z = 0;
-	scene_info->L_brightness = 0;
-	scene_info->L_rgb_code = 0;
-	return (0);
-}
 
 int	check_capital_identifier(t_scene_info *scene_info, char *string,
 		t_identifier_count *id_count)
@@ -60,6 +43,28 @@ int	check_capital_identifier(t_scene_info *scene_info, char *string,
 		return (1);
 }
 
+int	check_shape_identifier(t_scene_info *scene_info, char *string)
+{
+	if (string[0] == '\n')
+		return (0);
+	if (string[0] == 's' && string[1] == 'p')
+	{
+		if (parse_sphere(scene_info, string) == 1)
+			return (1);
+	}
+	else if (string[0] == 'p' && string[1] == 'l')
+	{
+		if (parse_plane(scene_info, string) == 1)
+			return (1);
+	}
+	else if (string[0] == 'c' && string[1] == 'y')
+	{
+		if (parse_cylinder(scene_info, string) == 1)
+			return (1);
+	}
+	return (0);
+}
+
 int	read_from_scene(t_scene_info *scene_info, int fd)
 {
 	char						*buffer;
@@ -70,10 +75,10 @@ int	read_from_scene(t_scene_info *scene_info, int fd)
 	id_count.has_A = false;
 	id_count.has_L = false;
 	id_count.has_C = false;
-	while (counter < 3)
+	while (counter < 6)
 	{
 		buffer = get_next_line(fd);
-		if (check_capital_identifier(scene_info, buffer, &id_count) == 1)
+		if (check_capital_identifier(scene_info, buffer, &id_count) == 1 && check_shape_identifier(scene_info, buffer) == 1)
 		{
 			free(buffer);
 			exit_handler("Error\nFormat error\n");
@@ -91,6 +96,9 @@ int	read_from_scene(t_scene_info *scene_info, int fd)
 			scene_info->C_coordinates_vp.x, scene_info->C_coordinates_vp.y,
 			scene_info->C_coordinates_vp.z, scene_info->C_coordinates_o.x, scene_info->C_coordinates_o.y, scene_info->C_coordinates_o.z, scene_info->C_fov);
 	printf("L || light coordinates: x%.1f, y:%.1f, z:%.1f || light brightness: %.1f || RGB: %d\n",scene_info->L_cordinates_lp.x, scene_info->L_cordinates_lp.y, scene_info->L_cordinates_lp.z, scene_info->L_brightness, scene_info->L_rgb_code);
+	printf("sp || coordinates: x:%f, y:%f, z:%f || diameter: %f || RGB: %d\n", scene_info->sphere.coordinates.x, scene_info->sphere.coordinates.y, scene_info->sphere.coordinates.z, scene_info->sphere.diameter, scene_info->sphere.rgb_code);
+	printf("pl || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || RGB: %d\n", scene_info->plane.coordinates.x, scene_info->plane.coordinates.y, scene_info->plane.coordinates.z, scene_info->plane.vector.x, scene_info->plane.vector.y, scene_info->plane.vector.z, scene_info->plane.rgb_code);
+	printf("cy || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || diameter: %f || height: %f || RGB: %d\n", scene_info->cylinder.coordinates.x, scene_info->cylinder.coordinates.y, scene_info->cylinder.coordinates.z, scene_info->cylinder.vector.x, scene_info->cylinder.vector.y, scene_info->cylinder.vector.z, scene_info->cylinder.diameter, scene_info->cylinder.height, scene_info->cylinder.rgb_code);
 	printf("\n--------------------------------------\n");
 	return (0);
 }
