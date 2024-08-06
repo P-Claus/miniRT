@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 08:57:40 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 12:20:13 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 21:59:11 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,7 @@ int	count_items_in_split(char **split, int nb_needed)
 
 	iter = 0;
 	while (split[iter])
-	{
-		printf("The item is: %s\n", split[iter]);
 		iter++;
-	}
 	if (iter == nb_needed)
 		return (0);
 	else

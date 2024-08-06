@@ -6,12 +6,11 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 14:03:36 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 22:15:55 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
-
 
 int	check_capital_identifier(t_scene_info *scene_info, char *string,
 		t_identifier_count *id_count)
@@ -39,8 +38,7 @@ int	check_capital_identifier(t_scene_info *scene_info, char *string,
 		id_count->has_L = true;
 		return (0);
 	}
-	else
-		return (1);
+	return (0);
 }
 
 int	check_shape_identifier(t_scene_info *scene_info, char *string)
@@ -78,27 +76,52 @@ int	read_from_scene(t_scene_info *scene_info, int fd)
 	while (counter < 6)
 	{
 		buffer = get_next_line(fd);
-		if (check_capital_identifier(scene_info, buffer, &id_count) == 1 && check_shape_identifier(scene_info, buffer) == 1)
+		if (check_capital_identifier(scene_info, buffer, &id_count) == 1 ||
+			check_shape_identifier(scene_info, buffer) == 1)
 		{
 			free(buffer);
 			exit_handler("Error\nFormat error\n");
 		}
-		printf("\n--------------------------------------\n");
-		printf("The buffer is: \n%s\n", buffer);
-		printf("\n--------------------------------------\n");
+		//    printf("\n--------------------------------------\n");
+		//    printf("The buffer is: \n%s\n", buffer);
+		//    printf("\n--------------------------------------\n");
 		free(buffer);
 		counter++;
 	}
-	printf("\n--------------------------------------\n");
-	printf("A || lighting ratio: %.1f || RGB: %d\n", scene_info->A_lighting,
-			scene_info->A_rgb_code);
-	printf("C || viewpoint coordinates: x:%.1f, y:%.1f, z:%.1f || orientation vector: x:%.1f, y:%.1f, z:%.1f || FOV: %d\n",
-			scene_info->C_coordinates_vp.x, scene_info->C_coordinates_vp.y,
-			scene_info->C_coordinates_vp.z, scene_info->C_coordinates_o.x, scene_info->C_coordinates_o.y, scene_info->C_coordinates_o.z, scene_info->C_fov);
-	printf("L || light coordinates: x%.1f, y:%.1f, z:%.1f || light brightness: %.1f || RGB: %d\n",scene_info->L_cordinates_lp.x, scene_info->L_cordinates_lp.y, scene_info->L_cordinates_lp.z, scene_info->L_brightness, scene_info->L_rgb_code);
-	printf("sp || coordinates: x:%f, y:%f, z:%f || diameter: %f || RGB: %d\n", scene_info->sphere.coordinates.x, scene_info->sphere.coordinates.y, scene_info->sphere.coordinates.z, scene_info->sphere.diameter, scene_info->sphere.rgb_code);
-	printf("pl || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || RGB: %d\n", scene_info->plane.coordinates.x, scene_info->plane.coordinates.y, scene_info->plane.coordinates.z, scene_info->plane.vector.x, scene_info->plane.vector.y, scene_info->plane.vector.z, scene_info->plane.rgb_code);
-	printf("cy || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || diameter: %f || height: %f || RGB: %d\n", scene_info->cylinder.coordinates.x, scene_info->cylinder.coordinates.y, scene_info->cylinder.coordinates.z, scene_info->cylinder.vector.x, scene_info->cylinder.vector.y, scene_info->cylinder.vector.z, scene_info->cylinder.diameter, scene_info->cylinder.height, scene_info->cylinder.rgb_code);
-	printf("\n--------------------------------------\n");
+	print_scene_info(scene_info);
+	/*
+  printf("\n--------------------------------------\n");
+  printf("A || lighting ratio: %.1f || RGB: %d\n", scene_info->A_lighting,
+         scene_info->A_rgb_code);
+  printf("C || viewpoint coordinates: x:%.1f, y:%.1f, z:%.1f || orientation "
+         "vector: x:%.1f, y:%.1f, z:%.1f || FOV: %d\n",
+         scene_info->C_coordinates_vp.x, scene_info->C_coordinates_vp.y,
+         scene_info->C_coordinates_vp.z, scene_info->C_coordinates_o.x,
+         scene_info->C_coordinates_o.y, scene_info->C_coordinates_o.z,
+         scene_info->C_fov);
+  printf("L || light coordinates: x%.1f, y:%.1f, z:%.1f || light brightness: "
+         "%.1f || RGB: %d\n",
+         scene_info->L_cordinates_lp.x, scene_info->L_cordinates_lp.y,
+         scene_info->L_cordinates_lp.z, scene_info->L_brightness,
+         scene_info->L_rgb_code);
+  printf("sp || coordinates: x:%f, y:%f, z:%f || diameter: %f || RGB: %d\n",
+         scene_info->sphere.coordinates.x, scene_info->sphere.coordinates.y,
+         scene_info->sphere.coordinates.z, scene_info->sphere.diameter,
+         scene_info->sphere.rgb_code);
+  printf("pl || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || "
+         "RGB: %d\n",
+         scene_info->plane.coordinates.x, scene_info->plane.coordinates.y,
+         scene_info->plane.coordinates.z, scene_info->plane.vector.x,
+         scene_info->plane.vector.y, scene_info->plane.vector.z,
+         scene_info->plane.rgb_code);
+  printf("cy || coordinates: x:%f, y:%f, z:%f || vector: x:%f, y:%f, z:%f || "
+         "diameter: %f || height: %f || RGB: %d\n",
+         scene_info->cylinder.coordinates.x, scene_info->cylinder.coordinates.y,
+         scene_info->cylinder.coordinates.z, scene_info->cylinder.vector.x,
+         scene_info->cylinder.vector.y, scene_info->cylinder.vector.z,
+         scene_info->cylinder.diameter, scene_info->cylinder.height,
+         scene_info->cylinder.rgb_code);
+  printf("\n--------------------------------------\n");
+  */
 	return (0);
 }

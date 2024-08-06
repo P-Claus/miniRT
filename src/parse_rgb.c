@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:24:12 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 16:49:27 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 22:01:16 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ static int	check_digits_in_rgb(char **split)
 		while (split[iter][word_iter] && split[iter][word_iter] != '\0')
 		{
 			if (!ft_isdigit(split[iter][word_iter]))
-			{
 				return (1);
-			}
 			word_iter++;
 		}
 		iter++;
@@ -37,9 +35,6 @@ static int	check_digits_in_rgb(char **split)
 
 int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
 {
-	int	red;
-	int	green;
-	int	blue;
 	int	iter;
 
 	iter = 0;
@@ -51,12 +46,6 @@ int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
 		iter++;
 	}
 	*rgb_code = (rgb_values[0] << 16) | (rgb_values[1] << 8) | rgb_values[2];
-	red = (*rgb_code >> 16) & 0xFF;
-	green = (*rgb_code >> 8) & 0xFF;
-	blue = *rgb_code & 0xFF;
-	printf("The red color is: %d\n", red);
-	printf("The green color is: %d\n", green);
-	printf("The blue color is: %d\n", blue);
 	return (0);
 }
 
@@ -74,7 +63,6 @@ int	parse_rgb(int *rgb_int, char *string)
 		free_split(rgb_split);
 		return (1);
 	}
-	printf("The rgb code is: %d\n", rgb_code);
 	*rgb_int = rgb_code;
 	free_split(rgb_split);
 	return (0);

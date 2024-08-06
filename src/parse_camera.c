@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 12:21:36 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/06 22:24:59 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,19 @@
 static int	parse_field_of_view(t_scene_info *scene_info, char *string)
 {
 	int	converted_int;
+	int	iter;
+	char *trim;
 
+	iter = 0;
 	if (ft_strchr(string, '.'))
 		return (1);
+	trim = ft_strtrim(string, "\n");
+	while (trim[iter] && trim[iter] != '\0')
+	{
+		if (!ft_isdigit(trim[iter]))
+			return (1);
+		iter++;
+	}
 	converted_int = ft_atoi(string);
 	if (converted_int >= 0 && converted_int <= 180)
 	{
@@ -34,7 +44,7 @@ int	parse_camera(t_scene_info *scene_info, char *string)
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 4) == 1
 		|| parse_coordinates(&scene_info->C_coordinates_vp, split[1]) == 1
-		|| parse_orientation_vector(&scene_info->plane.coordinates, split[2], -1) == 1
+		|| parse_orientation_vector(&scene_info->C_coordinates_o, split[2], -1) == 1
 		|| parse_field_of_view(scene_info, split[3]) == 1)
 	{
 		free_split(split);
