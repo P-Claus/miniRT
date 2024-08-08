@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 11:57:35 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 14:23:02 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ typedef struct s_scene_info
 	t_sphere		*spheres;
 	t_plane			*planes;
 	t_cylinder		*cylinders;
+	int				nb_of_spheres;
+	int				nb_of_planes;
+	int				nb_of_cylinders;
 }					t_scene_info;
 
 typedef struct s_identifier_count
@@ -100,7 +103,10 @@ void				free_split_and_trimmed_rgb(char **split,
 						char *trimmed_rgb);
 int					check_digits_in_coordinates(char **split);
 void				init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count);
-void				print_scene_info(t_scene_info *scene_info);
+void				print_parsing_result(t_scene_info *scene_info);
+void				print_spheres(t_scene_info *scene_info);
+void				print_planes(t_scene_info *scene_info);
+void				print_cylinders(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
 

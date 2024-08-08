@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 09:43:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 09:45:31 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 14:29:37 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,3 @@ int	count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 		return (1);
 	return (0);
 }
-

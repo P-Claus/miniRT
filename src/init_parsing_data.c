@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:59:20 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 12:10:29 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 13:37:45 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ void	init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count)
 	scene_info->L_brightness = 0;
 	scene_info->L_rgb_code = 0;
 	
+	scene_info->nb_of_spheres = id_count->sp_count;
+	scene_info->nb_of_planes = id_count->pl_count;
+	scene_info->nb_of_cylinders =id_count->cy_count;
 	scene_info->spheres = malloc(id_count->sp_count * sizeof(t_sphere));
 	scene_info->planes = malloc(id_count->pl_count * sizeof(t_plane));
 	scene_info->cylinders = malloc(id_count->cy_count * sizeof(t_cylinder));

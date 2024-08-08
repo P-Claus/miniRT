@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 09:18:01 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 11:19:19 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 14:30:07 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	parse_sphere(t_scene_info *scene_info, char *string,
 	id_count->sp_count--;
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 4) == 1
-		|| parse_coordinates(&scene_info->spheres[id_count->sp_count].coordinates,
+		|| parse_coordinates(
+			&scene_info->spheres[id_count->sp_count].coordinates,
 			split[1]) == 1 || parse_diameter(scene_info, split[2],
 			id_count) == 1)
 	{
