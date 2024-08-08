@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:27:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 21:59:41 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 12:19:25 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	parse_coordinates(t_coordinates *coordinates, char *string)
 		free_split(coordinates_split);
 		return (1);
 	}
-	while (coordinates_split[++iter])
+	while (coordinates_split[++iter] && iter < 3)
 		coordinate_values[iter] = ft_atof(coordinates_split[iter], 2);
 	coordinates->x = coordinate_values[0];
 	coordinates->y = coordinate_values[1];
@@ -47,7 +47,7 @@ int	parse_orientation_vector(t_coordinates *coordinates, char *string, int iter)
 		free_split(coordinates_split);
 		return (1);
 	}
-	while (coordinates_split[++iter])
+	while (coordinates_split[++iter] && iter < 3)
 	{
 		coordinate_values[iter] = ft_atof(coordinates_split[iter], 2);
 		if (!(coordinate_values[iter] >= -1.00

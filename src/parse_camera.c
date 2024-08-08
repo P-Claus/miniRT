@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 22:24:59 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 12:22:58 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,20 @@ static int	parse_field_of_view(t_scene_info *scene_info, char *string)
 	while (trim[iter] && trim[iter] != '\0')
 	{
 		if (!ft_isdigit(trim[iter]))
+		{
+			free(trim);
 			return (1);
+		}
 		iter++;
 	}
 	converted_int = ft_atoi(string);
 	if (converted_int >= 0 && converted_int <= 180)
 	{
 		scene_info->C_fov = converted_int;
+		free(trim);
 		return (0);
 	}
+	free(trim);
 	return (1);
 }
 
