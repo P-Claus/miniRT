@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 09:43:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 14:29:37 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 17:58:57 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,28 @@ static int	identifiers_error_check(t_identifier_count *id_count)
 	return (0);
 }
 
+static int	check_capital_identifier(t_identifier_count *id_count, char *buffer)
+{
+	if (buffer[0] == 'A')
+		id_count->A_count++;
+	else if (buffer[0] == 'C')
+		id_count->C_count++;
+	else if (buffer[0] == 'L')
+		id_count->L_count++;
+	return (0);
+}
+
+static int	check_shape_identifier(t_identifier_count *id_count, char *buffer)
+{
+	if (buffer[0] == 's' && buffer[1] == 'p')
+		id_count->sp_count++;
+	else if (buffer[0] == 'p' && buffer[1] == 'l')
+		id_count->pl_count++;
+	else if (buffer[0] == 'c' && buffer[1] == 'y')
+		id_count->cy_count++;
+	return (0);
+}
+
 int	count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 		char *buffer)
 {
@@ -39,22 +61,11 @@ int	count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 		buffer = get_next_line(fd);
 		if (buffer == NULL)
 			break ;
-		if (buffer[0] == 'A')
-			id_count->A_count++;
-		else if (buffer[0] == 'C')
-			id_count->C_count++;
-		else if (buffer[0] == 'L')
-			id_count->L_count++;
-		else if (buffer[0] == 's' && buffer[1] == 'p')
-			id_count->sp_count++;
-		else if (buffer[0] == 'p' && buffer[1] == 'l')
-			id_count->pl_count++;
-		else if (buffer[0] == 'c' && buffer[1] == 'y')
-			id_count->cy_count++;
-		else
-			return (1);
+		check_capital_identifier(id_count, buffer);
+		check_shape_identifier(id_count, buffer);
 		free(buffer);
 	}
+	free(buffer);
 	if (identifiers_error_check(id_count) == 1)
 		return (1);
 	return (0);

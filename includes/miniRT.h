@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 14:23:02 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 17:38:13 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ double				ft_atof(const char *str, int decimal_nb);
 void				free_split(char **split);
 void				free_split_and_trimmed_rgb(char **split,
 						char *trimmed_rgb);
+void				free_shape_arrays(t_scene_info *scene_info);
 int					check_digits_in_coordinates(char **split);
 void				init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count);
 void				print_parsing_result(t_scene_info *scene_info);

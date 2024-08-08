@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 14:28:34 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/08 17:48:31 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	read_from_scene(t_scene_info *scene_info, int fd,
 			|| check_shape_identifier(scene_info, buffer, id_count) == 1)
 		{
 			free(buffer);
+			free_shape_arrays(scene_info);
 			exit_handler("Error\nFormat error\n");
 		}
 		free(buffer);
