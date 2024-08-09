@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 17:38:13 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 09:41:09 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <limits.h>
 
 /*	STRUCTURES	*/
 
@@ -97,7 +98,7 @@ int					parse_cylinder(t_scene_info *scene_info, char *string, t_identifier_coun
 /*	PARSE UTILS	*/
 int					count_items_in_split(char **split,
 						int nb_needed);
-double				ft_atof(const char *str, int decimal_nb);
+float				ft_atof(const char *str, int decimal_nb);
 void				free_split(char **split);
 void				free_split_and_trimmed_rgb(char **split,
 						char *trimmed_rgb);
@@ -111,8 +112,8 @@ void				print_cylinders(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
 
-	/*	UTILS	*/
-	int exit_handler(char *error);
+/*	UTILS	*/
+int					exit_handler(char *error);
 
 /*	SRC	*/
 int					main(int argc, char **argv);

@@ -6,17 +6,29 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 12:22:58 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 11:19:43 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-static int	parse_field_of_view(t_scene_info *scene_info, char *string)
+static int	handle_coversion(t_scene_info *scene_info, char *string)
 {
 	int	converted_int;
-	int	iter;
-	char *trim;
+
+	converted_int = ft_atoi(string);
+	if (converted_int >= 0 && converted_int <= 180)
+	{
+		scene_info->C_fov = converted_int;
+		return (0);
+	}
+	return (1);
+}
+
+static int	parse_field_of_view(t_scene_info *scene_info, char *string)
+{
+	int		iter;
+	char	*trim;
 
 	iter = 0;
 	if (ft_strchr(string, '.'))
@@ -31,10 +43,8 @@ static int	parse_field_of_view(t_scene_info *scene_info, char *string)
 		}
 		iter++;
 	}
-	converted_int = ft_atoi(string);
-	if (converted_int >= 0 && converted_int <= 180)
+	if (handle_coversion(scene_info, string) == 0)
 	{
-		scene_info->C_fov = converted_int;
 		free(trim);
 		return (0);
 	}
@@ -49,7 +59,8 @@ int	parse_camera(t_scene_info *scene_info, char *string)
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 4) == 1
 		|| parse_coordinates(&scene_info->C_coordinates_vp, split[1]) == 1
-		|| parse_orientation_vector(&scene_info->C_coordinates_o, split[2], -1) == 1
+		|| parse_orientation_vector(
+			&scene_info->C_coordinates_o, split[2], -1) == 1
 		|| parse_field_of_view(scene_info, split[3]) == 1)
 	{
 		free_split(split);

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 08:57:40 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 21:59:11 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 09:41:12 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static int	atof_check_sign(const char *str, int *iter)
 	return (sign);
 }
 
-double	ft_atof(const char *str, int decimal_nb)
+float	ft_atof(const char *str, int decimal_nb)
 {
-	double	result;
+	float	result;
 	int		sign;
 	int		iter;
-	double	fraction;
+	float	fraction;
 	int		count;
 
 	result = 0.0;

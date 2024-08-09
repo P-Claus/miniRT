@@ -6,13 +6,13 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:18:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/05 16:50:20 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 09:17:30 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-static int	ambient_lighting_error_check_lighting_ratio(double lighting_ratio)
+static int	ambient_lighting_error_check_lighting_ratio(float lighting_ratio)
 {
 	if (lighting_ratio >= 0.0 && lighting_ratio <= 1.0)
 		return (0);
@@ -24,7 +24,7 @@ int	parse_ambient_lighting(t_scene_info *scene_info, char *string)
 {
 	char	**split;
 	char	*trimmed_rgb;
-	double	conversion;
+	float	conversion;
 
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 3) == 1 || ft_strlen(split[1]) != 3)

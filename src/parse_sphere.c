@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 09:18:01 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 14:30:07 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 10:31:44 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static int	parse_diameter(t_scene_info *scene_info, char *string,
 		iter++;
 	}
 	conversion = ft_atof(string, 2);
+	if (conversion > INT_MAX)
+		return (1);
 	scene_info->spheres[id_count->sp_count].diameter = conversion;
 	return (0);
 }

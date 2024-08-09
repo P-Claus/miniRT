@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 14:29:24 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/09 10:33:34 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	print_spheres(t_scene_info *scene_info)
 			scene_info->spheres[iter].coordinates.x,
 			scene_info->spheres[iter].coordinates.y,
 			scene_info->spheres[iter].coordinates.z);
-		printf("|           Sphere diameter: %5.1f            |\n",
+		printf("|           Sphere diameter: %5.2f            |\n",
 			scene_info->spheres[iter].diameter);
 		printf("|               RGB: %3d,%3d,%3d              |\n",
 			scene_info->spheres[iter].rgb_code >> 16 & 0xFF,
@@ -79,9 +79,9 @@ void	print_cylinders(t_scene_info *scene_info, int iter)
 			scene_info->cylinders[iter].vector.x,
 			scene_info->cylinders[iter].vector.y,
 			scene_info->cylinders[iter].vector.z);
-		printf("|           Cylinder diameter: %5.1f          |\n",
+		printf("|           Cylinder diameter: %5.2f          |\n",
 			scene_info->cylinders[iter].diameter);
-		printf("|            Cylinder height: %5.1f           |\n",
+		printf("|            Cylinder height: %5.2f           |\n",
 			scene_info->cylinders[iter].height);
 		printf("|               RGB: %3d,%3d,%3d              |\n",
 			scene_info->cylinders[iter].rgb_code >> 16 & 0xFF,
