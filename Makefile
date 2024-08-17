@@ -3,10 +3,12 @@
 #############################################
 
 NAME			= miniRT 
+INCLUDES		= -I ./includes -I ./minilibx_linux -I ./libft/incl
 
-CC				= cc
+CC				= clang
 RM				= rm -rf
-CFLAGS			= -Wall -Werror -Wextra -g $(INCLUDES)
+CFLAGS			= -Wall -Werror -Wextra -gdwarf-4
+CFLAGS			+= $(INCLUDES)
 
 MKDIR			= mkdir -p
 
@@ -22,8 +24,6 @@ SOURCES_DIR		= src
 SOURCES			= $(addprefix $(SOURCES_DIR)/, $(SOURCE_FILES))
 OBJ_DIR			= obj
 OBJ				= $(addprefix $(OBJ_DIR)/, $(notdir $(SOURCES:.c=.o)))
-
-INCLUDES		= -I ./includes
 
 TOTAL_FILES := $(words $(SOURCE_FILES))
 
@@ -49,8 +49,8 @@ RESET			= \e[2K\r
 
 all: $(NAME)
 
-$(NAME): libft/libft.a minilibx-linux/libmlx.a $(OBJ)
-	@$(CC) $(CFLAGS) -lXext -lX11 -lm -o $(NAME) $(OBJ) libft/libft.a minilibx-linux/libmlx.a
+$(NAME): libft/libft.a minilibx_linux/libmlx.a $(OBJ)
+	@$(CC) $(CFLAGS) -lXext -lX11 -lm -lz $(OBJ) -o $(NAME) libft/libft.a minilibx_linux/libmlx.a
 	@echo "$(RESET)$(GREEN)Compiled $(NAME)$(RESET_COLOR)"
 
 $(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c
@@ -62,12 +62,12 @@ $(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c
 libft/libft.a:
 	@make -sC libft
 
-minilibx-linux/libmlx.a:
-	@make -sC minilibx-linux
+minilibx_linux/libmlx.a:
+	@make -sC minilibx_linux
 
 clean:
 	@make fclean -sC libft 
-	@make clean -sC minilibx-linux
+	@make clean -sC minilibx_linux
 	@$(RM) $(OBJ_DIR)
 	@echo "$(GREEN)Removed the object files from $(NAME)$(RESET_COLOR)"
 

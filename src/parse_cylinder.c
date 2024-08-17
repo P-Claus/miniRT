@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:23:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 11:02:44 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/17 21:54:03 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	parse_diameter(t_scene_info *scene_info, char *string, int index)
 		iter++;
 	}
 	conversion = ft_atof(string, 2);
-	if (conversion > INT_MAX)
+	if (conversion > (float)INT_MAX)
 		return (1);
 	scene_info->cylinders[index].diameter = conversion;
 	return (0);
@@ -44,7 +44,7 @@ static int	parse_height(t_scene_info *scene_info, char *string, int index)
 		iter++;
 	}
 	conversion = ft_atof(string, 2);
-	if (conversion > INT_MAX)
+	if (conversion > (float)INT_MAX)
 		return (1);
 	scene_info->cylinders[index].height = conversion;
 	return (0);

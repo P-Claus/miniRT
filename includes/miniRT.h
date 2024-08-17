@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 09:41:09 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/17 21:53:32 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,29 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <limits.h>
+# include <math.h>
+# include "../minilibx_linux/mlx.h"
+# include <X11/keysym.h>
+# include <X11/X.h>
+# include <X11/Xlib.h>
+# include "../minilibx_linux/mlx_int.h"
 
 /*	STRUCTURES	*/
+
+typedef struct	s_my_img
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_my_img;
+
+typedef struct	s_mlx_data
+{
+	void	*mlx;
+	void	*mlx_win;
+}	t_mlx_data;
 
 typedef struct s_coordinates
 {

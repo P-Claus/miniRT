@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 17:48:31 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/17 21:40:12 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int	read_from_scene(t_scene_info *scene_info, int fd,
 	char	*buffer;
 	int		counter;
 
+	counter = 0;
 	buffer = "start";
 	while (buffer != NULL)
 	{

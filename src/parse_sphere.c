@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 09:18:01 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 10:31:44 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/17 21:53:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static int	parse_diameter(t_scene_info *scene_info, char *string,
 			return (1);
 		iter++;
 	}
-	conversion = ft_atof(string, 2);
-	if (conversion > INT_MAX)
+	conversion = ft_atof(string, 2); //overflow check maybe in ft_atof?
+	if (conversion > (float)INT_MAX) // should technically allow above intmax up to float max ?
 		return (1);
 	scene_info->spheres[id_count->sp_count].diameter = conversion;
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:27:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 10:20:26 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/17 21:52:38 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	check_limits(float coordinate_value, char **coordinates_split)
 {
-	if (coordinate_value < INT_MIN || coordinate_value > INT_MAX)
+	if (coordinate_value < (float)INT_MIN || coordinate_value > (float)INT_MAX)
 	{
 		free_split(coordinates_split);
 		return (1);
