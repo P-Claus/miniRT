@@ -49,8 +49,8 @@ RESET			= \e[2K\r
 
 all: $(NAME)
 
-$(NAME): libft/libft.a $(OBJ)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) libft/libft.a
+$(NAME): libft/libft.a minilibx-linux/libmlx.a $(OBJ)
+	@$(CC) $(CFLAGS) -lXext -lX11 -lm -o $(NAME) $(OBJ) libft/libft.a minilibx-linux/libmlx.a
 	@echo "$(RESET)$(GREEN)Compiled $(NAME)$(RESET_COLOR)"
 
 $(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c
@@ -62,8 +62,12 @@ $(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c
 libft/libft.a:
 	@make -sC libft
 
+minilibx-linux/libmlx.a:
+	@make -sC minilibx-linux
+
 clean:
 	@make fclean -sC libft 
+	@make clean -sC minilibx-linux
 	@$(RM) $(OBJ_DIR)
 	@echo "$(GREEN)Removed the object files from $(NAME)$(RESET_COLOR)"
 
