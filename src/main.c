@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/18 17:20:00 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/18 17:59:44 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	init_mlx_data(t_mlx_data *data)
 	mlx_loop_hook(data->mlx, handle_no_event, data);
 	mlx_hook(data->mlx_win, DestroyNotify, 0L, handle_window_destroy, data);
 	mlx_hook(data->mlx_win, KeyPress, KeyPressMask, handle_keypress, data);
+	errno = 0;
 	return (0);
 }
 

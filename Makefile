@@ -17,7 +17,8 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  parse_camera.c parse_coordinates.c parse_light.c\
 				  parse_sphere.c parse_plane.c parse_cylinder.c init_parsing_data.c\
 				  print_parsing_result.c identifier_error_check.c\
-				  print_parsing_result_shapes.c mlx_events.c draw_utils.c render.c
+				  print_parsing_result_shapes.c mlx_events.c draw_utils.c render.c \
+				  time_utils.c
 
 
 SOURCES_DIR		= src
