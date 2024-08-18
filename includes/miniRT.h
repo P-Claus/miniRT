@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/17 21:53:32 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/18 16:54:26 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,17 @@
 
 /*	STRUCTURES	*/
 
-typedef struct	s_my_img
+typedef struct s_pixel_coord
 {
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_my_img;
+	int	x;
+	int	y;
+}	t_pixel_coord;
 
-typedef struct	s_mlx_data
+typedef struct s_pixel_uv
 {
-	void	*mlx;
-	void	*mlx_win;
-}	t_mlx_data;
+	float	x;
+	float	y;
+}	t_pixel_uv;
 
 typedef struct s_coordinates
 {
@@ -101,6 +98,25 @@ typedef struct s_identifier_count
 	int				cy_count;
 }					t_identifier_count;
 
+typedef struct	s_my_img
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_my_img;
+
+typedef struct	s_mlx_data
+{
+	void			*mlx;
+	int				width;
+	int				heigth;
+	void			*mlx_win;
+	t_my_img		render;
+	t_scene_info	scene;
+}	t_mlx_data;
+
 /*	PARSING	*/
 int	parse_ambient_lighting(t_scene_info *scene_info,
 							char *string);
@@ -135,9 +151,17 @@ int					count_identifiers_for_initialization(int fd, t_identifier_count *id_coun
 
 /*	UTILS	*/
 int					exit_handler(char *error);
+void				free_mlx(t_mlx_data *data);
+void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
+
+/*  MLX_EVENTS  */
+int					handle_no_event(t_mlx_data *data);
+int					handle_keypress(int keysym, t_mlx_data *data);
+int					handle_window_destroy(t_mlx_data *data);
 
 /*	SRC	*/
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
+void				render(t_mlx_data *data);
 
 #endif
