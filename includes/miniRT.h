@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/18 17:57:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/19 14:15:26 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,13 @@ void				free_mlx(t_mlx_data *data);
 void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
+
+/* VECTOR MATH STUFF */
+t_coordinates		vec3_scalar(t_coordinates a, float scalar);
+float				vec3_norm(t_coordinates a);
+t_coordinates		vec3_normalize(t_coordinates a);
+float				vec3_dot(t_coordinates a, t_coordinates b);
+t_coordinates		vec3_cross(t_coordinates a, t_coordinates b);
 
 /*  MLX_EVENTS  */
 int					handle_no_event(t_mlx_data *data);
