@@ -8,6 +8,7 @@ INCLUDES		= -I ./includes -I ./minilibx_linux -I ./libft/incl
 CC				= clang
 RM				= rm -rf
 CFLAGS			= -Wall -Werror -Wextra -gdwarf-4
+CFLAGS			+= -O3
 CFLAGS			+= $(INCLUDES)
 
 MKDIR			= mkdir -p
