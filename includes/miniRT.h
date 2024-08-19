@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/19 14:15:26 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/19 20:33:54 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@
 # include <X11/Xlib.h>
 # include "../minilibx_linux/mlx_int.h"
 # include <sys/time.h>
+
+# ifndef SCREEN_WIDTH
+#  define SCREEN_WIDTH 860
+# endif
+
+# ifndef SCREEN_HEIGHT
+#  define SCREEN_HEIGHT 540
+# endif
 
 /*	STRUCTURES	*/
 
@@ -111,11 +119,12 @@ typedef struct	s_my_img
 typedef struct	s_mlx_data
 {
 	void			*mlx;
-	int				width;
-	int				heigth;
 	void			*mlx_win;
 	t_my_img		render;
 	t_scene_info	scene;
+	int				width;
+	int				heigth;
+	float			aspect;
 }	t_mlx_data;
 
 /*	PARSING	*/

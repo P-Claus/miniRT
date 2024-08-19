@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 12:24:59 by efret             #+#    #+#             */
-/*   Updated: 2024/08/19 14:14:34 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/19 19:37:16 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ float			vec3_dot(t_coordinates a, t_coordinates b)
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
+/* Euclidean norm */
 float			vec3_norm(t_coordinates a)
 {
-	return (vec3_dot(a, a));
+	return (sqrt(vec3_dot(a, a)));
 }
 
 t_coordinates	vec3_normalize(t_coordinates a)
 {
 	float	hypot;
 
-	hypot = vec3_dot(a, a);
+	hypot = vec3_norm(a);
 	if (hypot == 0)
 		return ((t_coordinates){INFINITY, INFINITY, INFINITY});
 	return (vec3_scalar(a, 1. / hypot));
