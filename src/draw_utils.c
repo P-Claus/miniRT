@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:39:59 by efret             #+#    #+#             */
-/*   Updated: 2024/08/18 16:57:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/19 15:27:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,5 @@ void	fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color)
 	if (!data || !data->render.img || !on_screen(data, p))
 		return ;
 	i = ((int)p.y * data->render.line_len + (int)p.x * (data->render.bpp / 8));
-	data->render.addr[i] = color;
-	data->render.addr[++i] = color >> 8;
-	data->render.addr[++i] = color >> 16;
+	*(unsigned int *)(data->render.addr + i) = color;
 }

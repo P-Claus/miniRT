@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/19 14:30:44 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/19 15:26:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,19 @@ void	render(t_mlx_data *data)
 {
 	struct timeval	start;
 	struct timeval	end;
-	int				i;
-	int				j;
 	t_pixel_coord	p;
 
 	gettimeofday(&start, NULL);
-	j = 0;
-	while (j < data->heigth)
+	p.y = 0;
+	while (p.y < data->heigth)
 	{
-		i = 0;
-		while (i < data->width)
+		p.x = 0;
+		while (p.x < data->width)
 		{
-			p = (t_pixel_coord){i, j};
 			fast_pixel_put(data, p, per_pixel(data, p));
-			i++;
+			p.x++;
 		}
-		j++;
+		p.y++;
 	}
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
 	errno = 0;
@@ -43,7 +40,12 @@ void	render(t_mlx_data *data)
 
 int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 {
-	if (p.x == data->width / 2 || p.y == data->heigth / 2)
-		return (0x00FFFFFF);
-	return (0x00000000);
+	t_pixel_uv uv = (t_pixel_uv){(float)p.x / data->width, (float)(data->heigth - p.y) / data->heigth};
+	uv.x = uv.x * 2. - 1.;
+	uv.y = uv.y * 2. - 1.;
+	int r = (int)(uv.x * 255.0f);
+	int g = (int)(uv.y * 255.0f);
+	r = r < 0 ? 0 : r;
+	g = g < 0 ? 0 : g;
+	return (0x00000000 | (g << 8) | (r << 16));
 }
