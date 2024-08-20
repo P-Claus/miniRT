@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/20 14:29:23 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/20 20:56:10 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,111 @@ void	render(t_mlx_data *data)
 
 // I know all the scene things are inside the data, for now I've just done this to test the very first step of understanding ray tracing.
 #if 1
+/* Same as the next block, but the scene info is used.
+ * !!!NOTE IMPORTANT ONLY USE THIS WITH "one_sphere.rt" FILE */
+int	per_pixel(t_mlx_data *data, t_pixel_coord p)
+{
+	if (data->scene.nb_of_spheres != 1)
+		return (0);
+	float	fov = 65;
+	float	scale = tan(DEG2RAD * fov * 0.5);
+
+	t_pixel_uv uv = (t_pixel_uv){(float)p.x / data->width, (float)(data->heigth - p.y) / data->heigth};
+	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
+	uv.y = (uv.y * 2. - 1.) * scale;
+	t_coordinates	ray_origin = {0., 0., 100.};
+	t_coordinates	ray_dir = {uv.x, uv.y, -1.}; // -1. for the z component to set the screen 1 unit in front of us in the world space. The z axis point towards the screen.
+	//ray_dir = vec3_normalize(ray_dir);
+	// should normalize (should normalize every direction vector really) but not really necessary to get the distance t
+	t_coordinates	sphere_origin = data->scene.spheres[0].coordinates;
+	float			sphere_radius = data->scene.spheres[0].diameter / 2.;
+	t_coordinates	sphere_color = {
+		(data->scene.spheres[0].rgb_code >> 16 ) & 0xFF,
+		(data->scene.spheres[0].rgb_code >> 8) & 0xFF,
+		(data->scene.spheres[0].rgb_code) & 0xFF};
+
+	t_coordinates	L = vec3_diff(ray_origin, sphere_origin);
+
+	float	a = vec3_dot(ray_dir, ray_dir);
+	float	b = 2. * vec3_dot(L, ray_dir);
+	float	c = vec3_dot(L, L) - pow(sphere_radius, 2);
+
+	float	discr = b * b - 4 * a * c;
+	float	dist;
+	if (discr < 0)
+		return (0);
+	else if (discr == 0)
+		dist = -0.5 * b / a;
+	else
+		dist = -0.5 * (b - sqrt(discr)) / a;
+	t_coordinates	hit = vec3_sum(ray_origin, vec3_scalar(ray_dir, dist));
+	t_coordinates	hit_normal = vec3_normalize(vec3_diff(hit, sphere_origin));
+
+	t_coordinates	light_dir = {-1., -1., -0.5};
+	light_dir = vec3_normalize(light_dir);
+
+	float	light = fmax(vec3_dot(hit_normal, vec3_neg(light_dir)), 0.);
+
+	t_coordinates	color_coord = vec3_scalar(sphere_color, light);
+
+	vec3_scalar(color_coord, light);
+	int	color = 0x00000000 | ((int)color_coord.x << 16) | ((int)color_coord.y << 8) | (int)color_coord.z;
+	return (color);
+}
+#elif 1
+/* Same as the next block, but the sphere origin can be moved and a couple of non-necessary calculations are removed.
+ * Also camera fov is now considered. */
+int	per_pixel(t_mlx_data *data, t_pixel_coord p)
+{
+	float	fov = 65;
+	float	scale = tan(DEG2RAD * fov * 0.5);
+
+	t_pixel_uv uv = (t_pixel_uv){(float)p.x / data->width, (float)(data->heigth - p.y) / data->heigth};
+	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
+	uv.y = (uv.y * 2. - 1.) * scale;
+	t_coordinates	ray_origin = {0., 0., 100.};
+	t_coordinates	ray_dir = {uv.x, uv.y, -1.}; // -1. for the z component to set the screen 1 unit in front of us in the world space. The z axis point towards the screen.
+	//ray_dir = vec3_normalize(ray_dir);
+	// should normalize (should normalize every direction vector really) but not really necessary to get the distance t
+	t_coordinates	sphere_origin = {0., 0., 0.};
+	float			sphere_radius = 35.;
+
+	t_coordinates	L = vec3_diff(ray_origin, sphere_origin);
+
+	float	a = vec3_dot(ray_dir, ray_dir);
+	float	b = 2. * vec3_dot(L, ray_dir);
+	float	c = vec3_dot(L, L) - pow(sphere_radius, 2);
+
+	float	discr = b * b - 4 * a * c;
+	float	dist;
+	if (discr < 0)
+		return (0);
+	else if (discr == 0)
+		dist= -0.5 * b / a;
+	else
+		dist = -0.5 * (b - sqrt(discr)) / a;
+	t_coordinates	hit = vec3_sum(ray_origin, vec3_scalar(ray_dir, dist));
+	t_coordinates	hit_normal = vec3_normalize(vec3_diff(hit, sphere_origin));
+
+	t_coordinates	light_dir = {-1., -1., -0.5};
+	light_dir = vec3_normalize(light_dir);
+
+	float	light = fmax(vec3_dot(hit_normal, vec3_neg(light_dir)), 0.);
+
+#if 0
+	t_coordinates	hit_normal_uv = vec3_sum(vec3_scalar(hit_normal, 0.5), (t_coordinates){0.5, 0.5, 0.5});
+	t_coordinates	sphere_color = vec3_scalar(hit_normal_uv, 255);
+#else
+	t_coordinates	sphere_color = {0., 255., 0.};
+#endif
+
+	t_coordinates	color_coord = vec3_scalar(sphere_color, light);
+
+	vec3_scalar(color_coord, light);
+	int	color = 0x00000000 | ((int)color_coord.x << 16) | ((int)color_coord.y << 8) | (int)color_coord.z;
+	return (color);
+}
+#elif 1
 /* map color to a shaded color of a sphere based on the dot between some light direction and the normal of the sphere hitpoint.
  * This results in the most basic light shading of a single sphere and a single light direction. */
 int	per_pixel(t_mlx_data *data, t_pixel_coord p)

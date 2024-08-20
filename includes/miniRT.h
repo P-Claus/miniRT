@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/20 13:35:28 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/20 20:16:28 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@
 # ifndef SCREEN_HEIGHT
 #  define SCREEN_HEIGHT 540
 # endif
+
+# define DEG2RAD (M_PI / 180.)
+# define RAD2DEG (180. / M_PI)
 
 /*	STRUCTURES	*/
 
@@ -168,6 +171,8 @@ float				frame_time(struct timeval start, struct timeval end);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);
+t_coordinates		vec3_diff(t_coordinates a, t_coordinates b);
+t_coordinates		vec3_neg(t_coordinates a);
 t_coordinates		vec3_scalar(t_coordinates a, float scalar);
 float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);

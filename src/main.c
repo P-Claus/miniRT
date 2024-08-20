@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/19 20:12:31 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/20 20:40:11 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,16 @@ int	main(int argc, char **argv)
 
 	init_mlx_data(&mlx_data);
 
-# if 1
+# if 0
 	(void)argc;
 	(void)argv;
 	(void)fd;
 	(void)id_count;
-# elif
+
+	mlx_loop(mlx_data.mlx);
+	free_mlx(&mlx_data);
+
+# else
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
 	fd = open(argv[1], O_RDONLY);
@@ -66,12 +70,13 @@ int	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	init_scene_info(&mlx_data.scene, &id_count);
 	read_from_scene(&mlx_data.scene, fd, &id_count);
+
+	mlx_loop(mlx_data.mlx);
+	free_mlx(&mlx_data);
+
 	free(mlx_data.scene.spheres);
 	free(mlx_data.scene.planes);
 	free(mlx_data.scene.cylinders);
 	close(fd);
 # endif
-
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
 }
