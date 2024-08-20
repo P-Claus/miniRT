@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/19 20:33:54 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/20 13:35:28 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 
 /* VECTOR MATH STUFF */
+t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);
 t_coordinates		vec3_scalar(t_coordinates a, float scalar);
 float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);
