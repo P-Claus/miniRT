@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:12:49 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 11:38:24 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ void				free_mlx(t_mlx_data *data);
 void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
+int					check_extension(char *string);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);

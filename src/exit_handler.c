@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/18 17:00:40 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/24 11:42:28 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,15 @@ void	free_mlx(t_mlx_data *mlx_data)
 		mlx_destroy_display(mlx_data->mlx);
 		free(mlx_data->mlx);
 	}
+}
+
+int	check_extension(char *string)
+{
+	int	len;
+
+	len = ft_strlen(string);
+	if (string[len - 1] == 't' && string[len - 2] == 'r'
+		&& string[len - 3] == '.')
+		return (0);
+	return (1);
 }

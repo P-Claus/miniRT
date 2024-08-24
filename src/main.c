@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/20 20:40:11 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/24 11:38:56 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	main(int argc, char **argv)
 # else
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
+	if (check_extension(argv[1]) == 1)
+		exit_handler("Error\nThe file you tried to open doesn't have the .rt extension\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		exit_handler("Error\nThe file does not exist\n");

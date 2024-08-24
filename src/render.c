@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/24 09:51:30 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 09:58:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	t_coordinates	sphere_origin = data->scene.spheres[0].coordinates;
 	float			sphere_radius = data->scene.spheres[0].diameter / 2.;
 	t_coordinates	sphere_color = {
-		(data->scene.spheres[0].rgb_code >> 16 ) & 0xFF,
-		(data->scene.spheres[0].rgb_code >> 8) & 0xFF,
-		(data->scene.spheres[0].rgb_code) & 0xFF};
+		data->scene.spheres[0].rgb.r,
+		data->scene.spheres[0].rgb.g,
+		data->scene.spheres[0].rgb.b};
 
 	t_coordinates	L = vec3_diff(ray_origin, sphere_origin);
 
