@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:23:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/17 21:54:03 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/24 09:13:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	handle_rgb(t_scene_info *scene_info, char **split,
 	char	*trimmed_rgb;
 
 	trimmed_rgb = ft_strtrim(split[5], "\n");
-	if (parse_rgb(&scene_info->cylinders[id_count->cy_count].rgb_code,
+	if (parse_rgb(&scene_info->cylinders[id_count->cy_count].rgb,
 			trimmed_rgb) == 1)
 	{
 		free_split_and_trimmed_rgb(split, trimmed_rgb);

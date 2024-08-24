@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:24:12 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/06 22:01:16 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 09:42:02 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	check_digits_in_rgb(char **split)
 	return (0);
 }
 
-int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
+static int	fill_rgb_struct(char **rgb_split, int rgb_values[], t_rgb *rgb)
 {
 	int	iter;
 
@@ -45,25 +45,25 @@ int	rgb_bit_shift(char **rgb_split, int rgb_values[], int *rgb_code)
 			return (1);
 		iter++;
 	}
-	*rgb_code = (rgb_values[0] << 16) | (rgb_values[1] << 8) | rgb_values[2];
+	rgb->r = rgb_values[0] / 255.0;
+	rgb->g = rgb_values[1] / 255.0;
+	rgb->b = rgb_values[2] / 255.0;
 	return (0);
 }
 
-int	parse_rgb(int *rgb_int, char *string)
+int	parse_rgb(t_rgb *rgb, char *string)
 {
 	char	**rgb_split;
 	int		rgb_values[3];
-	int		rgb_code;
-
+	
 	rgb_split = ft_split(string, ',');
 	if (count_items_in_split(rgb_split, 3) == 1
-		|| check_digits_in_rgb(rgb_split) == 1 || rgb_bit_shift(rgb_split,
-			rgb_values, &rgb_code) == 1)
+		|| check_digits_in_rgb(rgb_split) == 1 || fill_rgb_struct(rgb_split,
+			rgb_values, rgb) == 1)
 	{
 		free_split(rgb_split);
 		return (1);
 	}
-	*rgb_int = rgb_code;
 	free_split(rgb_split);
 	return (0);
 }

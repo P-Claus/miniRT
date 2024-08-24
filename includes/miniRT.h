@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/20 20:16:28 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/24 09:12:49 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,45 @@ typedef struct s_coordinates
 	float			z;
 }					t_coordinates;
 
+typedef struct s_rgb
+{
+	float			r;
+	float			g;
+	float			b;
+}					t_rgb;
+
+typedef struct s_a_lightning
+{
+	float			ambient_lighting;
+	t_rgb			rgb;
+}					t_a_lightning;
+
+typedef struct s_camera
+{
+	t_coordinates	coordinates;
+	t_coordinates	vector;
+	int				fov;
+}					t_camera;
+
+typedef struct s_light
+{
+	t_coordinates	coordinates;
+	float			brightness;
+	t_rgb			rgb;
+}					t_light;
+
 typedef struct s_sphere
 {
 	t_coordinates	coordinates;
 	float			diameter;
-	int				rgb_code;
+	t_rgb			rgb;
 }					t_sphere;
 
 typedef struct s_plane
 {
 	t_coordinates	coordinates;
 	t_coordinates	vector;
-	int				rgb_code;
+	t_rgb			rgb;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -79,19 +106,14 @@ typedef struct s_cylinder
 	t_coordinates	vector;
 	float			diameter;
 	float			height;
-	int				rgb_code;
+	t_rgb				rgb;
 }					t_cylinder;
 
 typedef struct s_scene_info
 {
-	float			A_lighting;
-	int				A_rgb_code;
-	t_coordinates	C_coordinates_vp;
-	t_coordinates	C_coordinates_o;
-	int				C_fov;
-	t_coordinates	L_cordinates_lp;
-	float			L_brightness;
-	int				L_rgb_code;
+	t_a_lightning	a_lightning;
+	t_camera		camera;
+	t_light			light;
 	t_sphere		*spheres;
 	t_plane			*planes;
 	t_cylinder		*cylinders;
@@ -133,7 +155,7 @@ typedef struct	s_mlx_data
 /*	PARSING	*/
 int	parse_ambient_lighting(t_scene_info *scene_info,
 							char *string);
-int					parse_rgb(int *rgb_int, char *string);
+int					parse_rgb(t_rgb *rgb, char *string);
 int	parse_camera(t_scene_info *scene_info,
 					char *string);
 int					parse_coordinates(t_coordinates *coordinates, char *string);

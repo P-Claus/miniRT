@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 10:33:34 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 09:50:03 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	print_spheres(t_scene_info *scene_info)
 			scene_info->spheres[iter].coordinates.x,
 			scene_info->spheres[iter].coordinates.y,
 			scene_info->spheres[iter].coordinates.z);
-		printf("|           Sphere diameter: %5.2f            |\n",
+		printf("|           Sphere diameter: %6.2f           |\n",
 			scene_info->spheres[iter].diameter);
-		printf("|               RGB: %3d,%3d,%3d              |\n",
-			scene_info->spheres[iter].rgb_code >> 16 & 0xFF,
-			scene_info->spheres[iter].rgb_code >> 8 & 0xFF,
-			scene_info->spheres[iter].rgb_code & 0xFF);
+		printf("|       RGB: %8f,%8f,%8f       |\n",
+			scene_info->spheres[iter].rgb.r,
+			scene_info->spheres[iter].rgb.g,
+			scene_info->spheres[iter].rgb.b);
 		printf(" --------------------------------------------- \n");
 		iter++;
 	}
@@ -55,10 +55,10 @@ void	print_planes(t_scene_info *scene_info)
 			scene_info->planes[iter].vector.x,
 			scene_info->planes[iter].vector.y,
 			scene_info->planes[iter].vector.z);
-		printf("|               RGB: %3d,%3d,%3d              |\n",
-			scene_info->planes[iter].rgb_code >> 16 & 0xFF,
-			scene_info->planes[iter].rgb_code >> 8 & 0xFF,
-			scene_info->planes[iter].rgb_code & 0xFF);
+		printf("|       RGB: %8f,%8f,%8f       |\n",
+			scene_info->planes[iter].rgb.r,
+			scene_info->planes[iter].rgb.g,
+			scene_info->planes[iter].rgb.b);
 		printf(" --------------------------------------------- \n");
 		iter++;
 	}
@@ -83,10 +83,10 @@ void	print_cylinders(t_scene_info *scene_info, int iter)
 			scene_info->cylinders[iter].diameter);
 		printf("|            Cylinder height: %5.2f           |\n",
 			scene_info->cylinders[iter].height);
-		printf("|               RGB: %3d,%3d,%3d              |\n",
-			scene_info->cylinders[iter].rgb_code >> 16 & 0xFF,
-			scene_info->cylinders[iter].rgb_code >> 8 & 0xFF,
-			scene_info->cylinders[iter].rgb_code & 0xFF);
+		printf("|       RGB: %8f,%8f,%8f       |\n",
+			scene_info->cylinders[iter].rgb.r,
+			scene_info->cylinders[iter].rgb.g,
+			scene_info->cylinders[iter].rgb.b);
 		printf(" --------------------------------------------- \n");
 		iter++;
 	}

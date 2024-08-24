@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:18:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 09:17:30 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 08:43:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	parse_ambient_lighting(t_scene_info *scene_info, char *string)
 		free_split(split);
 		return (1);
 	}
-	scene_info->A_lighting = conversion;
+	scene_info->a_lightning.ambient_lighting = conversion;
 	trimmed_rgb = ft_strtrim(split[2], "\n");
-	if (parse_rgb(&scene_info->A_rgb_code, trimmed_rgb) == 1)
+	if (parse_rgb(&scene_info->a_lightning.rgb, trimmed_rgb) == 1)
 	{
 		free_split_and_trimmed_rgb(split, trimmed_rgb);
 		return (1);

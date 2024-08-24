@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/09 11:19:43 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/24 09:08:52 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	handle_coversion(t_scene_info *scene_info, char *string)
 	converted_int = ft_atoi(string);
 	if (converted_int >= 0 && converted_int <= 180)
 	{
-		scene_info->C_fov = converted_int;
+		scene_info->camera.fov = converted_int;
 		return (0);
 	}
 	return (1);
@@ -58,9 +58,9 @@ int	parse_camera(t_scene_info *scene_info, char *string)
 
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 4) == 1
-		|| parse_coordinates(&scene_info->C_coordinates_vp, split[1]) == 1
+		|| parse_coordinates(&scene_info->camera.coordinates, split[1]) == 1
 		|| parse_orientation_vector(
-			&scene_info->C_coordinates_o, split[2], -1) == 1
+			&scene_info->camera.vector, split[2], -1) == 1
 		|| parse_field_of_view(scene_info, split[3]) == 1)
 	{
 		free_split(split);

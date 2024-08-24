@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 09:18:01 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/17 21:53:24 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/24 09:13:01 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	parse_sphere(t_scene_info *scene_info, char *string,
 		return (1);
 	}
 	trimmed_rgb = ft_strtrim(split[3], "\n");
-	if (parse_rgb(&scene_info->spheres[id_count->sp_count].rgb_code,
+	if (parse_rgb(&scene_info->spheres[id_count->sp_count].rgb,
 			trimmed_rgb) == 1)
 	{
 		free_split_and_trimmed_rgb(split, trimmed_rgb);
