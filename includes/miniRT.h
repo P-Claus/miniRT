@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 11:38:24 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/25 12:31:08 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ typedef struct s_rgb
 	float			b;
 }					t_rgb;
 
-typedef struct s_a_lightning
+typedef struct s_a_lighting
 {
 	float			ambient_lighting;
 	t_rgb			rgb;
-}					t_a_lightning;
+}					t_a_lighting;
 
 typedef struct s_camera
 {
@@ -111,7 +111,7 @@ typedef struct s_cylinder
 
 typedef struct s_scene_info
 {
-	t_a_lightning	a_lightning;
+	t_a_lighting	a_lighting;
 	t_camera		camera;
 	t_light			light;
 	t_sphere		*spheres;

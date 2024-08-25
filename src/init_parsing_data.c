@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:59:20 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:18:32 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/25 12:32:54 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ static int	allocate_shape_arrays(t_scene_info *scene_info,
 
 void	init_ambient_lightning(t_scene_info *scene_info)
 {
-	scene_info->a_lightning.ambient_lighting = 0.0;
-	scene_info->a_lightning.rgb.r = 0;
-	scene_info->a_lightning.rgb.g = 0;
-	scene_info->a_lightning.rgb.b = 0;
+	scene_info->a_lighting.ambient_lighting = 0.0;
+	scene_info->a_lighting.rgb.r = 0;
+	scene_info->a_lighting.rgb.g = 0;
+	scene_info->a_lighting.rgb.b = 0;
 }
 
 void	init_camera(t_scene_info *scene_info)

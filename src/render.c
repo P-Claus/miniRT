@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/24 09:58:51 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/25 12:12:34 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 
 	t_coordinates	color_coord = vec3_scalar(sphere_color, light);
 
-	vec3_scalar(color_coord, light);
+	color_coord = vec3_scalar(color_coord, 0xFF);
 	int	color = 0x00000000 | ((int)color_coord.x << 16) | ((int)color_coord.y << 8) | (int)color_coord.z;
 	return (color);
 }

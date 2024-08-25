@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:50:13 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:44:40 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/25 12:33:11 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ static void	print_ambient_lighting(t_scene_info *scene_info)
 	printf("|              Ambient lighting               |\n");
 	printf("|                                             |\n");
 	printf("|             Lighting ratio: %4.2f            |\n",
-		scene_info->a_lightning.ambient_lighting);
+		scene_info->a_lighting.ambient_lighting);
 	printf("|      RGB: %8f,%8f,%8f        |\n",
-		scene_info->a_lightning.rgb.r,
-		scene_info->a_lightning.rgb.g,
-		scene_info->a_lightning.rgb.b);
+		scene_info->a_lighting.rgb.r,
+		scene_info->a_lighting.rgb.g,
+		scene_info->a_lighting.rgb.b);
 	printf(" --------------------------------------------- \n");
 }
 
