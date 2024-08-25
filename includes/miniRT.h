@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/25 12:31:08 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/25 14:30:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,15 @@
 
 /*	STRUCTURES	*/
 
+typedef enum e_object_type
+{
+	OBJ_NONE,
+	OBJ_SPHERE,
+	OBJ_CYLINDER,
+	OBJ_PLANE
+}	t_object_type;
+
+
 typedef struct s_pixel_coord
 {
 	int	x;
@@ -65,6 +74,20 @@ typedef struct s_rgb
 	float			g;
 	float			b;
 }					t_rgb;
+
+typedef struct s_ray
+{
+	t_coordinates	origin;
+	t_coordinates	dir;
+}	t_ray;
+
+typedef struct s_hit_info
+{
+	int				obj_type;
+	size_t			obj_index;
+	float			dist;
+	t_coordinates	coordinates;
+}	t_hit_info;
 
 typedef struct s_a_lighting
 {
@@ -132,7 +155,7 @@ typedef struct s_identifier_count
 	int				cy_count;
 }					t_identifier_count;
 
-typedef struct	s_my_img
+typedef struct s_my_img
 {
 	void	*img;
 	char	*addr;
@@ -141,7 +164,7 @@ typedef struct	s_my_img
 	int		endian;
 }	t_my_img;
 
-typedef struct	s_mlx_data
+typedef struct s_mlx_data
 {
 	void			*mlx;
 	void			*mlx_win;
@@ -192,6 +215,10 @@ struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
 
+/* SPHERE UTILS */
+bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
+t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
+
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);
 t_coordinates		vec3_diff(t_coordinates a, t_coordinates b);
@@ -201,6 +228,10 @@ float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);
 float				vec3_dot(t_coordinates a, t_coordinates b);
 t_coordinates		vec3_cross(t_coordinates a, t_coordinates b);
+
+/* COLOR MATH STUFF */
+t_rgb				color_scalar(t_rgb c, float scale);
+int					color_to_int(t_rgb c);
 
 /*  MLX_EVENTS  */
 int					handle_no_event(t_mlx_data *data);
