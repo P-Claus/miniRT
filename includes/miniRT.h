@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/26 11:53:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/26 16:02:36 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,14 @@ typedef struct s_cylinder
 	t_rgb				rgb;
 }					t_cylinder;
 
+typedef struct s_disk
+{
+	t_coordinates	coordinates;
+	t_coordinates	vector;
+	float			diameter;
+	t_rgb			rgb;
+}					t_disk;
+
 typedef struct s_scene_info
 {
 	t_a_lighting	a_lighting;
@@ -214,6 +222,7 @@ void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
+bool				solve_quadratic(float a, float b, float c, float *dist);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
@@ -221,6 +230,13 @@ t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
 
 /* PLANE UTILS */
 bool				plane_hit(t_ray ray, t_plane plane, float *dist);
+
+/* CYLINDER UTILS */
+bool				cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist);
+t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
+
+/* DISK UTILS */
+bool				disk_hit(t_ray ray, t_disk disk, float *dist);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);

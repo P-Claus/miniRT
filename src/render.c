@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/26 12:19:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/26 18:34:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,20 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
+	i = 0;
+	while (i < scene.nb_of_cylinders)
+	{
+		if (cylinder_hit(ray, scene.cylinders[i], &dist) && dist > 0)
+		{
+			if (dist < hit.dist)
+			{
+				hit.dist = dist;
+				hit.obj_index = i;
+				hit.obj_type = OBJ_CYLINDER;
+			}
+		}
+		i++;
+	}
 	if (!isinf(hit.dist))
 		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
 	return (hit);
@@ -99,6 +113,11 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 		color = scene.planes[hit.obj_index].rgb;
 		hit_normal = scene.planes[hit.obj_index].vector;
 	}
+	else if (hit.obj_type == OBJ_CYLINDER)
+	{
+		color = scene.cylinders[hit.obj_index].rgb;
+		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
+	}
 	else
 		return ((t_rgb){0, 0, 0,});
 	light = fmax(vec3_dot(hit_normal,light_dir), 0.);
@@ -106,7 +125,6 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	return (color);
 }
 
-// I know all the scene things are inside the data, for now I've just done this to test the very first step of understanding ray tracing.
 #if 1
 /* split up the function to call other functions setting up the framework how I think we'll up up with. */
 int	per_pixel(t_mlx_data *data, t_pixel_coord p)
@@ -120,7 +138,7 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	t_ray	ray;
 	ray.origin = (t_coordinates){0., 0., 100.};
 	ray.dir = (t_coordinates){uv.x, uv.y, -1.};
-	// -1. for the z component to set the screen 1 unit in front of us in the world space. The z axis point towards the screen.
+	ray.dir = vec3_normalize(ray.dir);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
 	if (isinf(hit.dist))
