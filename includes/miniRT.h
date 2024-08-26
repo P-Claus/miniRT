@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/25 14:30:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/26 11:53:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,9 @@ int					check_extension(char *string);
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
 t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
+
+/* PLANE UTILS */
+bool				plane_hit(t_ray ray, t_plane plane, float *dist);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);

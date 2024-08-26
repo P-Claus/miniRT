@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:27:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/17 21:52:38 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/26 12:11:45 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ int	parse_orientation_vector(t_coordinates *coordinates, char *string, int iter)
 	coordinates->x = coordinate_values[0];
 	coordinates->y = coordinate_values[1];
 	coordinates->z = coordinate_values[2];
-	free_split(coordinates_split);
-	return (0);
+	*coordinates = vec3_normalize(*coordinates);
+	return (free_split(coordinates_split), 0);
 }

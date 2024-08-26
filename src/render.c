@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/25 15:51:03 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/26 12:19:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,20 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
+	i = 0;
+	while(i < scene.nb_of_planes)
+	{
+		if (plane_hit(ray, scene.planes[i], &dist) && dist > 0)
+		{
+			if (dist < hit.dist)
+			{
+				hit.dist = dist;
+				hit.obj_index = i;
+				hit.obj_type = OBJ_PLANE;
+			}
+		}
+		i++;
+	}
 	if (!isinf(hit.dist))
 		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
 	return (hit);
@@ -79,6 +93,11 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	{
 		color = scene.spheres[hit.obj_index].rgb;
 		hit_normal = sphere_normal(hit, scene.spheres[hit.obj_index]);
+	}
+	else if (hit.obj_type == OBJ_PLANE)
+	{
+		color = scene.planes[hit.obj_index].rgb;
+		hit_normal = scene.planes[hit.obj_index].vector;
 	}
 	else
 		return ((t_rgb){0, 0, 0,});
