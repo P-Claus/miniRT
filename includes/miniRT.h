@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/26 16:02:36 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/28 16:53:29 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ typedef enum e_object_type
 	OBJ_NONE,
 	OBJ_SPHERE,
 	OBJ_CYLINDER,
-	OBJ_PLANE
+	OBJ_PLANE,
+	OBJ_CUBE,
 }	t_object_type;
 
 
@@ -163,6 +164,16 @@ typedef struct s_identifier_count
 	int				cy_count;
 }					t_identifier_count;
 
+typedef struct s_cube
+{
+	float	min_x;
+	float	min_y;
+	float	min_z;
+	float	max_x;
+	float	max_y;
+	float	max_z;
+}				t_cube;
+
 typedef struct s_my_img
 {
 	void	*img;
@@ -237,6 +248,8 @@ t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
 
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);
+/* CUBE UTILS */
+bool				cube_hit(t_ray ray, t_cube cube, float *dist);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);

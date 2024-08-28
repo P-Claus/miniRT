@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/26 18:34:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/28 22:24:40 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,28 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 	t_hit_info	hit;
 	float		dist;
 	int			i;
+	t_cube		cube;
 
+	cube.max_x = 15;
+	cube.max_y = 15;
+	cube.max_z = 15;
+	cube.min_x = -20;
+	cube.min_y = -20;
+	cube.min_z = -20;
 
 	hit.dist = INFINITY;
 	hit.obj_index = 0;
 	hit.obj_type = OBJ_NONE;
 	i = 0;
+	if (cube_hit(ray, cube, &dist) && dist > 0)
+	{
+		if (dist < hit.dist)
+		{
+			hit.dist = dist;
+			hit.obj_index = 0;
+			hit.obj_type = OBJ_CUBE;
+		}
+	}
 	while (i < scene.nb_of_spheres)
 	{
 		if (sphere_hit(ray, scene.spheres[i], &dist) && dist > 0)
@@ -119,7 +135,7 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
 	}
 	else
-		return ((t_rgb){0, 0, 0,});
+		return ((t_rgb){0, 255, 0,});
 	light = fmax(vec3_dot(hit_normal,light_dir), 0.);
 	color = color_scalar(color, light);
 	return (color);
