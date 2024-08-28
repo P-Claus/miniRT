@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/26 16:02:36 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/28 22:18:07 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,20 @@
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
+
+/* KEY_INPUT_STATE BIT MASKS */
+# define KEY_ESCAPE (1 << 0)
+# define KEY_SPACE (1 << 1)
+# define KEY_W (1 << 2)
+# define KEY_A (1 << 3)
+# define KEY_S (1 << 4)
+# define KEY_D (1 << 5)
+# define KEY_Q (1 << 6)
+# define KEY_E (1 << 7)
+
+/* MOUSE_INPUT_STATE BIT MASKS */
+# define BTN_LEFT (1 << 0)
+# define BTN_RIGHT (1 << 1)
 
 /*	STRUCTURES	*/
 
@@ -99,6 +113,8 @@ typedef struct s_camera
 {
 	t_coordinates	coordinates;
 	t_coordinates	vector;
+	t_coordinates	up;
+	t_coordinates	right;
 	int				fov;
 }					t_camera;
 
@@ -177,10 +193,14 @@ typedef struct s_mlx_data
 	void			*mlx;
 	void			*mlx_win;
 	t_my_img		render;
+	float			frame_time;
 	t_scene_info	scene;
 	int				width;
 	int				heigth;
 	float			aspect;
+	long			key_input_state;
+	int				mouse_input_state;
+	t_pixel_coord	mouse_last_pos;
 }	t_mlx_data;
 
 /*	PARSING	*/
@@ -224,6 +244,10 @@ float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
 bool				solve_quadratic(float a, float b, float c, float *dist);
 
+/* RAY TRACING */
+t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
+t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
+
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
 t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
@@ -255,6 +279,10 @@ int					color_to_int(t_rgb c);
 /*  MLX_EVENTS  */
 int					handle_no_event(t_mlx_data *data);
 int					handle_keypress(int keysym, t_mlx_data *data);
+int					handle_keyrelease(int keysym, t_mlx_data *data);
+int					handle_mouse_movement(int x, int y, t_mlx_data *data);
+int					handle_mouse_press(int button, int x, int y, t_mlx_data *data);
+int					handle_mouse_release(int button, int x, int y, t_mlx_data *data);
 int					handle_window_destroy(t_mlx_data *data);
 
 /*	SRC	*/

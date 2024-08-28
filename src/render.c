@@ -35,7 +35,8 @@ void	render(t_mlx_data *data)
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
 	errno = 0;
 	gettimeofday(&end, NULL);
-	printf("frametime: %.3f ms\n", frame_time(start, end));
+	data->frame_time = frame_time(start, end);
+	printf("frametime: %.3f ms\n", data->frame_time);
 }
 
 t_hit_info	cast_ray(t_ray ray, t_scene_info scene)

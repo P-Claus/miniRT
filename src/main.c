@@ -34,6 +34,9 @@ int	init_mlx_data(t_mlx_data *data)
 	mlx_loop_hook(data->mlx, handle_no_event, data);
 	mlx_hook(data->mlx_win, DestroyNotify, 0L, handle_window_destroy, data);
 	mlx_hook(data->mlx_win, KeyPress, KeyPressMask, handle_keypress, data);
+	mlx_hook(data->mlx_win, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
+	mlx_hook(data->mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press, data);
+	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release, data);
 	errno = 0;
 	return (0);
 }
