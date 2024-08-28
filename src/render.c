@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/26 18:34:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/28 16:05:54 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,11 +132,11 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	float	fov = 65;
 	float	scale = tan(DEG2RAD * fov * 0.5);
 
-	t_pixel_uv uv = (t_pixel_uv){(float)p.x / data->width, (float)(data->heigth - p.y) / data->heigth};
+	t_pixel_uv uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->heigth - p.y - 0.5) / data->heigth};
 	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
 	t_ray	ray;
-	ray.origin = (t_coordinates){0., 0., 100.};
+	ray.origin = data->scene.camera.coordinates;
 	ray.dir = (t_coordinates){uv.x, uv.y, -1.};
 	ray.dir = vec3_normalize(ray.dir);
 
