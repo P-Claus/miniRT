@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 11:38:56 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/28 22:11:55 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	init_mlx_data(t_mlx_data *data)
 			data->width, data->heigth, "miniRT");
 	if (!data->mlx_win)
 		return (free_mlx(data), 1);
-	data->render.img = mlx_new_image(data->mlx, 1200, 675);
+	data->render.img = mlx_new_image(data->mlx, data->width, data->heigth);
 	if (!data->render.img)
 		return (free_mlx(data), 1);
 	data->render.addr = mlx_get_data_addr(data->render.img,
