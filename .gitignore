@@ -4,5 +4,6 @@ miniRT
 
 obj/
 *.o
+*.d
 
 *.out*

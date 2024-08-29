@@ -27,6 +27,8 @@ SOURCES_DIR		= src
 SOURCES			= $(addprefix $(SOURCES_DIR)/, $(SOURCE_FILES))
 OBJ_DIR			= obj
 OBJ				= $(addprefix $(OBJ_DIR)/, $(notdir $(SOURCES:.c=.o)))
+DEPENDS			= $(OBJ:.o=.d)
+
 
 TOTAL_FILES := $(words $(SOURCE_FILES))
 
@@ -56,9 +58,11 @@ $(NAME): libft/libft.a minilibx_linux/libmlx.a $(OBJ)
 	@$(CC) $(CFLAGS) -lXext -lX11 -lm -lz $(OBJ) -o $(NAME) libft/libft.a minilibx_linux/libmlx.a
 	@echo "$(RESET)$(GREEN)Compiled $(NAME)$(RESET_COLOR)"
 
-$(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c
+-include $(DEPENDS)
+
+$(OBJ_DIR)/%.o: $(SOURCES_DIR)/%.c Makefile
 	@$(MKDIR) $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 	@$(eval COMPILE_COUNT=$(shell echo $$(($(COMPILE_COUNT)+1))))
 	@echo -n "$(RESET)[$(YELLOW)$$(($(COMPILE_COUNT)*100/$(TOTAL_FILES)))%] Compiling $(NAME)"
 
