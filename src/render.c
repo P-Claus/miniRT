@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/28 16:05:54 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/29 21:37:04 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,20 +126,35 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	return (color);
 }
 
+t_ray	calc_ray_dir(t_camera camera, t_pixel_uv uv)
+{
+	t_coordinates	ray_dir_screen;
+	t_ray	ray;
+
+	ray.origin = camera.coordinates;
+
+	ray_dir_screen = (t_coordinates){uv.x, uv.y, 1.};
+
+	ray.dir.x = vec3_dot(camera.right, ray_dir_screen);
+	ray.dir.y = vec3_dot(camera.up, ray_dir_screen);
+	ray.dir.z = vec3_dot(camera.vector, ray_dir_screen);
+
+	ray.dir = vec3_normalize(ray.dir);
+	return (ray);
+}
+
 #if 1
 /* split up the function to call other functions setting up the framework how I think we'll up up with. */
 int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 {
-	float	fov = 65;
+	t_ray	ray;
+	float	fov = data->scene.camera.fov;
 	float	scale = tan(DEG2RAD * fov * 0.5);
 
 	t_pixel_uv uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->heigth - p.y - 0.5) / data->heigth};
 	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
-	t_ray	ray;
-	ray.origin = data->scene.camera.coordinates;
-	ray.dir = (t_coordinates){uv.x, uv.y, -1.};
-	ray.dir = vec3_normalize(ray.dir);
+	ray = calc_ray_dir(data->scene.camera, uv);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
 	if (isinf(hit.dist))

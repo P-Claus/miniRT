@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/28 22:11:55 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/29 21:16:58 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ int	init_mlx_data(t_mlx_data *data)
 	mlx_hook(data->mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press, data);
 	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release, data);
 	errno = 0;
+
+	data->scene.camera.right = (t_coordinates){1, 0, 0};
+	data->scene.camera.up = (t_coordinates){0, 1, 0};
+	data->scene.camera.vector = (t_coordinates){0, 0, -1};
+
 	return (0);
 }
 

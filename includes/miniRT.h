@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/28 22:18:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/29 23:48:34 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ typedef struct s_coordinates
 	float			z;
 }					t_coordinates;
 
+typedef struct s_quat
+{
+	float			r;
+	t_coordinates	v;
+}	t_quat;
+
 typedef struct s_rgb
 {
 	float			r;
@@ -116,6 +122,9 @@ typedef struct s_camera
 	t_coordinates	up;
 	t_coordinates	right;
 	int				fov;
+	float			pitch;
+	float			yaw;
+	t_quat			rotation;
 }					t_camera;
 
 typedef struct s_light
@@ -271,6 +280,12 @@ float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);
 float				vec3_dot(t_coordinates a, t_coordinates b);
 t_coordinates		vec3_cross(t_coordinates a, t_coordinates b);
+
+/* QUATERNION MATH */
+t_quat				quat_axis_rot(t_coordinates axis, float radians);
+t_quat				quat_set(float r, t_coordinates v);
+t_quat				quat_mult(t_quat a, t_quat b);
+t_coordinates		quat_rotate_point(t_coordinates p, t_quat q);
 
 /* COLOR MATH STUFF */
 t_rgb				color_scalar(t_rgb c, float scale);
