@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/30 13:03:45 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/30 15:55:07 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 {
 	t_rgb			color;
 	(void)scene;
-	t_coordinates	hit_normal;
+	t_coordinates	hit_normal = {0.0, 0.0, 0.0};
 	t_coordinates	light_dir;
 	float	light;
 	light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
@@ -141,18 +141,45 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	*/
 	if (hit.obj_type == OBJ_CUBE)
 	{
-		color.r = hit.coordinates.x;
-		color.g = hit.coordinates.y;
-		color.b = hit.coordinates.z;
-		hit_normal.x = 0.0;
-		hit_normal.y = 1.0;
-		hit_normal.z = 0.0;
+
+		if (fabs(hit.coordinates.x + 20) < 1e-6)
+			hit_normal = (t_coordinates){-1.0, 0.0, 0.0};
+		else if (fabs(hit.coordinates.x - 15) < EPSILON)
+			hit_normal = (t_coordinates){1.0, 0.0, 0.0};
+		else if (fabs(hit.coordinates.y + 20) < EPSILON)
+			hit_normal = (t_coordinates){0.0, -1.0, 0.0};
+		else if (fabs(hit.coordinates.y - 15) < EPSILON)
+			hit_normal = (t_coordinates){0.0, 1.0, 0.0};
+		else if (fabs(hit.coordinates.z + 20) < EPSILON)
+			hit_normal = (t_coordinates){0.0, 0.0, -1.0};
+		else if (fabs(hit.coordinates.z - 15) < EPSILON)
+			hit_normal = (t_coordinates){0.0, 0.0, 1.0};
+	
+		color.r = fabs(hit_normal.x);
+		color.g = fabs(hit_normal.y);
+		color.b = fabs(hit_normal.z);
 	}
 	else
 		return ((t_rgb){0, 255, 0,});
 	light = fmax(vec3_dot(hit_normal,light_dir), 0.);
 	color = color_scalar(color, light);
 	return (color);
+}
+
+t_ray calc_ray(t_pixel_uv uv)
+{
+	t_ray ray;
+	t_coordinates ray_dir_screen;
+
+	ray_dir_screen = (t_coordinates){uv.x, uv.y, 1};
+
+	ray.origin = (t_coordinates){100, 0, 0};
+	ray.dir.x = vec3_dot((t_coordinates){0, 0, -1}, ray_dir_screen);
+	ray.dir.y = vec3_dot((t_coordinates){0, 1, 0}, ray_dir_screen);
+	ray.dir.z = vec3_dot((t_coordinates){1, 0, 0}, ray_dir_screen);
+
+	ray.dir = vec3_normalize(ray.dir);
+	return (ray);
 }
 
 #if 1
@@ -165,10 +192,7 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	t_pixel_uv uv = (t_pixel_uv){(float)p.x / data->width, (float)(data->heigth - p.y) / data->heigth};
 	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
-	t_ray	ray;
-	ray.origin = (t_coordinates){0., 0., 100.};
-	ray.dir = (t_coordinates){uv.x, uv.y, -1.};
-	ray.dir = vec3_normalize(ray.dir);
+	t_ray	ray = calc_ray(uv);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
 	if (isinf(hit.dist))

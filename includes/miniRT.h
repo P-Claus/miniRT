@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/30 12:33:32 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/30 14:55:39 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
+# define EPSILON 0.000001
 
 /*	STRUCTURES	*/
 
