@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/28 22:24:40 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/30 13:03:45 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,15 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 	cube.min_x = -20;
 	cube.min_y = -20;
 	cube.min_z = -20;
+	cube.vector.x = 0.0;
+	cube.vector.y = 1.0;
+	cube.vector.z = 0.0;
 
 	hit.dist = INFINITY;
 	hit.obj_index = 0;
 	hit.obj_type = OBJ_NONE;
 	i = 0;
-	if (cube_hit(ray, cube, &dist) && dist > 0)
+	if (cube_hit(ray, &cube, &dist, &hit) && dist > 0)
 	{
 		if (dist < hit.dist)
 		{
@@ -114,11 +117,12 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 {
 	t_rgb			color;
+	(void)scene;
 	t_coordinates	hit_normal;
 	t_coordinates	light_dir;
 	float	light;
-
 	light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
+/*
 	if (hit.obj_type == OBJ_SPHERE)
 	{
 		color = scene.spheres[hit.obj_index].rgb;
@@ -133,6 +137,16 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	{
 		color = scene.cylinders[hit.obj_index].rgb;
 		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
+	}
+	*/
+	if (hit.obj_type == OBJ_CUBE)
+	{
+		color.r = hit.coordinates.x;
+		color.g = hit.coordinates.y;
+		color.b = hit.coordinates.z;
+		hit_normal.x = 0.0;
+		hit_normal.y = 1.0;
+		hit_normal.z = 0.0;
 	}
 	else
 		return ((t_rgb){0, 255, 0,});

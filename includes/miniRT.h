@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/28 16:53:29 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/30 12:33:32 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,8 @@ typedef struct s_cube
 	float	max_x;
 	float	max_y;
 	float	max_z;
+	t_coordinates	hit_c;
+	t_coordinates	vector;
 }				t_cube;
 
 typedef struct s_my_img
@@ -249,7 +251,7 @@ t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);
 /* CUBE UTILS */
-bool				cube_hit(t_ray ray, t_cube cube, float *dist);
+bool				cube_hit(t_ray ray, t_cube *cube, float *dist, t_hit_info *hit);
 
 /* VECTOR MATH STUFF */
 t_coordinates		vec3_sum(t_coordinates a, t_coordinates b);

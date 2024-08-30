@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:51:01 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/28 22:23:44 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/30 12:52:30 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ float	get_min(float t_max_x, float t_max_y, float t_max_z)
 		return (t_max_z);
 }
 
-bool	cube_hit(t_ray ray, t_cube cube, float *dist)
+bool	cube_hit(t_ray ray, t_cube *cube, float *dist, t_hit_info *hit)
 {
 	float	t_min_x;
 	float	t_max_x;
@@ -46,8 +46,8 @@ bool	cube_hit(t_ray ray, t_cube cube, float *dist)
 
 	if (ray.dir.x != 0.0) //the ray is not parallel to the xplane
 	{
-		t_min_x = (cube.min_x - ray.origin.x) / (ray.dir.x);
-		t_max_x = (cube.max_x - ray.origin.x) / (ray.dir.x);
+		t_min_x = (cube->min_x - ray.origin.x) / (ray.dir.x);
+		t_max_x = (cube->max_x - ray.origin.x) / (ray.dir.x);
 		if (t_min_x > t_max_x)
 		{
 			temp = t_min_x;
@@ -58,15 +58,15 @@ bool	cube_hit(t_ray ray, t_cube cube, float *dist)
 	//the ray is parallel to the x plane
 	else
 	{
-		if (ray.origin.x < cube.min_x || ray.origin.x > cube.max_x)
+		if (ray.origin.x < cube->min_x || ray.origin.x > cube->max_x)
 			return (false);
 		t_min_x = -INFINITY;
 		t_max_x = INFINITY;
 	}
 	if (ray.dir.y != 0.0)
 	{
-		t_min_y = (cube.min_y - ray.origin.y) / (ray.dir.y);
-		t_max_y = (cube.max_y - ray.origin.y) / (ray.dir.y);
+		t_min_y = (cube->min_y - ray.origin.y) / (ray.dir.y);
+		t_max_y = (cube->max_y - ray.origin.y) / (ray.dir.y);
 		if (t_min_y > t_max_y)
 		{
 			temp = t_min_y;
@@ -76,15 +76,15 @@ bool	cube_hit(t_ray ray, t_cube cube, float *dist)
 	}
 	else
 	{
-		if (ray.origin.y < cube.min_y || ray.origin.y > cube.max_y)
+		if (ray.origin.y < cube->min_y || ray.origin.y > cube->max_y)
 			return (false);
 		t_min_y = -INFINITY;
 		t_max_y = INFINITY;
 	}
 	if (ray.dir.z != 0.0)
 	{
-		t_min_z = (cube.min_z - ray.origin.z) / (ray.dir.z);
-		t_max_z = (cube.max_z - ray.origin.z) / (ray.dir.z);
+		t_min_z = (cube->min_z - ray.origin.z) / (ray.dir.z);
+		t_max_z = (cube->max_z - ray.origin.z) / (ray.dir.z);
 		if (t_min_z > t_max_z)
 		{
 			temp = t_min_z;
@@ -94,7 +94,7 @@ bool	cube_hit(t_ray ray, t_cube cube, float *dist)
 	}
 	else
 	{
-		if (ray.origin.z < cube.min_z || ray.origin.z > cube.max_z)
+		if (ray.origin.z < cube->min_z || ray.origin.z > cube->max_z)
 			return (false);
 		t_min_z = -INFINITY;
 		t_max_z = INFINITY;
@@ -108,5 +108,11 @@ bool	cube_hit(t_ray ray, t_cube cube, float *dist)
 
 	*dist = t_min > 0.0f ? t_min : t_max;
 
+	//calculate the coordinates of the hitpoint
+	hit->coordinates.x = (ray.origin.x + *dist) * ray.dir.x;
+	hit->coordinates.y = (ray.origin.y + *dist) * ray.dir.y;
+	hit->coordinates.z = (ray.origin.z + *dist) * ray.dir.z;
+
 	return (true);
 }
+
