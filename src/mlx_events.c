@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/08/30 00:18:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/30 15:06:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,23 @@ void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 {
 	t_quat	q1;
 	t_quat	q2;
+	float	yaw_diff;
+	float	pitch_diff;
 
-	camera->yaw = mouse_diff.x * DEG2RAD * 0.005 * frame_time;
-	camera->pitch = mouse_diff.y * DEG2RAD * 0.005 * frame_time;
-	q1 = quat_axis_rot(camera->right, camera->pitch);
-	q2 = quat_axis_rot((t_coordinates){0, 1, 0}, camera->yaw);
+	yaw_diff = mouse_diff.x * DEG2RAD * 0.005 * frame_time;
+	pitch_diff = mouse_diff.y * DEG2RAD * 0.005 * frame_time;
+	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD) || 90 * DEG2RAD <= camera->pitch + pitch_diff)
+		pitch_diff = 0;
+	camera->yaw += yaw_diff;
+	camera->pitch += pitch_diff;
+	q1 = quat_axis_rot(camera->right, pitch_diff);
+	q2 = quat_axis_rot((t_coordinates){0, 1, 0}, yaw_diff);
 	camera->rotation = quat_mult(q1, q2);
-	camera->up = quat_rotate_point(camera->up, camera->rotation);
-	camera->right = quat_rotate_point(camera->right, camera->rotation);
-	camera->vector = quat_rotate_point(camera->vector, camera->rotation);
+
+	camera->vector = vec3_normalize(quat_rotate_point(camera->vector, camera->rotation));
+	camera->up = (t_coordinates){0, 1, 0};
+	camera->right = vec3_normalize(vec3_cross(camera->vector, camera->up));
+	camera->up = vec3_normalize(vec3_cross(camera->right, camera->vector));
 }
 
 void	mouse_drag(t_mlx_data *data)
@@ -50,7 +58,7 @@ void	move_camera(t_camera *camera, long key_state, float frame_time)
 		return ;
 	move_dir.x = ((key_state & KEY_D) > 0) - ((key_state & KEY_A) > 0);
 	move_dir.y = ((key_state & KEY_E) > 0) - ((key_state & KEY_Q) > 0);
-	move_dir.z = ((key_state & KEY_S) > 0) - ((key_state & KEY_W) > 0);
+	move_dir.z = ((key_state & KEY_W) > 0) - ((key_state & KEY_S) > 0);
 	//move_dir = vec3_normalize(move_dir);
 
 	world_move_dir.x = vec3_dot(camera->right, move_dir);
@@ -58,7 +66,7 @@ void	move_camera(t_camera *camera, long key_state, float frame_time)
 	world_move_dir.z = vec3_dot(camera->vector, move_dir);
 	world_move_dir = vec3_normalize(world_move_dir);
 
-	camera->coordinates = vec3_sum(camera->coordinates, vec3_scalar(move_dir, 0.1 * frame_time));
+	camera->coordinates = vec3_sum(camera->coordinates, vec3_scalar(world_move_dir, 0.1 * frame_time));
 }
 
 int	handle_no_event(t_mlx_data *data)
