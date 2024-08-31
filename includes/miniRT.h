@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 12:43:15 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 18:46:13 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@
 # include <sys/time.h>
 
 # ifndef SCREEN_WIDTH
-#  define SCREEN_WIDTH 860
+#  define SCREEN_WIDTH 1600
 # endif
 
 # ifndef SCREEN_HEIGHT
-#  define SCREEN_HEIGHT 540
+#  define SCREEN_HEIGHT 900
 # endif
 
 # define DEG2RAD (M_PI / 180.)
@@ -45,6 +45,7 @@
 # define KEY_D (1 << 5)
 # define KEY_Q (1 << 6)
 # define KEY_E (1 << 7)
+# define KEY_CTRL (1 << 8)
 
 /* MOUSE_INPUT_STATE BIT MASKS */
 # define BTN_LEFT (1 << 0)
@@ -216,6 +217,7 @@ typedef struct s_mlx_data
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
 	int				full_res;
+	t_hit_info		selected;
 }	t_mlx_data;
 
 /*	PARSING	*/
@@ -262,6 +264,7 @@ bool				solve_quadratic(float a, float b, float c, float *dist);
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
+t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
