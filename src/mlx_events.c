@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/08/30 15:06:07 by marvin           ###   ########.fr       */
+/*   Updated: 2024/08/31 10:56:16 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 		pitch_diff = 0;
 	camera->yaw += yaw_diff;
 	camera->pitch += pitch_diff;
-	q1 = quat_axis_rot(camera->right, pitch_diff);
-	q2 = quat_axis_rot((t_coordinates){0, 1, 0}, yaw_diff);
+	q1 = quat_axis_rot((t_coordinates){0, 1, 0}, camera->yaw);
+	q2 = quat_axis_rot((t_coordinates){1, 0, 0}, camera->pitch);
 	camera->rotation = quat_mult(q1, q2);
 
-	camera->vector = vec3_normalize(quat_rotate_point(camera->vector, camera->rotation));
-	camera->up = (t_coordinates){0, 1, 0};
-	camera->right = vec3_normalize(vec3_cross(camera->vector, camera->up));
-	camera->up = vec3_normalize(vec3_cross(camera->right, camera->vector));
+	camera->vector = vec3_normalize(quat_rotate_point((t_coordinates){0, 0, -1}, camera->rotation));
+	camera->right = vec3_normalize(quat_rotate_point((t_coordinates){1, 0, 0}, camera->rotation));
+	camera->up = vec3_normalize(quat_rotate_point((t_coordinates){0, 1, 0}, camera->rotation));
 }
 
 void	mouse_drag(t_mlx_data *data)
