@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:59:20 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/25 12:32:54 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 13:58:45 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,68 @@ static void	init_cylinder(t_scene_info *scene_info,
 	}
 }
 
+static void	init_cone(t_scene_info *scene_info, t_identifier_count *id_count)
+{
+	int	iter;
+
+	iter = 0;
+	while (iter < id_count->co_count)
+	{
+		scene_info->cones[iter].rgb.r = 0;
+		scene_info->cones[iter].rgb.g = 0;
+		scene_info->cones[iter].rgb.b = 0;
+		scene_info->cones[iter].height = 0;
+		scene_info->cones[iter].diameter = 0;
+		scene_info->cones[iter].coordinates.x = 0;
+		scene_info->cones[iter].coordinates.x = 0;
+		scene_info->cones[iter].coordinates.x = 0;
+		scene_info->cones[iter].vector.x = 0;
+		scene_info->cones[iter].vector.y = 0;
+		scene_info->cones[iter].vector.z = 0;
+		iter++;
+	}
+}
+
+int	malloc_check(t_scene_info *scene_info)
+{
+	if (!scene_info->spheres)
+	{
+		free(scene_info->spheres);
+		return (1);
+	}
+	if (!scene_info->planes)
+	{
+		free(scene_info->spheres);
+		free(scene_info->planes);
+		return (1);
+	}
+	if (!scene_info->cylinders)
+	{
+		free(scene_info->spheres);
+		free(scene_info->planes);
+		free(scene_info->cylinders);
+		return (1);
+		
+	}
+	if (!scene_info->cones)
+	{
+		free(scene_info->spheres);
+		free(scene_info->planes);
+		free(scene_info->cylinders);
+		free(scene_info->cones);
+		return (1);
+	}
+	return (0);
+}
 static int	allocate_shape_arrays(t_scene_info *scene_info,
 		t_identifier_count *id_count)
 {
 	scene_info->spheres = malloc(id_count->sp_count * sizeof(t_sphere));
 	scene_info->planes = malloc(id_count->pl_count * sizeof(t_plane));
 	scene_info->cylinders = malloc(id_count->cy_count * sizeof(t_cylinder));
-	if (!scene_info->spheres || !scene_info->planes || !scene_info->cylinders)
-	{
-		free(scene_info->spheres);
-		free(scene_info->planes);
-		free(scene_info->cylinders);
-		return (1);
-	}
+	scene_info->cones = malloc(id_count->co_count * sizeof(t_cone));
+	if (malloc_check(scene_info))
+		exit_handler("Malloc error\n");
 	return (0);
 }
 
@@ -127,9 +176,11 @@ void	init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count)
 	scene_info->nb_of_spheres = id_count->sp_count;
 	scene_info->nb_of_planes = id_count->pl_count;
 	scene_info->nb_of_cylinders = id_count->cy_count;
+	scene_info->nb_of_cones = id_count->co_count;
 	if (allocate_shape_arrays(scene_info, id_count) == 1)
 		return ;
 	init_sphere(scene_info, id_count);
 	init_plane(scene_info, id_count);
 	init_cylinder(scene_info, id_count);
+	init_cone(scene_info, id_count);
 }

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:50:03 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 13:59:41 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,34 @@ void	print_cylinders(t_scene_info *scene_info, int iter)
 			scene_info->cylinders[iter].rgb.r,
 			scene_info->cylinders[iter].rgb.g,
 			scene_info->cylinders[iter].rgb.b);
+		printf(" --------------------------------------------- \n");
+		iter++;
+	}
+}
+
+void	print_cones(t_scene_info *scene_info, int iter)
+{
+	while (iter < scene_info->nb_of_cones)
+	{
+		printf(" --------------------------------------------- \n");
+		printf("|                   Cone #%d                   |\n", iter);
+		printf("|                                             |\n");
+		printf("|       Coordinates: %5.1f,%5.1f,%5.1f        |\n",
+			scene_info->cones[iter].coordinates.x,
+			scene_info->cones[iter].coordinates.y,
+			scene_info->cones[iter].coordinates.z);
+		printf("|     Orientation vector: %4.1f,%4.1f,%4.1f      |\n",
+			scene_info->cones[iter].vector.x,
+			scene_info->cones[iter].vector.y,
+			scene_info->cones[iter].vector.z);
+		printf("|           Cylinder diameter: %5.2f          |\n",
+			scene_info->cones[iter].diameter);
+		printf("|            Cylinder height: %5.2f           |\n",
+			scene_info->cones[iter].height);
+		printf("|       RGB: %8f,%8f,%8f       |\n",
+			scene_info->cones[iter].rgb.r,
+			scene_info->cones[iter].rgb.g,
+			scene_info->cones[iter].rgb.b);
 		printf(" --------------------------------------------- \n");
 		iter++;
 	}

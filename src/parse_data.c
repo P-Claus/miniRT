@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:35:09 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/17 21:40:12 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 13:50:23 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ int	check_shape_identifier(t_scene_info *scene_info, char *string,
 	else if (string[0] == 'c' && string[1] == 'y')
 	{
 		if (parse_cylinder(scene_info, string, id_count) == 1)
+			return (1);
+	}
+	else if (string[0] == 'c' && string[1] == 'o')
+	{
+		if (parse_cone(scene_info, string, id_count) == 1)
 			return (1);
 	}
 	return (0);

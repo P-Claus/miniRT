@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:50:13 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/25 12:33:11 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 13:46:01 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,5 @@ void	print_parsing_result(t_scene_info *scene_info)
 	print_spheres(scene_info);
 	print_planes(scene_info);
 	print_cylinders(scene_info, 0);
+	print_cones(scene_info, 0);
 }

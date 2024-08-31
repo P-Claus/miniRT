@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/29 23:48:34 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 13:45:07 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,15 @@ typedef struct s_disk
 	t_rgb			rgb;
 }					t_disk;
 
+typedef struct	s_cone
+{
+	t_coordinates	coordinates;
+	t_coordinates	vector;
+	float			diameter;
+	float			height;
+	t_rgb			rgb;
+}					t_cone;
+
 typedef struct s_scene_info
 {
 	t_a_lighting	a_lighting;
@@ -173,9 +182,11 @@ typedef struct s_scene_info
 	t_sphere		*spheres;
 	t_plane			*planes;
 	t_cylinder		*cylinders;
+	t_cone			*cones;
 	int				nb_of_spheres;
 	int				nb_of_planes;
 	int				nb_of_cylinders;
+	int				nb_of_cones;
 }					t_scene_info;
 
 typedef struct s_identifier_count
@@ -186,6 +197,7 @@ typedef struct s_identifier_count
 	int				sp_count;
 	int				pl_count;
 	int				cy_count;
+	int				co_count;
 }					t_identifier_count;
 
 typedef struct s_my_img
@@ -226,6 +238,8 @@ int					parse_light(t_scene_info *scene_info, char *string);
 int					parse_sphere(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
 int					parse_plane(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
 int					parse_cylinder(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
+int					parse_cone(t_scene_info *scene_info, char *string,
+						t_identifier_count *id_count);
 
 /*	PARSE UTILS	*/
 int					count_items_in_split(char **split,
@@ -241,6 +255,7 @@ void				print_parsing_result(t_scene_info *scene_info);
 void				print_spheres(t_scene_info *scene_info);
 void				print_planes(t_scene_info *scene_info);
 void				print_cylinders(t_scene_info *scene_info, int iter);
+void				print_cones(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
 
