@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/31 20:04:17 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 21:57:50 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 	}
 	while(i < scene.nb_of_cones)
 	{
-		printf("test\n");
 		if (cone_hit(ray, scene.cones[i], &dist) && dist > 0)
 		{
 			if (dist < hit.dist)
