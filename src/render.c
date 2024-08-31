@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/29 21:37:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 13:13:05 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p);
 
 void	render(t_mlx_data *data)
 {
-	struct timeval	start;
-	struct timeval	end;
 	t_pixel_coord	p;
 
-	gettimeofday(&start, NULL);
 	p.y = 0;
 	while (p.y < data->heigth)
 	{
@@ -34,9 +31,49 @@ void	render(t_mlx_data *data)
 	}
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
 	errno = 0;
-	gettimeofday(&end, NULL);
-	data->frame_time = frame_time(start, end);
-	printf("frametime: %.3f ms\n", data->frame_time);
+}
+
+void	set_pixels(t_mlx_data *data, int color, t_pixel_coord p, t_pixel_coord dp)
+{
+	int				j;
+	int				i;
+
+	p.x -= dp.x / 2;
+	p.y -= dp.y / 2;
+	j = 0;
+	while (j < dp.y)
+	{
+		i = 0;
+		while (i < dp.x)
+		{
+			fast_pixel_put(data, (t_pixel_coord){p.x + i, p.y + j}, color);
+			i++;
+		}
+		j++;
+	}
+}
+
+void	render_low_res(t_mlx_data *data, int dx, int dy)
+{
+	t_pixel_coord	p;
+	int				pixel_color;
+
+	if (dx < 1 || dy < 1)
+		return (render_low_res(data, 2, 2));
+	p.y = dy / 2;
+	while (p.y < data->heigth)
+	{
+		p.x = dx / 2;
+		while (p.x < data->width)
+		{
+			pixel_color = per_pixel(data, p);
+			set_pixels(data, pixel_color, p, (t_pixel_coord){dx, dy});
+			p.x += dx;
+		}
+		p.y += dy;
+	}
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
+	errno = 0;
 }
 
 t_hit_info	cast_ray(t_ray ray, t_scene_info scene)

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/29 23:48:34 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 12:43:15 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@
 # define RAD2DEG (180. / M_PI)
 
 /* KEY_INPUT_STATE BIT MASKS */
-# define KEY_ESCAPE (1 << 0)
-# define KEY_SPACE (1 << 1)
 # define KEY_W (1 << 2)
 # define KEY_A (1 << 3)
 # define KEY_S (1 << 4)
@@ -53,6 +51,13 @@
 # define BTN_RIGHT (1 << 1)
 
 /*	STRUCTURES	*/
+
+typedef enum e_render_state
+{
+	REND_LOW,
+	REND_HIGH,
+	REND_DONE
+}	t_render_state;
 
 typedef enum e_object_type
 {
@@ -210,6 +215,7 @@ typedef struct s_mlx_data
 	long			key_input_state;
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
+	int				full_res;
 }	t_mlx_data;
 
 /*	PARSING	*/
@@ -304,5 +310,6 @@ int					handle_window_destroy(t_mlx_data *data);
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
 void				render(t_mlx_data *data);
+void				render_low_res(t_mlx_data *data, int dx, int dy);
 
 #endif
