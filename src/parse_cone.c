@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 12:18:52 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 13:52:46 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 14:31:53 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	parse_cone(t_scene_info *scene_info, char *string,
 	split = ft_split(string, ' ');
 	id_count->co_count--;
 	if (count_items_in_split(split, 6) == 1
-		|| parse_coordinates(&scene_info->cones[id_count->co_count].coordinates,
+		|| parse_coordinates(&scene_info->cones[id_count->co_count].apex,
 			split[1]) == 1
 		|| parse_orientation_vector(&scene_info->cones[id_count->co_count].vector,
 			split[2], -1) == 1 || parse_diameter(scene_info, split[3],

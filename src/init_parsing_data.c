@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:59:20 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 13:58:45 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 16:12:07 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ static void	init_cone(t_scene_info *scene_info, t_identifier_count *id_count)
 		scene_info->cones[iter].rgb.b = 0;
 		scene_info->cones[iter].height = 0;
 		scene_info->cones[iter].diameter = 0;
-		scene_info->cones[iter].coordinates.x = 0;
-		scene_info->cones[iter].coordinates.x = 0;
-		scene_info->cones[iter].coordinates.x = 0;
+		scene_info->cones[iter].apex.x = 0;
+		scene_info->cones[iter].apex.x = 0;
+		scene_info->cones[iter].apex.x = 0;
 		scene_info->cones[iter].vector.x = 0;
 		scene_info->cones[iter].vector.y = 0;
 		scene_info->cones[iter].vector.z = 0;

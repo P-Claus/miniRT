@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/29 21:37:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/08/31 20:04:17 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,20 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
+	while(i < scene.nb_of_cones)
+	{
+		printf("test\n");
+		if (cone_hit(ray, scene.cones[i], &dist) && dist > 0)
+		{
+			if (dist < hit.dist)
+			{
+				hit.dist = dist;
+				hit.obj_type = i;
+				hit.obj_type = OBJ_CONE;
+			}
+		}
+		i++;
+	}
 	if (!isinf(hit.dist))
 		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
 	return (hit);
@@ -118,6 +132,11 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	{
 		color = scene.cylinders[hit.obj_index].rgb;
 		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
+	}
+	else if (hit.obj_type == OBJ_CONE)
+	{
+		color = scene.cones[hit.obj_index].rgb;
+		hit_normal = cone_normal(hit, scene.cones[hit.obj_index]);
 	}
 	else
 		return ((t_rgb){0, 0, 0,});

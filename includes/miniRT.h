@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 13:45:07 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 20:10:37 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ typedef enum e_object_type
 	OBJ_NONE,
 	OBJ_SPHERE,
 	OBJ_CYLINDER,
-	OBJ_PLANE
+	OBJ_PLANE,
+	OBJ_CONE
 }	t_object_type;
 
 
@@ -167,7 +168,7 @@ typedef struct s_disk
 
 typedef struct	s_cone
 {
-	t_coordinates	coordinates;
+	t_coordinates	apex;
 	t_coordinates	vector;
 	float			diameter;
 	float			height;
@@ -282,6 +283,11 @@ bool				plane_hit(t_ray ray, t_plane plane, float *dist);
 /* CYLINDER UTILS */
 bool				cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist);
 t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
+
+/* CONE UTILS */
+t_coordinates cone_normal(t_hit_info hit, t_cone cone);
+bool	cone_hit(t_ray ray, t_cone cone, float *dist);
+
 
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);
