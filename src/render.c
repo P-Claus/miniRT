@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/01 17:10:19 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 18:21:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 			if (dist < hit.dist)
 			{
 				hit.dist = dist;
-				hit.obj_type = i;
+				hit.obj_index = i;
 				hit.obj_type = OBJ_CONE;
 			}
 		}
