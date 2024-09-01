@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/31 21:57:50 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/01 17:10:19 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
+	i = 0;
 	while(i < scene.nb_of_cones)
 	{
 		if (cone_hit(ray, scene.cones[i], &dist) && dist > 0)

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 22:04:04 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/01 16:55:48 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,60 +18,30 @@ bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 	t_coordinates	apex_ray_o_v;//the length of the apex to the origin of the ray
 
 
-	cone.vector = vec3_normalize(cone.vector);
-	(void)dist;
 	float a;
 	float b;
 	float c;
-	float 	t_min;
-	float	t_max;
 
 	apex_ray_o_v = vec3_diff(ray.origin, cone.apex);
 
 	a = pow(vec3_dot(ray.dir, cone.vector), 2) - pow(cos(10.0f * DEG2RAD), 2);
 	b = 2 * ((vec3_dot(ray.dir, cone.vector) * vec3_dot(apex_ray_o_v, cone.vector)) - vec3_dot(ray.dir, apex_ray_o_v) * pow(cos(10.0f * DEG2RAD), 2));
 	c = pow(vec3_dot(apex_ray_o_v, cone.vector), 2) - vec3_dot(apex_ray_o_v, apex_ray_o_v) * pow(cos(10.0f * DEG2RAD), 2);
-
-	float discriminant = b * b - 4 * a * c;
-
-	/*
-	printf("a: %f, b: %f, c:%f, discriminant: %f\n", a, b, c, discriminant);
-	printf("apex_ray_o_v : %f, %f, %f\n", apex_ray_o_v.x, apex_ray_o_v.y, apex_ray_o_v.z);
-	printf("cone vector: %f , %f, %f\n", cone.vector.x, cone.vector.y, cone.vector.z);
-	printf("Ray origin: %f, %f, %f\n", ray.origin.x, ray.origin.y, ray.origin.z);
-	*/
-	if (discriminant < 0)
-	{
-		printf("It's false\n");
+	if (!solve_quadratic(a, b, c, dist))
 		return (false);
-	}
-	else
-	{
-		t_min = (-b - sqrt(discriminant)) / (2 * a);
-		t_max = (-b + sqrt(discriminant)) / (2 * a);
-		if (t_min > t_max)
-		{
-			float temp;
-			temp = t_min;
-			t_min = t_max;
-			t_max = temp;
-		}
-	}
-
-	if (t_min < 0 && t_max < 0)
+	float	t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist), vec3_neg(apex_ray_o_v)));
+	if (t <= 0)
 		return (false);
-
-	float t = (t_min < 0) ? t_max : t_min;
-
-	/*
-	t_coordinates intersection = vec3_sum(ray.origin, vec3_scalar(ray.dir, t));
-	printf("Intersection at: %f\n", t);
-	printf("The intersection point: %f, %f, %f\n", intersection.x, intersection.y, intersection.z);
-*/	
-	*dist = t;
-
+	else if (t > cone.height)
+	{
+		t_disk	cap;
+		cap.vector = cone.vector;
+		cap.rgb = cone.rgb;
+		cap.diameter = cone.diameter;
+		cap.coordinates = vec3_sum(cone.apex,vec3_scalar(cone.vector, cone.height));
+		return (disk_hit(ray, cap, dist));
+	}
 	return (true);
-
 }
 
 t_coordinates cone_normal(t_hit_info hit, t_cone cone)
