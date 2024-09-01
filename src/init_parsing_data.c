@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:59:20 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 16:48:35 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 18:14:16 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ static void	init_cylinder(t_scene_info *scene_info,
 		scene_info->cylinders[iter].height = 0;
 		scene_info->cylinders[iter].diameter = 0;
 		scene_info->cylinders[iter].coordinates.x = 0;
-		scene_info->cylinders[iter].coordinates.x = 0;
-		scene_info->cylinders[iter].coordinates.x = 0;
+		scene_info->cylinders[iter].coordinates.y = 0;
+		scene_info->cylinders[iter].coordinates.z = 0;
 		scene_info->cylinders[iter].vector.x = 0;
 		scene_info->cylinders[iter].vector.y = 0;
 		scene_info->cylinders[iter].vector.z = 0;
