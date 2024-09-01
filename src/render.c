@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/01 18:21:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 21:24:50 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
-	if (!isinf(hit.dist))
+	if (hit.obj_type != OBJ_NONE)
 		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
 	return (hit);
 }
@@ -176,7 +176,7 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	ray = calc_ray_dir(data->scene.camera, uv);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
-	if (isinf(hit.dist))
+	if (hit.obj_type == OBJ_NONE)
 		return (0);
 
 	t_rgb color_coord = color_from_hit(hit, data->scene);
