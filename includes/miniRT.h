@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 18:46:13 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 13:02:52 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ typedef struct s_mlx_data
 	float			frame_time;
 	t_scene_info	scene;
 	int				width;
-	int				heigth;
+	int				height;
 	float			aspect;
 	long			key_input_state;
 	int				mouse_input_state;

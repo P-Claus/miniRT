@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/08/31 17:33:06 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 12:53:29 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	render(t_mlx_data *data)
 	t_pixel_coord	p;
 
 	p.y = 0;
-	while (p.y < data->heigth)
+	while (p.y < data->height)
 	{
 		p.x = 0;
 		while (p.x < data->width)
@@ -61,7 +61,7 @@ void	render_low_res(t_mlx_data *data, int dx, int dy)
 	if (dx < 1 || dy < 1)
 		return (render_low_res(data, 2, 2));
 	p.y = dy / 2;
-	while (p.y < data->heigth)
+	while (p.y < data->height)
 	{
 		p.x = dx / 2;
 		while (p.x < data->width)
@@ -171,7 +171,7 @@ t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 	float			scale;
 
 	scale = tan(DEG2RAD * camera.fov * 0.5);
-	uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->heigth - p.y - 0.5) / data->heigth};
+	uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->height - p.y - 0.5) / data->height};
 	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
 	ray.origin = camera.coordinates;

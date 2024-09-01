@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/29 21:16:58 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/01 13:03:33 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ int	init_mlx_data(t_mlx_data *data)
 {
 	memset(data, 0, sizeof(t_mlx_data));
 	data->width = SCREEN_WIDTH;
-	data->heigth = SCREEN_HEIGHT;
-	data->aspect = data->width / (float)data->heigth;
+	data->height = SCREEN_HEIGHT;
+	data->aspect = data->width / (float)data->height;
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return (1);
 	data->mlx_win = mlx_new_window(data->mlx,
-			data->width, data->heigth, "miniRT");
+			data->width, data->height, "miniRT");
 	if (!data->mlx_win)
 		return (free_mlx(data), 1);
-	data->render.img = mlx_new_image(data->mlx, data->width, data->heigth);
+	data->render.img = mlx_new_image(data->mlx, data->width, data->height);
 	if (!data->render.img)
 		return (free_mlx(data), 1);
 	data->render.addr = mlx_get_data_addr(data->render.img,
