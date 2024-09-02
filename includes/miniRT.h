@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 12:25:30 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 18:15:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 #  define SCREEN_HEIGHT 900
 # endif
 
-# define MENU_WIDTH 300
+# define MENU_WIDTH 240
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
@@ -61,6 +61,13 @@ typedef enum e_render_state
 	REND_HIGH,
 	REND_DONE
 }	t_render_state;
+
+typedef enum e_menu_draw_state
+{
+	MENU_NO_SHOW,
+	MENU_SHOW,
+	MENU_DRAWN
+}	t_menu_draw_state;
 
 typedef enum e_object_type
 {
@@ -215,7 +222,7 @@ typedef struct s_ui_viewport
 
 typedef struct s_ui_menu
 {
-	bool			show;
+	int				show;
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;

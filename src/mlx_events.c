@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/02 12:26:58 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 16:01:01 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ int	handle_no_event(t_mlx_data *data)
 		gettimeofday(&start, NULL);
 		if (data->full_res == REND_HIGH)
 		{
-			data->menu.show = false;
+			data->menu.show = MENU_NO_SHOW;
 			data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
 			printf("Rendering scene ...\n");
 			render(data, data->full_render);
@@ -191,13 +191,16 @@ int	handle_no_event(t_mlx_data *data)
 			return (0);
 		}
 		check_input_states(data);
+		if (data->menu.show == MENU_SHOW)
+		{
+			mlx_put_image_to_window(data->mlx, data->mlx_win, data->menu.bg.img, data->menu.pos.x, data->menu.pos.y);
+			mlx_string_put(data->mlx, data->mlx_win, data->menu.pos.x + data->menu.size.x / 2 - 4 * 4, data->menu.pos.y + 10 + 5, 0x00CCCCCC, "MENU");
+			data->menu.show = MENU_DRAWN;
+		}
 		if (!data->menu.show)
 			render_low_res(data, data->full_render, 5, 5);
 		else
-		{
 			render_low_res(data, data->viewport, 5, 5);
-			mlx_put_image_to_window(data->mlx, data->mlx_win, data->menu.bg.img, data->menu.pos.x, data->menu.pos.y);
-		}
 		gettimeofday(&end, NULL);
 		data->frame_time = frame_time(start, end);
 		image_add_frametime(data);
@@ -237,7 +240,7 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 	else if (!data->key_input_state && !data->mouse_input_state && keysym == XK_r)
 		data->full_res = !(data->full_res);
 	else if (keysym == XK_m && !data->full_res)
-		data->menu.show ^= true;
+		data->menu.show  = !(data->menu.show);
 	return (0);
 }
 
@@ -292,7 +295,7 @@ void	select_obj(t_mlx_data *data)
 	}
 	data->selected = hit;
 	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
-	data->menu.show = true;
+	data->menu.show = MENU_SHOW;
 }
 
 int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)

@@ -6,38 +6,40 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 12:17:08 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 17:50:45 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-int	init_ui_viewport(void *mlx, t_ui_viewport *ui_elem, t_pixel_coord pos, t_pixel_coord size)
+int	init_image(t_mlx_data *data, t_my_img *img, t_pixel_coord size)
+{
+	img->img = mlx_new_image(data->mlx, size.x, size.y);
+	if (!img->img)
+		return (1);
+	img->addr = mlx_get_data_addr(img->img,
+		&img->bpp, &img->line_len, &img->endian);
+	return (0);
+}
+
+int	init_ui_viewport(t_mlx_data *data, t_ui_viewport *ui_elem, t_pixel_coord pos, t_pixel_coord size)
 {
 	ui_elem->pos = pos;
 	ui_elem->size = size;
 	ui_elem->aspect = size.x / (float)size.y;
 
-	ui_elem->render.img = mlx_new_image(mlx, size.x, size.y);
-	if (!ui_elem->render.img)
-		return (1);
-	ui_elem->render.addr = mlx_get_data_addr(ui_elem->render.img,
-		&ui_elem->render.bpp, &ui_elem->render.line_len, &ui_elem->render.endian);
-	return (0);
+	return (init_image(data, &ui_elem->render, size));
 }
 
-int	init_menu(void *mlx, t_ui_menu *menu)
+int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 {
 	menu->size = (t_pixel_coord){MENU_WIDTH, SCREEN_HEIGHT};
-	menu->bg.img = mlx_new_image(mlx, MENU_WIDTH, SCREEN_HEIGHT);
-
 	menu->pos.x = SCREEN_WIDTH - MENU_WIDTH;
 	menu->pos.y = 0;
-	if (!menu->bg.img)
+	menu->show = true;
+	if (init_image(data, &menu->bg, menu->size))
 		return (1);
-	menu->bg.addr = mlx_get_data_addr(menu->bg.img,
-		&menu->bg.bpp, &menu->bg.line_len, &menu->bg.endian);
-	//memset(menu->bg.addr, 0, MENU_WIDTH * SCREEN_HEIGHT * menu->bg.bpp / 8);
+	memset(menu->bg.addr, 0x00282828, menu->size.x * menu->size.y * 4);
 	return (0);
 }
 
@@ -53,11 +55,11 @@ int	init_mlx_data(t_mlx_data *data)
 	if (!data->mlx_win)
 		return (free_mlx(data), 1);
 
-	if (init_ui_viewport(data->mlx, &data->full_render, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH, SCREEN_HEIGHT}))
+	if (init_ui_viewport(data, &data->full_render, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH, SCREEN_HEIGHT}))
 		return (free_mlx(data), 1);
-	if (init_ui_viewport(data->mlx, &data->viewport, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH - MENU_WIDTH, SCREEN_HEIGHT}))
+	if (init_ui_viewport(data, &data->viewport, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH - MENU_WIDTH, SCREEN_HEIGHT}))
 		return (free_mlx(data), 1);
-	if (init_menu(data->mlx, &data->menu))
+	if (init_menu(data, &data->menu))
 		return (free_mlx(data), 1);
 
 	mlx_loop_hook(data->mlx, handle_no_event, data);
