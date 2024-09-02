@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/02 16:01:01 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 20:36:13 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,11 +192,7 @@ int	handle_no_event(t_mlx_data *data)
 		}
 		check_input_states(data);
 		if (data->menu.show == MENU_SHOW)
-		{
-			mlx_put_image_to_window(data->mlx, data->mlx_win, data->menu.bg.img, data->menu.pos.x, data->menu.pos.y);
-			mlx_string_put(data->mlx, data->mlx_win, data->menu.pos.x + data->menu.size.x / 2 - 4 * 4, data->menu.pos.y + 10 + 5, 0x00CCCCCC, "MENU");
-			data->menu.show = MENU_DRAWN;
-		}
+			menu_draw(data, &data->menu);
 		if (!data->menu.show)
 			render_low_res(data, data->full_render, 5, 5);
 		else

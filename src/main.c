@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 17:50:45 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 22:13:52 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 	menu->size = (t_pixel_coord){MENU_WIDTH, SCREEN_HEIGHT};
 	menu->pos.x = SCREEN_WIDTH - MENU_WIDTH;
 	menu->pos.y = 0;
-	menu->show = true;
 	if (init_image(data, &menu->bg, menu->size))
 		return (1);
 	memset(menu->bg.addr, 0x00282828, menu->size.x * menu->size.y * 4);
+	menu_init_pages(data, menu);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 18:15:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 22:29:04 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,12 +220,58 @@ typedef struct s_ui_viewport
 	float			aspect;
 }	t_ui_viewport;
 
+typedef enum e_ui_menu_elem_type
+{
+	UI_MENU_SPACE,
+	UI_MENU_TEXT,
+	UI_MENU_BTN,
+	UI_MENU_NBOX,
+	UI_MENU_END
+}	t_ui_menu_elem_type;
+
+typedef enum e_ui_menu_page_type
+{
+	UI_MENU_PAGE_HOME,
+	UI_MENU_PAGE_END,
+	UI_MENU_PAGE_SELECT,
+	UI_MENU_PAGE_ADD,
+	UI_MENU_PAGE_REMOVE,
+	UI_MENU_PAGE_OBJ_SPHERE,
+	UI_MENU_PAGE_OBJ_CYLINDER,
+	UI_MENU_PAGE_OBJ_PLANE,
+}	t_ui_menu_page_type;
+
+typedef struct s_mlx_data t_mlx_data;
+typedef struct s_ui_menu_page t_ui_menu_page;
+typedef struct s_ui_menu t_ui_menu;
+typedef struct s_ui_menu_elem
+{
+	t_ui_menu_elem_type	type;
+	char				*str;
+	t_ui_menu_page		*page;
+	int					index;
+	t_pixel_coord		page_pos;
+	int					(*draw)(struct s_ui_menu_elem *self, t_mlx_data *data);
+	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
+}	t_ui_menu_elem;
+
+typedef struct s_ui_menu_page
+{
+	char			*title;
+	t_ui_menu_elem	*elements;
+	t_ui_menu		*menu;
+	t_pixel_coord	menu_pos;
+	t_pixel_coord	size;
+	int				scroll;
+}	t_ui_menu_page;
+
 typedef struct s_ui_menu
 {
 	int				show;
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
+	t_ui_menu_page	*pages;
 }	t_ui_menu;
 
 typedef struct s_mlx_data
@@ -338,5 +384,9 @@ int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
 void				render(t_mlx_data *data, t_ui_viewport ui);
 void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int dx, int dy);
+
+/* MENU UTILS */
+int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
+int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
 
 #endif
