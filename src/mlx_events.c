@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/08/31 18:53:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 12:26:58 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,16 +181,23 @@ int	handle_no_event(t_mlx_data *data)
 		gettimeofday(&start, NULL);
 		if (data->full_res == REND_HIGH)
 		{
+			data->menu.show = false;
 			data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
 			printf("Rendering scene ...\n");
-			render(data);
+			render(data, data->full_render);
 			gettimeofday(&end, NULL);
 			printf("Rendered in: %.3f ms\n", frame_time(start, end));
 			data->full_res = REND_DONE;
 			return (0);
 		}
 		check_input_states(data);
-		render_low_res(data, 5, 5);
+		if (!data->menu.show)
+			render_low_res(data, data->full_render, 5, 5);
+		else
+		{
+			render_low_res(data, data->viewport, 5, 5);
+			mlx_put_image_to_window(data->mlx, data->mlx_win, data->menu.bg.img, data->menu.pos.x, data->menu.pos.y);
+		}
 		gettimeofday(&end, NULL);
 		data->frame_time = frame_time(start, end);
 		image_add_frametime(data);
@@ -229,6 +236,8 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 		data->full_res = REND_LOW;
 	else if (!data->key_input_state && !data->mouse_input_state && keysym == XK_r)
 		data->full_res = !(data->full_res);
+	else if (keysym == XK_m && !data->full_res)
+		data->menu.show ^= true;
 	return (0);
 }
 
@@ -266,9 +275,15 @@ char	*get_obj_name(t_object_type type)
 
 void	select_obj(t_mlx_data *data)
 {
-	t_hit_info	hit;
+	t_hit_info		hit;
+	t_ui_viewport	ui;
 
-	hit = cast_ray(calc_ray(data->scene.camera, data, data->mouse_last_pos), data->scene);
+	if (data->menu.show && data->mouse_last_pos.x >= data->viewport.size.x)
+		return (printf("Menu click\n"), (void)0);
+	ui = data->full_render;
+	if (data->menu.show)
+		ui = data->viewport;
+	hit = cast_ray(calc_ray(data->scene.camera, ui, data->mouse_last_pos), data->scene);
 	if (hit.obj_type == OBJ_NONE || (data->selected.obj_type == hit.obj_type && data->selected.obj_index == hit.obj_index))
 	{
 		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
@@ -277,6 +292,7 @@ void	select_obj(t_mlx_data *data)
 	}
 	data->selected = hit;
 	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
+	data->menu.show = true;
 }
 
 int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)

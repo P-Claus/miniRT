@@ -6,31 +6,60 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 13:03:33 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 12:17:08 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
+int	init_ui_viewport(void *mlx, t_ui_viewport *ui_elem, t_pixel_coord pos, t_pixel_coord size)
+{
+	ui_elem->pos = pos;
+	ui_elem->size = size;
+	ui_elem->aspect = size.x / (float)size.y;
+
+	ui_elem->render.img = mlx_new_image(mlx, size.x, size.y);
+	if (!ui_elem->render.img)
+		return (1);
+	ui_elem->render.addr = mlx_get_data_addr(ui_elem->render.img,
+		&ui_elem->render.bpp, &ui_elem->render.line_len, &ui_elem->render.endian);
+	return (0);
+}
+
+int	init_menu(void *mlx, t_ui_menu *menu)
+{
+	menu->size = (t_pixel_coord){MENU_WIDTH, SCREEN_HEIGHT};
+	menu->bg.img = mlx_new_image(mlx, MENU_WIDTH, SCREEN_HEIGHT);
+
+	menu->pos.x = SCREEN_WIDTH - MENU_WIDTH;
+	menu->pos.y = 0;
+	if (!menu->bg.img)
+		return (1);
+	menu->bg.addr = mlx_get_data_addr(menu->bg.img,
+		&menu->bg.bpp, &menu->bg.line_len, &menu->bg.endian);
+	//memset(menu->bg.addr, 0, MENU_WIDTH * SCREEN_HEIGHT * menu->bg.bpp / 8);
+	return (0);
+}
+
 int	init_mlx_data(t_mlx_data *data)
 {
 	memset(data, 0, sizeof(t_mlx_data));
-	data->width = SCREEN_WIDTH;
-	data->height = SCREEN_HEIGHT;
-	data->aspect = data->width / (float)data->height;
+
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return (1);
 	data->mlx_win = mlx_new_window(data->mlx,
-			data->width, data->height, "miniRT");
+			SCREEN_WIDTH, SCREEN_HEIGHT, "miniRT");
 	if (!data->mlx_win)
 		return (free_mlx(data), 1);
-	data->render.img = mlx_new_image(data->mlx, data->width, data->height);
-	if (!data->render.img)
+
+	if (init_ui_viewport(data->mlx, &data->full_render, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH, SCREEN_HEIGHT}))
 		return (free_mlx(data), 1);
-	data->render.addr = mlx_get_data_addr(data->render.img,
-			&data->render.bpp,
-			&data->render.line_len, &data->render.endian);
+	if (init_ui_viewport(data->mlx, &data->viewport, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH - MENU_WIDTH, SCREEN_HEIGHT}))
+		return (free_mlx(data), 1);
+	if (init_menu(data->mlx, &data->menu))
+		return (free_mlx(data), 1);
+
 	mlx_loop_hook(data->mlx, handle_no_event, data);
 	mlx_hook(data->mlx_win, DestroyNotify, 0L, handle_window_destroy, data);
 	mlx_hook(data->mlx_win, KeyPress, KeyPressMask, handle_keypress, data);
@@ -53,17 +82,6 @@ int	main(int argc, char **argv)
 	t_mlx_data			mlx_data;
 
 	init_mlx_data(&mlx_data);
-
-# if 0
-	(void)argc;
-	(void)argv;
-	(void)fd;
-	(void)id_count;
-
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
-
-# else
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
 	if (check_extension(argv[1]) == 1)
@@ -88,5 +106,4 @@ int	main(int argc, char **argv)
 	free(mlx_data.scene.planes);
 	free(mlx_data.scene.cylinders);
 	close(fd);
-# endif
 }

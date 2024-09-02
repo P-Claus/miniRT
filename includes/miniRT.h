@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 13:02:52 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 12:25:30 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # ifndef SCREEN_HEIGHT
 #  define SCREEN_HEIGHT 900
 # endif
+
+# define MENU_WIDTH 300
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
@@ -203,16 +205,31 @@ typedef struct s_my_img
 	int		endian;
 }	t_my_img;
 
+typedef struct s_ui_viewport
+{
+	t_my_img		render;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	float			aspect;
+}	t_ui_viewport;
+
+typedef struct s_ui_menu
+{
+	bool			show;
+	t_my_img		bg;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+}	t_ui_menu;
+
 typedef struct s_mlx_data
 {
 	void			*mlx;
 	void			*mlx_win;
-	t_my_img		render;
-	float			frame_time;
+	t_ui_viewport	full_render;
+	t_ui_viewport	viewport;
+	t_ui_menu		menu;
 	t_scene_info	scene;
-	int				width;
-	int				height;
-	float			aspect;
+	float			frame_time;
 	long			key_input_state;
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
@@ -255,7 +272,7 @@ int					count_identifiers_for_initialization(int fd, t_identifier_count *id_coun
 /*	UTILS	*/
 int					exit_handler(char *error);
 void				free_mlx(t_mlx_data *data);
-void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
+void				fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
@@ -264,7 +281,7 @@ bool				solve_quadratic(float a, float b, float c, float *dist);
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
-t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
+t_ray				calc_ray(t_camera camera, t_ui_viewport ui, t_pixel_coord p);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
@@ -312,7 +329,7 @@ int					handle_window_destroy(t_mlx_data *data);
 /*	SRC	*/
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
-void				render(t_mlx_data *data);
-void				render_low_res(t_mlx_data *data, int dx, int dy);
+void				render(t_mlx_data *data, t_ui_viewport ui);
+void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int dx, int dy);
 
 #endif
