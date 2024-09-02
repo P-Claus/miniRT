@@ -6,42 +6,40 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/02 22:45:20 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 00:25:30 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-int	menu_draw_space(t_ui_menu_elem *self, t_mlx_data *data)
+int	menu_draw_space(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 {
 	(void)self;
 	(void)data;
+	(void)pos;
 	return (0);
 }
 
-int	menu_draw_text(t_ui_menu_elem *self, t_mlx_data *data)
+int	menu_draw_text(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 {
 	(void)self;
 	(void)data;
-	t_pixel_coord	pos = {self->page->menu->pos.x + self->page->menu_pos.x + self->page_pos.x, self->page->menu->pos.y + self->page->menu_pos.y + self->page_pos.y};
 	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
 	return (0);
 }
 
-int	menu_draw_btn(t_ui_menu_elem *self, t_mlx_data *data)
+int	menu_draw_btn(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 {
 	(void)self;
 	(void)data;
-	t_pixel_coord	pos = {self->page->menu->pos.x + self->page->menu_pos.x + self->page_pos.x, self->page->menu->pos.y + self->page->menu_pos.y + self->page_pos.y};
-	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
+	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x0000d9ff, self->str);
 	return (0);
 }
 
-int	menu_draw_nbox(t_ui_menu_elem *self, t_mlx_data *data)
+int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 {
 	(void)self;
 	(void)data;
-	t_pixel_coord	pos = {self->page->menu->pos.x + self->page->menu_pos.x + self->page_pos.x, self->page->menu->pos.y + self->page->menu_pos.y + self->page_pos.y};
 	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
 	return (0);
 }
@@ -55,13 +53,12 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	if (!elems)
 		return (page->title = NULL, 1);
 	page->title = "HOME";
-	page->menu_pos = (t_pixel_coord){60, 50};
-	page->menu = menu;
-	page->size = (t_pixel_coord){200, SCREEN_HEIGHT - 200};
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
 	page->scroll = 0;
-	elems[0] = (t_ui_menu_elem){UI_MENU_BTN, "Button1", page, 0, (t_pixel_coord){0, 10 * 0}, menu_draw_btn, NULL};
-	elems[1] = (t_ui_menu_elem){UI_MENU_BTN, "Button2", page, 1, (t_pixel_coord){0, 10 * 1}, menu_draw_btn, NULL};
-	elems[2] = (t_ui_menu_elem){UI_MENU_END, "END", page, 2, (t_pixel_coord){0, 0}, NULL, NULL};
+	elems[0] = (t_ui_menu_elem){UI_MENU_BTN, "Button1", 0, menu_draw_btn, NULL};
+	elems[1] = (t_ui_menu_elem){UI_MENU_NBOX, "Button2", 1, menu_draw_nbox, NULL};
+	elems[2] = (t_ui_menu_elem){UI_MENU_END, "END", 2, NULL, NULL};
 	page->elements = elems;
 	return (0);
 }
@@ -70,7 +67,7 @@ int	menu_init_page_end(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 {
 	(void)data;
 	(void)menu;
-	*page = (t_ui_menu_page){NULL, NULL, NULL, (t_pixel_coord){0, 0}, (t_pixel_coord){0, 0}, 0};
+	*page = (t_ui_menu_page){NULL, NULL, (t_pixel_coord){0, 0}, (t_pixel_coord){0, 0}, 0};
 	return (0);
 }
 
@@ -89,12 +86,17 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 
 void	menu_draw_page(t_mlx_data *data, t_ui_menu_page page)
 {
-	int i;
+	int				i;
+	t_pixel_coord	pos;
 
 	i = 0;
+	pos = page.pos;
+	mlx_string_put(data->mlx, data->mlx_win, pos.x + page.size.x / 2 - ft_strlen(page.title) * 4, pos.y + 10, 0x00DDDDDD, page.title);
+	pos.y += 10 + 20;
 	while (page.elements[i].type != UI_MENU_END)
 	{
-		page.elements[i].draw(&page.elements[i], data);
+		page.elements[i].draw(&page.elements[i], pos, data);
+		pos.y += 11;
 		i++;
 	}
 }

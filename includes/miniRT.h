@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 22:29:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/02 23:37:40 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,19 +248,16 @@ typedef struct s_ui_menu_elem
 {
 	t_ui_menu_elem_type	type;
 	char				*str;
-	t_ui_menu_page		*page;
 	int					index;
-	t_pixel_coord		page_pos;
-	int					(*draw)(struct s_ui_menu_elem *self, t_mlx_data *data);
-	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
+	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+	int					(*func)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
 }	t_ui_menu_elem;
 
 typedef struct s_ui_menu_page
 {
 	char			*title;
 	t_ui_menu_elem	*elements;
-	t_ui_menu		*menu;
-	t_pixel_coord	menu_pos;
+	t_pixel_coord	pos;
 	t_pixel_coord	size;
 	int				scroll;
 }	t_ui_menu_page;

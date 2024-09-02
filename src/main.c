@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 22:13:52 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 00:26:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 	menu->pos.y = 0;
 	if (init_image(data, &menu->bg, menu->size))
 		return (1);
-	memset(menu->bg.addr, 0x00282828, menu->size.x * menu->size.y * 4);
+	memset(menu->bg.addr, 0x28, menu->size.x * menu->size.y * 4);
+	menu->show = MENU_SHOW;
 	menu_init_pages(data, menu);
+	usleep(80000); // Is because shared memory image would be black if we dont wait a bit. (Solve it by opening the program with a loading animation !)
 	return (0);
 }
 
