@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/01 21:24:50 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 09:00:53 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
 	if (hit.obj_type == OBJ_NONE)
-		return (0);
+		return (150);
 
 	t_rgb color_coord = color_from_hit(hit, data->scene);
 	return (color_to_int(color_coord));

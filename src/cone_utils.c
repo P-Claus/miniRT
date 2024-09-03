@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 21:24:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 18:17:30 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,39 @@
 
 bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 {
-	t_coordinates	apex_ray_o_v;//the length of the apex to the origin of the ray
+	t_coordinates	apex_to_origin;//the length of the apex to the origin of the ray
 
 
-	float a;
-	float b;
-	float c;
+//	float a;
+//	float b;
+//	float c;
+	float	radius = (cone.diameter / 2);
+//	float half_angle = atan(radius / cone.height);
 
-	apex_ray_o_v = vec3_diff(ray.origin, cone.apex);
+//	printf("The radius is: %f\n", radius);
+(void)dist;
+	//printf("The half-angle is: %f\n", half_angle);
 
-	a = pow(vec3_dot(ray.dir, cone.vector), 2) - pow(cos(10.0f * DEG2RAD), 2);
-	b = 2 * ((vec3_dot(ray.dir, cone.vector) * vec3_dot(apex_ray_o_v, cone.vector)) - vec3_dot(ray.dir, apex_ray_o_v) * pow(cos(10.0f * DEG2RAD), 2));
-	c = pow(vec3_dot(apex_ray_o_v, cone.vector), 2) - vec3_dot(apex_ray_o_v, apex_ray_o_v) * pow(cos(10.0f * DEG2RAD), 2);
+	apex_to_origin = vec3_diff(ray.origin, cone.apex);
+	float projection_len = vec3_dot(apex_to_origin, cone.vector);
+	printf("The projection length is: %f\n", projection_len);
+	t_coordinates point_on_axis = vec3_sum(cone.apex, vec3_scalar(cone.vector, projection_len));
+	float	radius_at_projection = (projection_len / cone.height) * radius;
+	t_coordinates to_surface_point = vec3_diff(ray.origin, point_on_axis);
+	t_coordinates surface_vector = vec3_scalar(vec3_normalize(to_surface_point), radius_at_projection);
+	t_coordinates point_on_cone_surface = vec3_sum(point_on_axis, surface_vector);
+	t_coordinates origin_to_cone_surface = vec3_diff(point_on_cone_surface, ray.origin);
+	(void)origin_to_cone_surface;
+
+//	printf("The vector from O to surface is: %f, %f, %f\n", origin_to_cone_surface.x, origin_to_cone_surface.y, origin_to_cone_surface.z);
+/*
+
+	a = pow(vec3_dot(ray.dir, cone.vector), 2) - pow(half_angle, 2);
+	b = 2 * ((vec3_dot(ray.dir, cone.vector) * vec3_dot(apex_to_origin, cone.vector)) - vec3_dot(ray.dir, apex_to_origin) * pow(half_angle, 2));
+	c = pow(vec3_dot(apex_to_origin, cone.vector), 2) - vec3_dot(apex_to_origin, apex_to_origin) * pow(half_angle, 2);
 	if (!solve_quadratic(a, b, c, dist))
 		return (false);
-	float	t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist), vec3_neg(apex_ray_o_v)));
+	float	t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist), vec3_neg(apex_to_origin)));
 	if (t <= 0)
 		return (false);
 	else if (t > cone.height)
@@ -36,10 +54,11 @@ bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 		t_disk	cap;
 		cap.vector = cone.vector;
 		cap.rgb = cone.rgb;
-		cap.diameter = tan(10.0f * DEG2RAD) * cone.height * 2;
+		cap.diameter = tan(half_angle) * cone.height * 2;
 		cap.coordinates = vec3_sum(cone.apex, vec3_scalar(cone.vector, cone.height));
 		return (disk_hit(ray, cap, dist));
 	}
+	*/
 	return (true);
 }
 
