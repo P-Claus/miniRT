@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/08/31 18:53:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 22:31:41 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,27 +227,15 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 		mlx_loop_end(data->mlx);
 	else if (handle_move_keys(keysym, &data->key_input_state))
 		data->full_res = REND_LOW;
-	else if (!data->key_input_state && !data->mouse_input_state && keysym == XK_r)
+	else if (keysym == XK_r && !data->key_input_state && !data->mouse_input_state)
 		data->full_res = !(data->full_res);
 	return (0);
 }
 
 int	handle_keyrelease(int keysym, t_mlx_data *data)
 {
-	if (keysym == XK_a)
-		data->key_input_state ^= KEY_A;
-	else if (keysym == XK_d)
-		data->key_input_state ^= KEY_D;
-	else if (keysym == XK_w)
-		data->key_input_state ^= KEY_W;
-	else if (keysym == XK_s)
-		data->key_input_state ^= KEY_S;
-	else if (keysym == XK_q)
-		data->key_input_state ^= KEY_Q;
-	else if (keysym == XK_e)
-		data->key_input_state ^= KEY_E;
-	else if (keysym == XK_Control_L)
-		data->key_input_state ^= KEY_CTRL;
+	if (handle_move_keys(keysym, &data->key_input_state))
+		;
 	return (0);
 }
 
