@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 13:03:33 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 22:19:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	init_mlx_data(t_mlx_data *data)
 	mlx_hook(data->mlx_win, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
 	mlx_hook(data->mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press, data);
 	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release, data);
+	mlx_do_key_autorepeatoff(data->mlx);
 	errno = 0;
 
 	data->scene.camera.right = (t_coordinates){1, 0, 0};
@@ -53,17 +54,6 @@ int	main(int argc, char **argv)
 	t_mlx_data			mlx_data;
 
 	init_mlx_data(&mlx_data);
-
-# if 0
-	(void)argc;
-	(void)argv;
-	(void)fd;
-	(void)id_count;
-
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
-
-# else
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
 	if (check_extension(argv[1]) == 1)
@@ -88,5 +78,4 @@ int	main(int argc, char **argv)
 	free(mlx_data.scene.planes);
 	free(mlx_data.scene.cylinders);
 	close(fd);
-# endif
 }
