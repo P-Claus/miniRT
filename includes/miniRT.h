@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 23:37:40 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 14:52:36 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,34 +232,39 @@ typedef enum e_ui_menu_elem_type
 typedef enum e_ui_menu_page_type
 {
 	UI_MENU_PAGE_HOME,
-	UI_MENU_PAGE_END,
 	UI_MENU_PAGE_SELECT,
 	UI_MENU_PAGE_ADD,
 	UI_MENU_PAGE_REMOVE,
 	UI_MENU_PAGE_OBJ_SPHERE,
 	UI_MENU_PAGE_OBJ_CYLINDER,
 	UI_MENU_PAGE_OBJ_PLANE,
+	UI_MENU_PAGE_END,
 }	t_ui_menu_page_type;
+
+# define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+# define ELEM_HEIGHT 18
+# define ELEM_OFFSET (40 + ELEM_HEIGHT)
 
 typedef struct s_mlx_data t_mlx_data;
 typedef struct s_ui_menu_page t_ui_menu_page;
 typedef struct s_ui_menu t_ui_menu;
+
 typedef struct s_ui_menu_elem
 {
 	t_ui_menu_elem_type	type;
 	char				*str;
 	int					index;
 	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
-	int					(*func)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
 }	t_ui_menu_elem;
 
 typedef struct s_ui_menu_page
 {
 	char			*title;
 	t_ui_menu_elem	*elements;
+	int				n_elems;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
-	int				scroll;
 }	t_ui_menu_page;
 
 typedef struct s_ui_menu
@@ -268,6 +273,7 @@ typedef struct s_ui_menu
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
+	t_ui_menu_page	curr_page;
 	t_ui_menu_page	*pages;
 }	t_ui_menu;
 
@@ -385,5 +391,7 @@ void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int dx, int dy);
 /* MENU UTILS */
 int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
 int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
+int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
+int					menu_page_click(t_mlx_data *data);
 
 #endif

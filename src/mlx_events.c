@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/02 20:36:13 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 14:21:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,8 +277,8 @@ void	select_obj(t_mlx_data *data)
 	t_hit_info		hit;
 	t_ui_viewport	ui;
 
-	if (data->menu.show && data->mouse_last_pos.x >= data->viewport.size.x)
-		return (printf("Menu click\n"), (void)0);
+	if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
+		return (printf("Menu click\n"), menu_page_click(data), (void)0);
 	ui = data->full_render;
 	if (data->menu.show)
 		ui = data->viewport;
@@ -287,6 +287,8 @@ void	select_obj(t_mlx_data *data)
 	{
 		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
 		data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
+		if (data->menu.show)
+			data->menu.show = MENU_SHOW;
 		return ;
 	}
 	data->selected = hit;
@@ -298,26 +300,30 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 {
 	if (button > 5)
 		return (0);
+	data->mouse_last_pos.x = x;
+	data->mouse_last_pos.y = y;
 	if (button == 1)
 	{
-		data->mouse_last_pos.x = x;
-		data->mouse_last_pos.y = y;
 		data->mouse_input_state ^= BTN_LEFT;
 		select_obj(data);
 	}
 	else if (button == 3)
 	{
-		data->mouse_last_pos.x = x;
-		data->mouse_last_pos.y = y;
 		data->mouse_input_state ^= BTN_RIGHT;
 	}
 	else if (button == 4)
 	{
-		data->scene.camera.fov = fmax(data->scene.camera.fov - 1, 30);
+		if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
+			;
+		else
+			data->scene.camera.fov = fmax(data->scene.camera.fov - 1, 30);
 	}
 	else if (button == 5)
 	{
-		data->scene.camera.fov = fmin(data->scene.camera.fov + 1, 130);
+		if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
+			;
+		else
+			data->scene.camera.fov = fmin(data->scene.camera.fov + 1, 130);
 	}
 	data->full_res = REND_LOW;
 	return (0);

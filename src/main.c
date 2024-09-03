@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/03 00:26:56 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/03 14:18:44 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 	memset(menu->bg.addr, 0x28, menu->size.x * menu->size.y * 4);
 	menu->show = MENU_SHOW;
 	menu_init_pages(data, menu);
+	menu->curr_page = menu->pages[UI_MENU_PAGE_HOME];
 	usleep(80000); // Is because shared memory image would be black if we dont wait a bit. (Solve it by opening the program with a loading animation !)
 	return (0);
 }
@@ -72,6 +73,8 @@ int	init_mlx_data(t_mlx_data *data)
 	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release, data);
 	errno = 0;
 
+	mlx_set_font(data->mlx, data->mlx_win, FONT);
+
 	data->scene.camera.right = (t_coordinates){1, 0, 0};
 	data->scene.camera.up = (t_coordinates){0, 1, 0};
 	data->scene.camera.vector = (t_coordinates){0, 0, -1};
@@ -83,9 +86,10 @@ int	main(int argc, char **argv)
 {
 	int					fd;
 	t_identifier_count	id_count;
-	t_mlx_data			mlx_data;
+	t_mlx_data			*mlx_data;
 
-	init_mlx_data(&mlx_data);
+	mlx_data = ft_calloc(1, sizeof(t_mlx_data));
+	init_mlx_data(mlx_data);
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
 	if (check_extension(argv[1]) == 1)
@@ -100,14 +104,14 @@ int	main(int argc, char **argv)
 	}
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
-	init_scene_info(&mlx_data.scene, &id_count);
-	read_from_scene(&mlx_data.scene, fd, &id_count);
+	init_scene_info(&mlx_data->scene, &id_count);
+	read_from_scene(&mlx_data->scene, fd, &id_count);
 
-	mlx_loop(mlx_data.mlx);
-	free_mlx(&mlx_data);
+	mlx_loop(mlx_data->mlx);
+	free_mlx(mlx_data);
 
-	free(mlx_data.scene.spheres);
-	free(mlx_data.scene.planes);
-	free(mlx_data.scene.cylinders);
+	free(mlx_data->scene.spheres);
+	free(mlx_data->scene.planes);
+	free(mlx_data->scene.cylinders);
 	close(fd);
 }
