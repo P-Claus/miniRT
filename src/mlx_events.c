@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/03 22:31:41 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/04 17:01:00 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	move_camera(t_camera *camera, long key_state, float frame_time)
 	world_move_dir.y = vec3_dot(camera->up, move_dir);
 	world_move_dir.z = vec3_dot(camera->vector, move_dir);
 	world_move_dir = vec3_normalize(world_move_dir);
-	world_move_dir = vec3_scalar(world_move_dir, 0.1 * frame_time);
+	world_move_dir = vec3_scalar(world_move_dir, 0.01 * frame_time);
 	camera->coordinates = vec3_sum(camera->coordinates, world_move_dir);
 }
 
@@ -121,7 +121,7 @@ void	move_obj(t_mlx_data *data, long key_state, float frame_time)
 	move_dir.z = ((key_state & KEY_S) > 0) - ((key_state & KEY_W) > 0);
 	if (vec3_norm(move_dir) < 1e-6)
 		return ;
-	move_dir = vec3_scalar(vec3_normalize(move_dir), 0.1 * frame_time);
+	move_dir = vec3_scalar(vec3_normalize(move_dir), 0.01 * frame_time);
 	if (data->selected.obj_type == OBJ_SPHERE)
 		data->scene.spheres[data->selected.obj_index].coordinates = vec3_sum(data->scene.spheres[data->selected.obj_index].coordinates, move_dir);
 	else if (data->selected.obj_type == OBJ_PLANE)

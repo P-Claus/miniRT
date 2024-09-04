@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 13:02:52 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/04 17:16:44 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,6 +288,7 @@ t_coordinates		vec3_scalar(t_coordinates a, float scalar);
 float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);
 float				vec3_dot(t_coordinates a, t_coordinates b);
+float				vec3_dot2(t_coordinates a);
 t_coordinates		vec3_cross(t_coordinates a, t_coordinates b);
 
 /* QUATERNION MATH */
@@ -297,7 +298,10 @@ t_quat				quat_mult(t_quat a, t_quat b);
 t_coordinates		quat_rotate_point(t_coordinates p, t_quat q);
 
 /* COLOR MATH STUFF */
+t_rgb				color_add(t_rgb a, t_rgb b);
 t_rgb				color_scalar(t_rgb c, float scale);
+float				color_dot(t_rgb a, t_rgb b);
+t_rgb				color_hadamard(t_rgb a, t_rgb b);
 int					color_to_int(t_rgb c);
 
 /*  MLX_EVENTS  */

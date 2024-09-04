@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/01 12:53:29 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/04 17:39:40 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,9 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 {
 	t_rgb			color;
 	t_coordinates	hit_normal;
+	float			light_dist2;
 	t_coordinates	light_dir;
-	float	light;
+	t_rgb			light;
 
 	light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
 	if (hit.obj_type == OBJ_SPHERE)
@@ -158,8 +159,14 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	}
 	else
 		return ((t_rgb){0, 0, 0,});
-	light = fmax(vec3_dot(hit_normal,light_dir), 0.);
-	color = color_scalar(color, light);
+	light_dist2 = vec3_dot2(vec3_diff(scene.light.coordinates, hit.coordinates));
+	light = color_scalar(scene.light.rgb, fmax(vec3_dot(hit_normal,light_dir), 0.));
+	light = color_scalar(light, scene.light.brightness / (4 * M_PI * light_dist2));
+	color = color_hadamard(color, light);
+
+	// Ambient color?
+	//color = color_add(color, color_scalar(scene.a_lighting.rgb, scene.a_lighting.ambient_lighting));
+
 	return (color);
 }
 
