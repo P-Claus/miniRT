@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 14:31:49 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 20:04:13 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	print_cones(t_scene_info *scene_info, int iter)
 		printf(" --------------------------------------------- \n");
 		printf("|                   Cone #%d                   |\n", iter);
 		printf("|                                             |\n");
-		printf("|       Coordinates: %5.1f,%5.1f,%5.1f        |\n",
+		printf("|       Coordinates: %5.3f,%5.1f,%5.1f        |\n",
 			scene_info->cones[iter].apex.x,
 			scene_info->cones[iter].apex.y,
 			scene_info->cones[iter].apex.z);

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 14:06:52 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:10:19 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 20:48:59 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static int	handle_conversion(t_scene_info *scene_info, char *string)
 {
 	double	conversion;
 
-	conversion = ft_atof(string, 1);
+	conversion = ft_atof(string, 3);
+	printf("The conversion is: %f\n", conversion);
 	if (!(conversion >= 0.0 && conversion <= 1.0))
 		return (1);
 	scene_info->light.brightness = conversion;
@@ -31,7 +32,7 @@ int	parse_light(t_scene_info *scene_info, char *string)
 	split = ft_split(string, ' ');
 	if (count_items_in_split(split, 4) == 1
 		|| parse_coordinates(&scene_info->light.coordinates, split[1]) == 1
-		|| ft_strlen(split[2]) != 3)
+		|| ft_strlen(split[2]) > 5)
 	{
 		free_split(split);
 		return (1);
