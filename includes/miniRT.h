@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 20:10:37 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 15:00:52 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,13 @@ typedef struct s_hit_info
 	float			dist;
 	t_coordinates	coordinates;
 }	t_hit_info;
+
+typedef struct s_quadratic_variables
+{
+	float			a;
+	float			b;
+	float			c;
+}					t_q_vars;
 
 typedef struct s_a_lighting
 {
