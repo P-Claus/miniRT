@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/04 17:39:40 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/05 20:08:18 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 	float		dist;
 	int			i;
 
-
 	hit.dist = INFINITY;
 	hit.obj_index = 0;
 	hit.obj_type = OBJ_NONE;
@@ -133,6 +132,35 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 	return (hit);
 }
 
+bool	cast_shadow_ray(t_ray ray, t_scene_info scene, float light_dist)
+{
+	float		dist;
+	int			i;
+
+	i = 0;
+	while (i < scene.nb_of_spheres)
+	{
+		if (sphere_hit(ray, scene.spheres[i], &dist) && dist > 0 && dist < light_dist)
+			return (true);
+		i++;
+	}
+	i = 0;
+	while(i < scene.nb_of_planes)
+	{
+		if (plane_hit(ray, scene.planes[i], &dist) && dist > 0 && dist < light_dist)
+			return (true);
+		i++;
+	}
+	i = 0;
+	while (i < scene.nb_of_cylinders)
+	{
+		if (cylinder_hit(ray, scene.cylinders[i], &dist) && dist > 0 && dist < light_dist)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
 t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 {
 	t_rgb			color;
@@ -160,8 +188,16 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	else
 		return ((t_rgb){0, 0, 0,});
 	light_dist2 = vec3_dot2(vec3_diff(scene.light.coordinates, hit.coordinates));
+#if 1
+	if (vec3_dot(hit_normal, light_dir) < 0 || cast_shadow_ray((t_ray){hit.coordinates, light_dir}, scene, sqrt(light_dist2)))
+		return ((t_rgb){0,0,0});
+#else
+	if (cast_shadow_ray((t_ray){vec3_sum(hit.coordinates, vec3_scalar(hit_normal, 1e-4)), light_dir}, scene, sqrt(light_dist2)))
+		return ((t_rgb){0,0,0});
+#endif
 	light = color_scalar(scene.light.rgb, fmax(vec3_dot(hit_normal,light_dir), 0.));
-	light = color_scalar(light, scene.light.brightness / (4 * M_PI * light_dist2));
+	light = color_scalar(light, scene.light.brightness);
+	light = color_scalar(light, 1 / (4 * M_PI * light_dist2));
 	color = color_hadamard(color, light);
 
 	// Ambient color?
