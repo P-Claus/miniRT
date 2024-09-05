@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 20:16:09 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 21:13:23 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ void				free_split(char **split);
 void				free_split_and_trimmed_rgb(char **split,
 						char *trimmed_rgb);
 void				free_shape_arrays(t_scene_info *scene_info);
-int					check_digits_in_coordinates(char **split, int decimal_nb);
+int					check_digits_in_coordinates(char **split);
 void				init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count);
 void				print_parsing_result(t_scene_info *scene_info);
 void				print_spheres(t_scene_info *scene_info);

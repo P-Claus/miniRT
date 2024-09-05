@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:27:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 20:24:37 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:04:26 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	check_limits(float coordinate_value, char **coordinates_split)
 {
-	if (coordinate_value < (float)INT_MIN || coordinate_value > (float)INT_MAX)
+	if (coordinate_value < -1e5 || coordinate_value > 1e5)
 	{
 		free_split(coordinates_split);
 		return (1);
@@ -31,7 +31,7 @@ int	parse_coordinates(t_coordinates *coordinates, char *string)
 	iter = -1;
 	coordinates_split = ft_split(string, ',');
 	if (count_items_in_split(coordinates_split, 3) == 1
-		|| check_digits_in_coordinates(coordinates_split, 3) == 1)
+		|| check_digits_in_coordinates(coordinates_split) == 1)
 	{
 		free_split(coordinates_split);
 		return (1);
@@ -56,14 +56,14 @@ int	parse_orientation_vector(t_coordinates *coordinates, char *string, int iter)
 
 	coordinates_split = ft_split(string, ',');
 	if (count_items_in_split(coordinates_split, 3) == 1
-		|| check_digits_in_coordinates(coordinates_split, 3) == 1)
+		|| check_digits_in_coordinates(coordinates_split) == 1)
 	{
 		free_split(coordinates_split);
 		return (1);
 	}
 	while (coordinates_split[++iter] && iter < 3)
 	{
-		coordinate_values[iter] = ft_atof(coordinates_split[iter], 1);
+		coordinate_values[iter] = ft_atof(coordinates_split[iter], 3);
 		if (!(coordinate_values[iter] >= -1.0
 				&& coordinate_values[iter] <= 1.0))
 		{

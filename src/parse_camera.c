@@ -6,13 +6,13 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:08:52 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 20:55:22 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-static int	handle_coversion(t_scene_info *scene_info, char *string)
+static int	handle_conversion(t_scene_info *scene_info, char *string)
 {
 	int	converted_int;
 
@@ -43,7 +43,7 @@ static int	parse_field_of_view(t_scene_info *scene_info, char *string)
 		}
 		iter++;
 	}
-	if (handle_coversion(scene_info, string) == 0)
+	if (handle_conversion(scene_info, string) == 0)
 	{
 		free(trim);
 		return (0);

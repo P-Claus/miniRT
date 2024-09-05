@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 08:57:40 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 20:37:38 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/04 21:13:14 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	count_items_in_split(char **split, int nb_needed)
 		return (1);
 }
 
-int	check_digits_in_coordinates(char **split, int decimal_nb)
+int	check_digits_in_coordinates(char **split)
 {
 	int	iter;
 	int	word_iter;
@@ -88,7 +88,7 @@ int	check_digits_in_coordinates(char **split, int decimal_nb)
 			if ((!ft_isdigit(split[iter][word_iter])
 				&& !(split[iter][word_iter] == '.')
 				&& !(split[iter][word_iter] == '-'))
-				|| dec_nb > decimal_nb)
+				|| dec_nb > 2)
 					return (1);
 			if (passed_dot == true)
 				dec_nb++;
