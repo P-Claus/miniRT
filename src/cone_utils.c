@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 15:16:43 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/05 16:52:15 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,44 @@ bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 	t_coordinates	apex_to_origin;
 
 	apex_to_origin = vec3_diff(ray.origin, cone.apex);
+
+	float	actual_angle = vec3_dot(cone.vector, vec3_normalize(apex_to_origin));
+	float	cone_angle = cos(atan(cone.diameter / (cone.height * 2)));
+
+	// Check if ray origin is inside the infinite cone volume.
+	if (fabs(actual_angle) >= cone_angle)
+	{
+		// If we are on the side of the base hit the disk.
+		if(vec3_dot(cone.vector, ray.dir) < 0)
+		{
+			cap.vector = cone.vector;
+			cap.rgb = cone.rgb;
+			cap.diameter = cone.diameter;
+			cap.coordinates = vec3_sum(cone.apex, vec3_scalar(cone.vector,
+						cone.height));
+			return (disk_hit(ray, cap, dist));
+		}
+		else
+		{
+			q_vars = calculate_quadratic_variables(ray, cone, apex_to_origin);
+
+			if (!solve_quadratic2(q_vars.a, q_vars.b, q_vars.c, dist))
+				return (false);
+			t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist),
+						vec3_neg(apex_to_origin)));
+			if (t <= 0)
+				return (false);
+			else if (t > cone.height)
+				return (false);
+			else
+				return (true);
+		}
+	}
+
 	q_vars = calculate_quadratic_variables(ray, cone, apex_to_origin);
 	if (!solve_quadratic(q_vars.a, q_vars.b, q_vars.c, dist))
 		return (false);
+
 	t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist),
 				vec3_neg(apex_to_origin)));
 	if (t <= 0)
@@ -69,9 +104,8 @@ t_coordinates	cone_normal(t_hit_info hit, t_cone cone)
 	apex_to_point = vec3_diff(hit.coordinates, cone.apex);
 	projection_len = vec3_dot(cone.vector, apex_to_point);
 	if (projection_len <= 1e-4)
-		normal = (t_coordinates){-cone.vector.x, -cone.vector.y,
-			-cone.vector.z};
-	else if (projection_len >= cone.height)
+		normal = vec3_neg(cone.vector);
+	else if (projection_len >= cone.height - 1e-4)
 		normal = cone.vector;
 	else
 	{
