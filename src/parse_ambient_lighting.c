@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:18:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/25 12:32:08 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/05 18:51:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	parse_ambient_lighting(t_scene_info *scene_info, char *string)
 	float	conversion;
 
 	split = ft_split(string, ' ');
-	if (count_items_in_split(split, 3) == 1 || ft_strlen(split[1]) != 3)
+	if (count_items_in_split(split, 3) == 1 || ft_strlen(split[1]) > 5)
 	{
 		free_split(split);
 		return (1);
 	}
-	conversion = ft_atof(split[1], 1);
+	conversion = ft_atof(split[1], 3);
 	if (ambient_lighting_error_check_lighting_ratio(conversion) == 1)
 	{
 		free_split(split);

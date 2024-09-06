@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:27:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/26 12:11:45 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/05 19:04:26 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	check_limits(float coordinate_value, char **coordinates_split)
 {
-	if (coordinate_value < (float)INT_MIN || coordinate_value > (float)INT_MAX)
+	if (coordinate_value < -1e5 || coordinate_value > 1e5)
 	{
 		free_split(coordinates_split);
 		return (1);
@@ -38,7 +38,7 @@ int	parse_coordinates(t_coordinates *coordinates, char *string)
 	}
 	while (coordinates_split[++iter] && iter < 3)
 	{
-		coordinate_values[iter] = ft_atof(coordinates_split[iter], 2);
+		coordinate_values[iter] = ft_atof(coordinates_split[iter], 3);
 		if (check_limits(coordinate_values[iter], coordinates_split) == 1)
 			return (1);
 	}
@@ -63,7 +63,7 @@ int	parse_orientation_vector(t_coordinates *coordinates, char *string, int iter)
 	}
 	while (coordinates_split[++iter] && iter < 3)
 	{
-		coordinate_values[iter] = ft_atof(coordinates_split[iter], 1);
+		coordinate_values[iter] = ft_atof(coordinates_split[iter], 3);
 		if (!(coordinate_values[iter] >= -1.0
 				&& coordinate_values[iter] <= 1.0))
 		{

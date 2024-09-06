@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/01 12:53:29 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/05 16:51:07 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,21 @@ t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
 		}
 		i++;
 	}
-	if (!isinf(hit.dist))
+	i = 0;
+	while(i < scene.nb_of_cones)
+	{
+		if (cone_hit(ray, scene.cones[i], &dist) && dist > 0)
+		{
+			if (dist < hit.dist)
+			{
+				hit.dist = dist;
+				hit.obj_index = i;
+				hit.obj_type = OBJ_CONE;
+			}
+		}
+		i++;
+	}
+	if (hit.obj_type != OBJ_NONE)
 		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
 	return (hit);
 }
@@ -155,6 +169,11 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	{
 		color = scene.cylinders[hit.obj_index].rgb;
 		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
+	}
+	else if (hit.obj_type == OBJ_CONE)
+	{
+		color = scene.cones[hit.obj_index].rgb;
+		hit_normal = cone_normal(hit, scene.cones[hit.obj_index]);
 	}
 	else
 		return ((t_rgb){0, 0, 0,});
@@ -190,8 +209,8 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	ray = calc_ray(data->scene.camera, data, p);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
-	if (isinf(hit.dist))
-		return (0);
+	if (hit.obj_type == OBJ_NONE)
+		return (0x0087CEEB);
 
 	t_rgb color_coord = color_from_hit(hit, data->scene);
 	return (color_to_int(color_coord));

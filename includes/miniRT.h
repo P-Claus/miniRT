@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/01 13:02:52 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/06 21:39:56 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ typedef enum e_object_type
 	OBJ_NONE,
 	OBJ_SPHERE,
 	OBJ_CYLINDER,
-	OBJ_PLANE
+	OBJ_PLANE,
+	OBJ_CONE
 }	t_object_type;
 
 
@@ -114,6 +115,13 @@ typedef struct s_hit_info
 	float			dist;
 	t_coordinates	coordinates;
 }	t_hit_info;
+
+typedef struct s_quadratic_variables
+{
+	float			a;
+	float			b;
+	float			c;
+}					t_q_vars;
 
 typedef struct s_a_lighting
 {
@@ -171,6 +179,15 @@ typedef struct s_disk
 	t_rgb			rgb;
 }					t_disk;
 
+typedef struct	s_cone
+{
+	t_coordinates	apex;
+	t_coordinates	vector;
+	float			diameter;
+	float			height;
+	t_rgb			rgb;
+}					t_cone;
+
 typedef struct s_scene_info
 {
 	t_a_lighting	a_lighting;
@@ -179,9 +196,11 @@ typedef struct s_scene_info
 	t_sphere		*spheres;
 	t_plane			*planes;
 	t_cylinder		*cylinders;
+	t_cone			*cones;
 	int				nb_of_spheres;
 	int				nb_of_planes;
 	int				nb_of_cylinders;
+	int				nb_of_cones;
 }					t_scene_info;
 
 typedef struct s_identifier_count
@@ -192,6 +211,7 @@ typedef struct s_identifier_count
 	int				sp_count;
 	int				pl_count;
 	int				cy_count;
+	int				co_count;
 }					t_identifier_count;
 
 typedef struct s_my_img
@@ -234,6 +254,8 @@ int					parse_light(t_scene_info *scene_info, char *string);
 int					parse_sphere(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
 int					parse_plane(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
 int					parse_cylinder(t_scene_info *scene_info, char *string, t_identifier_count *id_count);
+int					parse_cone(t_scene_info *scene_info, char *string,
+						t_identifier_count *id_count);
 
 /*	PARSE UTILS	*/
 int					count_items_in_split(char **split,
@@ -249,8 +271,10 @@ void				print_parsing_result(t_scene_info *scene_info);
 void				print_spheres(t_scene_info *scene_info);
 void				print_planes(t_scene_info *scene_info);
 void				print_cylinders(t_scene_info *scene_info, int iter);
+void				print_cones(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
+bool				count_digits(const char *str);
 
 /*	UTILS	*/
 int					exit_handler(char *error);
@@ -260,6 +284,10 @@ struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
 bool				solve_quadratic(float a, float b, float c, float *dist);
+bool				solve_quadratic2(float a, float b, float c, float *dist);
+
+/* CAMERA UTILS */
+void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
 
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
@@ -276,6 +304,11 @@ bool				plane_hit(t_ray ray, t_plane plane, float *dist);
 /* CYLINDER UTILS */
 bool				cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist);
 t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
+
+/* CONE UTILS */
+t_coordinates cone_normal(t_hit_info hit, t_cone cone);
+bool	cone_hit(t_ray ray, t_cone cone, float *dist);
+
 
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);

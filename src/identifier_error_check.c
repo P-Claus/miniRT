@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 09:43:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/08 17:58:57 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/08/31 11:59:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	init_identifiers_count(t_identifier_count *id_count)
 	id_count->sp_count = 0;
 	id_count->pl_count = 0;
 	id_count->cy_count = 0;
+	id_count->co_count = 0;
 }
 
 static int	identifiers_error_check(t_identifier_count *id_count)
@@ -49,6 +50,8 @@ static int	check_shape_identifier(t_identifier_count *id_count, char *buffer)
 		id_count->pl_count++;
 	else if (buffer[0] == 'c' && buffer[1] == 'y')
 		id_count->cy_count++;
+	else if (buffer[0] == 'c' && buffer[1] == 'o')
+		id_count->co_count++;
 	return (0);
 }
 
