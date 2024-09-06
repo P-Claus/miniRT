@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/05 18:42:53 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/06 13:04:42 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,6 @@ bool				solve_quadratic(float a, float b, float c, float *dist);
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 bool				cast_shadow_ray(t_ray ray, t_scene_info scene, float light_dist);
-t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
 t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
 
 /* SPHERE UTILS */
