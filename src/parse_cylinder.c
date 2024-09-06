@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:23:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 13:36:23 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/06 09:16:22 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ static int	parse_diameter(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
-	conversion = ft_atof(string, 2);
-	if (conversion > (float)INT_MAX)
+	if (count_digits(string) == false)
 		return (1);
+	conversion = ft_atof(string, 3);
 	scene_info->cylinders[index].diameter = conversion;
 	return (0);
 }
@@ -39,13 +39,13 @@ static int	parse_height(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
-	conversion = ft_atof(string, 2);
-	if (conversion > (float)INT_MAX)
-		return (1);
+	if (count_digits(string) == false)
+		return (false);
+	conversion = ft_atof(string, 3);
 	scene_info->cylinders[index].height = conversion;
 	return (0);
 }
