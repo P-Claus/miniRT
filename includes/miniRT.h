@@ -28,31 +28,37 @@
 # include <sys/time.h>
 
 # ifndef SCREEN_WIDTH
-#  define SCREEN_WIDTH 860
+#  define SCREEN_WIDTH 1600
 # endif
 
 # ifndef SCREEN_HEIGHT
-#  define SCREEN_HEIGHT 540
+#  define SCREEN_HEIGHT 900
 # endif
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
 
 /* KEY_INPUT_STATE BIT MASKS */
-# define KEY_ESCAPE (1 << 0)
-# define KEY_SPACE (1 << 1)
 # define KEY_W (1 << 2)
 # define KEY_A (1 << 3)
 # define KEY_S (1 << 4)
 # define KEY_D (1 << 5)
 # define KEY_Q (1 << 6)
 # define KEY_E (1 << 7)
+# define KEY_CTRL (1 << 8)
 
 /* MOUSE_INPUT_STATE BIT MASKS */
 # define BTN_LEFT (1 << 0)
 # define BTN_RIGHT (1 << 1)
 
 /*	STRUCTURES	*/
+
+typedef enum e_render_state
+{
+	REND_LOW,
+	REND_HIGH,
+	REND_DONE
+}	t_render_state;
 
 typedef enum e_object_type
 {
@@ -225,11 +231,13 @@ typedef struct s_mlx_data
 	float			frame_time;
 	t_scene_info	scene;
 	int				width;
-	int				heigth;
+	int				height;
 	float			aspect;
 	long			key_input_state;
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
+	int				full_res;
+	t_hit_info		selected;
 }	t_mlx_data;
 
 /*	PARSING	*/
@@ -284,6 +292,7 @@ void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_ti
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
+t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
@@ -337,5 +346,6 @@ int					handle_window_destroy(t_mlx_data *data);
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
 void				render(t_mlx_data *data);
+void				render_low_res(t_mlx_data *data, int dx, int dy);
 
 #endif
