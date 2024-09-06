@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 08:37:18 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/06 16:53:45 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,6 +276,9 @@ struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
 bool				solve_quadratic(float a, float b, float c, float *dist);
+
+/* CAMERA UTILS */
+void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
 
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);

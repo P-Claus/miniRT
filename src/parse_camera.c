@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 20:55:22 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/06 17:46:58 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,12 @@ int	parse_camera(t_scene_info *scene_info, char *string)
 		return (1);
 	}
 	free_split(split);
+	/* Calculate angles and rotate from default orientation */
+	if (1)
+	{
+		scene_info->camera.yaw = atan2(scene_info->camera.vector.x, -scene_info->camera.vector.z);
+		scene_info->camera.pitch = atan2(vec3_norm((t_coordinates){-scene_info->camera.vector.z, scene_info->camera.vector.x, 0}), scene_info->camera.vector.y) - M_PI_2;
+		rotate_camera(&scene_info->camera, (t_pixel_coord){0, 0}, 0);
+	}
 	return (0);
 }
