@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 20:04:13 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/06 09:01:00 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ void	print_spheres(t_scene_info *scene_info)
 		printf(" --------------------------------------------- \n");
 		printf("|                 Sphere #%d                   |\n", iter);
 		printf("|                                             |\n");
-		printf("|       Coordinates: %5.1f,%5.1f,%5.1f        |\n",
+		printf("|                 Coordinates:                |\n");
+		printf("|             %6.3f,%6.3f,%6.3f            |\n",
 			scene_info->spheres[iter].coordinates.x,
 			scene_info->spheres[iter].coordinates.y,
 			scene_info->spheres[iter].coordinates.z);
-		printf("|           Sphere diameter: %6.2f           |\n",
+		printf("|           Sphere diameter: %7.3f          |\n",
 			scene_info->spheres[iter].diameter);
 		printf("|       RGB: %8f,%8f,%8f       |\n",
 			scene_info->spheres[iter].rgb.r,
@@ -47,11 +48,13 @@ void	print_planes(t_scene_info *scene_info)
 		printf(" --------------------------------------------- \n");
 		printf("|                  Plane #%d                   |\n", iter);
 		printf("|                                             |\n");
-		printf("|       Coordinates: %5.1f,%5.1f,%5.1f        |\n",
+		printf("|                 Coordinates:                |\n");
+		printf("|             %6.3f,%6.3f,%6.3f            |\n",
 			scene_info->planes[iter].coordinates.x,
 			scene_info->planes[iter].coordinates.y,
 			scene_info->planes[iter].coordinates.z);
-		printf("|     Orientation vector: %4.1f,%4.1f,%4.1f      |\n",
+		printf("|             Orientation vector:             |\n");
+		printf("|             %6.3f,%6.3f,%6.3f            |\n",
 			scene_info->planes[iter].vector.x,
 			scene_info->planes[iter].vector.y,
 			scene_info->planes[iter].vector.z);

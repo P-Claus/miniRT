@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/04 21:13:23 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/06 08:37:18 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,7 @@ void				print_cylinders(t_scene_info *scene_info, int iter);
 void				print_cones(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
+bool				count_digits(const char *str);
 
 /*	UTILS	*/
 int					exit_handler(char *error);
