@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/03 22:31:41 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/07 16:59:29 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
 		data->scene.planes[data->selected.obj_index].vector = vec3_normalize(quat_rotate_point(data->scene.planes[data->selected.obj_index].vector, q));
 	else if (data->selected.obj_type == OBJ_CYLINDER)
 		data->scene.cylinders[data->selected.obj_index].vector = vec3_normalize(quat_rotate_point(data->scene.cylinders[data->selected.obj_index].vector, q));
+	else if (data->selected.obj_type == OBJ_CONE)
+		data->scene.cones[data->selected.obj_index].vector = vec3_normalize(quat_rotate_point(data->scene.cones[data->selected.obj_index].vector, q));
 }
 
 void	mouse_drag(t_mlx_data *data)
@@ -128,6 +130,8 @@ void	move_obj(t_mlx_data *data, long key_state, float frame_time)
 		data->scene.planes[data->selected.obj_index].coordinates = vec3_sum(data->scene.planes[data->selected.obj_index].coordinates, move_dir);
 	else if (data->selected.obj_type == OBJ_CYLINDER)
 		data->scene.cylinders[data->selected.obj_index].coordinates = vec3_sum(data->scene.cylinders[data->selected.obj_index].coordinates, move_dir);
+	else if (data->selected.obj_type == OBJ_CONE)
+		data->scene.cones[data->selected.obj_index].apex = vec3_sum(data->scene.cones[data->selected.obj_index].apex, move_dir);
 }
 
 void	key_inputs(t_mlx_data *data)
@@ -249,6 +253,8 @@ char	*get_obj_name(t_object_type type)
 		return ("Plane");
 	else if (type == OBJ_CYLINDER)
 		return ("Cylinder");
+	else if (type == OBJ_CONE)
+		return ("Cone");
 	return ("INVALID_TYPE");
 }
 
