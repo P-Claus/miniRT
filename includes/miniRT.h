@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 21:39:56 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/07 20:27:03 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,16 +223,49 @@ typedef struct s_my_img
 	int		endian;
 }	t_my_img;
 
+typedef enum e_ui_func_type
+{
+	UI_FUNC_NONE,
+	UI_FUNC_CAMERA,
+	UI_FUNC_LIGHT,
+	UI_FUNC_AMBIENT,
+} t_ui_func_type;
+
+typedef struct s_ui_elem
+{
+	void			*window;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	t_my_img		bg;
+	t_my_img		hover;
+	char			*str;
+	size_t			str_len;
+	t_ui_func_type	func_type;
+	union {
+		void	(*camera_func)(t_camera *);
+		void	(*light_func)(t_light *);
+		void	(*a_light_func)(t_a_lighting *);
+	} u_func;
+}	t_ui_elem;
+
+typedef struct s_ui_viewport
+{
+	void			*window;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	float			aspect;
+	t_my_img		render;
+}	t_ui_viewport;
+
 typedef struct s_mlx_data
 {
 	void			*mlx;
-	void			*mlx_win;
-	t_my_img		render;
+	t_ui_viewport	screen;
+	t_ui_viewport	full_render;
+	t_ui_viewport	viewport;
+	t_ui_elem		menu;
 	float			frame_time;
 	t_scene_info	scene;
-	int				width;
-	int				height;
-	float			aspect;
 	long			key_input_state;
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
@@ -279,7 +312,7 @@ bool				count_digits(const char *str);
 /*	UTILS	*/
 int					exit_handler(char *error);
 void				free_mlx(t_mlx_data *data);
-void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
+void				fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
@@ -292,7 +325,7 @@ void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_ti
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
-t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
+t_ray				calc_ray(t_camera camera, t_ui_viewport ui, t_pixel_coord p);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
@@ -335,17 +368,22 @@ int					color_to_int(t_rgb c);
 
 /*  MLX_EVENTS  */
 int					handle_no_event(t_mlx_data *data);
+/* viewport events */
 int					handle_keypress(int keysym, t_mlx_data *data);
 int					handle_keyrelease(int keysym, t_mlx_data *data);
 int					handle_mouse_movement(int x, int y, t_mlx_data *data);
 int					handle_mouse_press(int button, int x, int y, t_mlx_data *data);
 int					handle_mouse_release(int button, int x, int y, t_mlx_data *data);
 int					handle_window_destroy(t_mlx_data *data);
+/* Menu events */
+int					handle_menu_mouse_press(int button, int x, int y, t_mlx_data *data);
+/* Render view events */
+int					handle_keypress_render(int keysym, t_mlx_data *data);
 
 /*	SRC	*/
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
-void				render(t_mlx_data *data);
-void				render_low_res(t_mlx_data *data, int dx, int dy);
+void				render(t_mlx_data *data, t_ui_viewport ui);
+void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int dx, int dy);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/07 16:59:29 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/07 20:26:25 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	mouse_drag(t_mlx_data *data)
 
 	if (!(data->mouse_input_state & BTN_RIGHT))
 		return ;
-	mlx_mouse_get_pos(data->mlx, data->mlx_win, &mouse.x, &mouse.y);
+	mlx_mouse_get_pos(data->mlx, data->viewport.window, &mouse.x, &mouse.y);
 	diff.x = mouse.x - data->mouse_last_pos.x;
 	diff.y = mouse.y - data->mouse_last_pos.y;
 	data->mouse_last_pos.x = mouse.x;
@@ -169,7 +169,8 @@ void	image_add_frametime(t_mlx_data *data)
 	str = ft_strjoin(tmp, "ms");
 	if (!str)
 		return (free(ms), free(decimal), free(tmp));
-	mlx_string_put(data->mlx, data->mlx_win, 15, 15, 0x00FFFFFF, str);
+	if (!data->full_res)
+		mlx_string_put(data->mlx, data->viewport.window, 15, 15, 0x00FFFFFF, str);
 	return (free(ms), free(decimal), free(tmp), free(str));
 }
 
@@ -178,7 +179,7 @@ int	handle_no_event(t_mlx_data *data)
 	struct timeval	start;
 	struct timeval	end;
 
-	if (!data || !data->mlx_win)
+	if (!data || !data->full_render.window || !data->viewport.window)
 		return (1);
 	if (data->full_res != REND_DONE)
 	{
@@ -187,14 +188,14 @@ int	handle_no_event(t_mlx_data *data)
 		{
 			data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
 			printf("Rendering scene ...\n");
-			render(data);
+			render(data, data->full_render);
 			gettimeofday(&end, NULL);
 			printf("Rendered in: %.3f ms\n", frame_time(start, end));
 			data->full_res = REND_DONE;
 			return (0);
 		}
 		check_input_states(data);
-		render_low_res(data, 5, 5);
+		render_low_res(data, data->viewport, 5, 5);
 		gettimeofday(&end, NULL);
 		data->frame_time = frame_time(start, end);
 		image_add_frametime(data);
@@ -232,7 +233,11 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 	else if (handle_move_keys(keysym, &data->key_input_state))
 		data->full_res = REND_LOW;
 	else if (keysym == XK_r && !data->key_input_state && !data->mouse_input_state)
+	{
 		data->full_res = !(data->full_res);
+		if (data->full_res)
+			XMapWindow(((t_xvar *)data->mlx)->display, ((t_win_list *)data->full_render.window)->window);
+	}
 	return (0);
 }
 
@@ -262,7 +267,7 @@ void	select_obj(t_mlx_data *data)
 {
 	t_hit_info	hit;
 
-	hit = cast_ray(calc_ray(data->scene.camera, data, data->mouse_last_pos), data->scene);
+	hit = cast_ray(calc_ray(data->scene.camera, data->viewport, data->mouse_last_pos), data->scene);
 	if (hit.obj_type == OBJ_NONE || (data->selected.obj_type == hit.obj_type && data->selected.obj_index == hit.obj_index))
 	{
 		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
@@ -299,6 +304,7 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 		data->scene.camera.fov = fmin(data->scene.camera.fov + 1, 130);
 	}
 	data->full_res = REND_LOW;
+	XUnmapWindow(((t_xvar *)data->mlx)->display, ((t_win_list *)data->full_render.window)->window);
 	return (0);
 }
 
@@ -318,5 +324,26 @@ int	handle_mouse_release(int button, int x, int y, t_mlx_data *data)
 int	handle_window_destroy(t_mlx_data *data)
 {
 	mlx_loop_end(data->mlx);
+	return (0);
+}
+
+/* menu events */
+
+int	handle_menu_mouse_press(int button, int x, int y, t_mlx_data *data)
+{
+	(void)button, (void)x, (void)y, (void)data;
+	printf("Menu press\n");
+	return (0);
+}
+
+int	handle_keypress_render(int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_Escape)
+		mlx_loop_end(data->mlx);
+	else if (keysym == XK_r)
+	{
+		data->full_res = REND_LOW;
+		XUnmapWindow(((t_xvar *)data->mlx)->display, ((t_win_list *)data->full_render.window)->window);
+	}
 	return (0);
 }

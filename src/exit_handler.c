@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 11:42:28 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/07 20:10:31 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,17 @@ int	exit_handler(char *error)
 
 void	free_mlx(t_mlx_data *mlx_data)
 {
-	if (mlx_data->mlx_win)
-		mlx_destroy_window(mlx_data->mlx, mlx_data->mlx_win);
-	if (mlx_data->render.img)
-		mlx_destroy_image(mlx_data->mlx, mlx_data->render.img);
+	if (mlx_data->viewport.render.img)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->viewport.render.img);
+	if (mlx_data->viewport.window)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->viewport.window);
+	if (mlx_data->menu.window)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->menu.window);
+	if (mlx_data->full_render.render.img)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->full_render.render.img);
+	if (mlx_data->full_render.window)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->full_render.window);
+
 	if (mlx_data->mlx)
 	{
 		mlx_destroy_display(mlx_data->mlx);

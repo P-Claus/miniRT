@@ -6,34 +6,34 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/05 16:51:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/07 19:13:20 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-int	per_pixel(t_mlx_data *data, t_pixel_coord p);
+int	per_pixel(t_mlx_data *data, t_ui_viewport ui, t_pixel_coord p);
 
-void	render(t_mlx_data *data)
+void	render(t_mlx_data *data, t_ui_viewport ui)
 {
 	t_pixel_coord	p;
 
 	p.y = 0;
-	while (p.y < data->height)
+	while (p.y < ui.size.y)
 	{
 		p.x = 0;
-		while (p.x < data->width)
+		while (p.x < ui.size.x)
 		{
-			fast_pixel_put(data, p, per_pixel(data, p));
+			fast_pixel_put(ui, p, per_pixel(data, ui, p));
 			p.x++;
 		}
 		p.y++;
 	}
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, ui.window, ui.render.img, 0, 0);
 	errno = 0;
 }
 
-void	set_pixels(t_mlx_data *data, int color, t_pixel_coord p, t_pixel_coord dp)
+void	set_pixels(t_ui_viewport ui, int color, t_pixel_coord p, t_pixel_coord dp)
 {
 	int				j;
 	int				i;
@@ -46,33 +46,33 @@ void	set_pixels(t_mlx_data *data, int color, t_pixel_coord p, t_pixel_coord dp)
 		i = 0;
 		while (i < dp.x)
 		{
-			fast_pixel_put(data, (t_pixel_coord){p.x + i, p.y + j}, color);
+			fast_pixel_put(ui, (t_pixel_coord){p.x + i, p.y + j}, color);
 			i++;
 		}
 		j++;
 	}
 }
 
-void	render_low_res(t_mlx_data *data, int dx, int dy)
+void	render_low_res(t_mlx_data *data, t_ui_viewport ui, int dx, int dy)
 {
 	t_pixel_coord	p;
 	int				pixel_color;
 
 	if (dx < 1 || dy < 1)
-		return (render_low_res(data, 2, 2));
+		return (render_low_res(data, ui, 2, 2));
 	p.y = dy / 2;
-	while (p.y < data->height)
+	while (p.y < ui.size.y)
 	{
 		p.x = dx / 2;
-		while (p.x < data->width)
+		while (p.x < ui.size.x)
 		{
-			pixel_color = per_pixel(data, p);
-			set_pixels(data, pixel_color, p, (t_pixel_coord){dx, dy});
+			pixel_color = per_pixel(data, ui, p);
+			set_pixels(ui, pixel_color, p, (t_pixel_coord){dx, dy});
 			p.x += dx;
 		}
 		p.y += dy;
 	}
-	mlx_put_image_to_window(data->mlx, data->mlx_win, data->render.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, ui.window, ui.render.img, 0, 0);
 	errno = 0;
 }
 
@@ -182,7 +182,7 @@ t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
 	return (color);
 }
 
-t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
+t_ray	calc_ray(t_camera camera, t_ui_viewport ui, t_pixel_coord p)
 {
 	t_coordinates	ray_dir_screen;
 	t_ray			ray;
@@ -190,8 +190,8 @@ t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 	float			scale;
 
 	scale = tan(DEG2RAD * camera.fov * 0.5);
-	uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->height - p.y - 0.5) / data->height};
-	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
+	uv = (t_pixel_uv){(p.x + 0.5) / ui.size.x, (ui.size.y - p.y - 0.5) / ui.size.y};
+	uv.x = (uv.x * 2. - 1.) * scale * ui.aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
 	ray.origin = camera.coordinates;
 	ray_dir_screen = (t_coordinates){uv.x, uv.y, 1.};
@@ -202,11 +202,11 @@ t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 	return (ray);
 }
 
-int	per_pixel(t_mlx_data *data, t_pixel_coord p)
+int	per_pixel(t_mlx_data *data, t_ui_viewport ui, t_pixel_coord p)
 {
 	t_ray	ray;
 
-	ray = calc_ray(data->scene.camera, data, p);
+	ray = calc_ray(data->scene.camera, ui, p);
 
 	t_hit_info	hit = cast_ray(ray, data->scene);
 	if (hit.obj_type == OBJ_NONE)
