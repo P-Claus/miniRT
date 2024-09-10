@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/07 20:10:31 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:15:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ void	free_mlx(t_mlx_data *mlx_data)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->viewport.render.img);
 	if (mlx_data->viewport.window)
 		mlx_destroy_window(mlx_data->mlx, mlx_data->viewport.window);
-	if (mlx_data->menu.window)
-		mlx_destroy_window(mlx_data->mlx, mlx_data->menu.window);
+	if (mlx_data->menu_bar.window)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->menu_bar.window);
+	if (mlx_data->menu_side.window)
+		mlx_destroy_window(mlx_data->mlx, mlx_data->menu_side.window);
 	if (mlx_data->full_render.render.img)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->full_render.render.img);
 	if (mlx_data->full_render.window)

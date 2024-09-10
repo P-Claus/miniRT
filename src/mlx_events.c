@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/07 20:26:25 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/10 16:33:30 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,10 +329,27 @@ int	handle_window_destroy(t_mlx_data *data)
 
 /* menu events */
 
-int	handle_menu_mouse_press(int button, int x, int y, t_mlx_data *data)
+/* MENU BAR */
+int	handle_menu_bar_mouse_press(int button, int x, int y, t_mlx_data *data)
 {
 	(void)button, (void)x, (void)y, (void)data;
-	printf("Menu press\n");
+	printf("Menu BAR press\n");
+	return (0);
+}
+
+/* MENU SIDE */
+int handle_menu_side_mouse_press(int button, int x, int y, t_mlx_data *data)
+{
+	(void)button, (void)x, (void)y, (void)data;
+	printf("Menu SIDE press\n");
+	return (0);
+}
+
+/* MENU BOTTOM */
+int handle_menu_bottom_mouse_press(int button, int x, int y, t_mlx_data *data)
+{
+	(void)button, (void)x, (void)y, (void)data;
+	printf("Menu BOTTOM press\n");
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/07 20:27:03 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:42:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,9 @@ typedef struct s_mlx_data
 	t_ui_viewport	screen;
 	t_ui_viewport	full_render;
 	t_ui_viewport	viewport;
-	t_ui_elem		menu;
+	t_ui_elem		menu_bar;
+	t_ui_elem		menu_side;
+	t_ui_elem		menu_bottom;
 	float			frame_time;
 	t_scene_info	scene;
 	long			key_input_state;
@@ -375,8 +377,12 @@ int					handle_mouse_movement(int x, int y, t_mlx_data *data);
 int					handle_mouse_press(int button, int x, int y, t_mlx_data *data);
 int					handle_mouse_release(int button, int x, int y, t_mlx_data *data);
 int					handle_window_destroy(t_mlx_data *data);
-/* Menu events */
-int					handle_menu_mouse_press(int button, int x, int y, t_mlx_data *data);
+/* Menu bar */
+int					handle_menu_bar_mouse_press(int button, int x, int y, t_mlx_data *data);
+/* Menu side */
+int					handle_menu_side_mouse_press(int button, int x, int y, t_mlx_data *data);
+/* Menu bottom */
+int					handle_menu_bottom_mouse_press(int button, int x, int y, t_mlx_data *data);
 /* Render view events */
 int					handle_keypress_render(int keysym, t_mlx_data *data);
 

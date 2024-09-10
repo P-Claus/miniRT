@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/07 20:24:18 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/10 19:37:22 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void	*my_mlx_new_menu_window(t_xvar *xvar, t_win_list *win, t_ui_elem ui, char *
 	XGCValues				xgcv;
 	Window					parent;
 
-	xswa.background_pixel = 0;
-	xswa.border_pixel = -1;
+	xswa.background_pixel = 0x00181818;
+	xswa.border_pixel = 0x00353535;
 	xswa.colormap = xvar->cmap;
 	xswa.event_mask = 0xFFFFFF;	/* all events */
 	if (!(new_win = malloc(sizeof(*new_win))))
@@ -66,7 +66,7 @@ void	*my_mlx_new_menu_window(t_xvar *xvar, t_win_list *win, t_ui_elem ui, char *
 	if (win && win->window)
 		parent = win->window;
 	new_win->window = XCreateWindow(xvar->display,parent,ui.pos.x,ui.pos.y,ui.size.x,ui.size.y,
-					0,CopyFromParent,InputOutput,xvar->visual,
+					1,CopyFromParent,InputOutput,xvar->visual,
 					CWEventMask|CWBackPixel|CWBorderPixel|
 					CWColormap,&xswa);
 	mlx_int_anti_resize_win(xvar,new_win->window,ui.size.x,ui.size.y);
@@ -86,15 +86,16 @@ void	*my_mlx_new_menu_window(t_xvar *xvar, t_win_list *win, t_ui_elem ui, char *
 	return (new_win);
 }
 
-# define MENU_HEIGHT 20
+# define MENU_BAR_HEIGHT 30
+# define MENU_SIDE_WIDTH 200
 
 int	init_screen(t_mlx_data *data)
 {
 	data->screen.pos.x = 0;
 	data->screen.pos.y = 0;
-	data->screen.size.x = SCREEN_WIDTH;
-	data->screen.size.y = SCREEN_HEIGHT;
-	data->screen.aspect = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+	data->screen.size.x = SCREEN_WIDTH - 1;
+	data->screen.size.y = SCREEN_HEIGHT - 1;
+	data->screen.aspect = (SCREEN_WIDTH - 1) / (float)(SCREEN_HEIGHT - 1);
 	data->screen.window = mlx_new_window(data->mlx,
 			data->screen.size.x, data->screen.size.y, "miniRT");
 	if (!data->screen.window)
@@ -112,9 +113,9 @@ int	init_full_render(t_mlx_data *data)
 {
 	data->full_render.pos.x = 0;
 	data->full_render.pos.y = 0;
-	data->full_render.size.x = SCREEN_WIDTH;
-	data->full_render.size.y = SCREEN_HEIGHT;
-	data->full_render.aspect = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+	data->full_render.size.x = SCREEN_WIDTH - 1;
+	data->full_render.size.y = SCREEN_HEIGHT - 1;
+	data->full_render.aspect = (SCREEN_WIDTH - 1) / (float)(SCREEN_HEIGHT - 1);
 	data->full_render.window = my_mlx_new_window(data->mlx, data->screen.window, data->full_render, NULL);
 	if (!data->full_render.window)
 		return (free_mlx(data), 1);
@@ -130,11 +131,11 @@ int	init_full_render(t_mlx_data *data)
 
 int	init_viewport(t_mlx_data *data)
 {
+	data->viewport.aspect = data->full_render.aspect;
 	data->viewport.pos.x = 0;
-	data->viewport.pos.y = MENU_HEIGHT;
-	data->viewport.size.x = SCREEN_WIDTH;
-	data->viewport.size.y = (SCREEN_HEIGHT - MENU_HEIGHT);
-	data->viewport.aspect = SCREEN_WIDTH / (float)(SCREEN_HEIGHT - MENU_HEIGHT);
+	data->viewport.pos.y = MENU_BAR_HEIGHT;
+	data->viewport.size.x = SCREEN_WIDTH - MENU_SIDE_WIDTH;
+	data->viewport.size.y = ceil((data->viewport.size.x) / data->viewport.aspect);
 	data->viewport.window = my_mlx_new_window(data->mlx,data->screen.window, data->viewport, NULL);
 	if (!data->viewport.window)
 		return (free_mlx(data), 1);
@@ -151,17 +152,51 @@ int	init_viewport(t_mlx_data *data)
 	return (0);
 }
 
-int	init_menu(t_mlx_data *data)
+int	init_menu_bar(t_mlx_data *data, t_ui_elem *menu_bar)
 {
-	data->menu.pos.x = 0;
-	data->menu.pos.y = 0;
-	data->menu.size.x = SCREEN_WIDTH;
-	data->menu.size.y = MENU_HEIGHT;
-	data->menu.window = my_mlx_new_menu_window(data->mlx,data->screen.window, data->menu, NULL);
-	if (!data->menu.window)
+	menu_bar->pos.x = 0;
+	menu_bar->pos.y = 0;
+	menu_bar->size.x = (SCREEN_WIDTH - 1);
+	menu_bar->size.y = (MENU_BAR_HEIGHT - 1);
+	menu_bar->window = my_mlx_new_menu_window(data->mlx,data->screen.window, *menu_bar, NULL);
+	if (!menu_bar->window)
 		return (free_mlx(data), 1);
-	mlx_hook(data->menu.window, DestroyNotify, 0L, handle_window_destroy, data);
-	mlx_hook(data->menu.window, ButtonPress, ButtonPressMask, handle_menu_mouse_press, data);
+	mlx_hook(menu_bar->window, DestroyNotify, 0L, handle_window_destroy, data);
+	mlx_hook(menu_bar->window, ButtonPress, ButtonPressMask, handle_menu_bar_mouse_press, data);
+	mlx_hook(menu_bar->window, KeyPress, KeyPressMask, handle_keypress, data);
+	mlx_hook(menu_bar->window, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
+	return (0);
+}
+
+int	init_menu_side(t_mlx_data *data, t_ui_elem *menu_side)
+{
+	menu_side->pos.x = SCREEN_WIDTH - MENU_SIDE_WIDTH;
+	menu_side->pos.y = MENU_BAR_HEIGHT;
+	menu_side->size.x = MENU_SIDE_WIDTH - 1;
+	menu_side->size.y = (SCREEN_HEIGHT - MENU_BAR_HEIGHT - 1);
+	menu_side->window = my_mlx_new_menu_window(data->mlx,data->screen.window, *menu_side, NULL);
+	if (!menu_side->window)
+		return (free_mlx(data), 1);
+	mlx_hook(menu_side->window, DestroyNotify, 0L, handle_window_destroy, data);
+	mlx_hook(menu_side->window, ButtonPress, ButtonPressMask, handle_menu_side_mouse_press, data);
+	mlx_hook(menu_side->window, KeyPress, KeyPressMask, handle_keypress, data);
+	mlx_hook(menu_side->window, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
+	return (0);
+}
+
+int	init_menu_bottom(t_mlx_data *data, t_ui_elem *menu_bottom)
+{
+	menu_bottom->pos.x = 0;
+	menu_bottom->pos.y = MENU_BAR_HEIGHT + data->viewport.size.y;
+	menu_bottom->size.x = SCREEN_WIDTH - MENU_SIDE_WIDTH - 1;
+	menu_bottom->size.y = SCREEN_HEIGHT - menu_bottom->pos.y - 1;
+	menu_bottom->window = my_mlx_new_menu_window(data->mlx,data->screen.window, *menu_bottom, NULL);
+	if (!menu_bottom->window)
+		return (free_mlx(data), 1);
+	mlx_hook(menu_bottom->window, DestroyNotify, 0L, handle_window_destroy, data);
+	mlx_hook(menu_bottom->window, ButtonPress, ButtonPressMask, handle_menu_bottom_mouse_press, data);
+	mlx_hook(menu_bottom->window, KeyPress, KeyPressMask, handle_keypress, data);
+	mlx_hook(menu_bottom->window, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
 	return (0);
 }
 
@@ -174,7 +209,9 @@ int	init_mlx_data(t_mlx_data *data)
 	init_screen(data);
 	init_full_render(data);
 	init_viewport(data);
-	init_menu(data);
+	init_menu_bar(data, &data->menu_bar);
+	init_menu_side(data, &data->menu_side);
+	init_menu_bottom(data, &data->menu_bottom);
 	mlx_do_key_autorepeatoff(data->mlx);
 	mlx_loop_hook(data->mlx, handle_no_event, data);
 	XMapRaised(((t_xvar *)data->mlx)->display, ((t_win_list *)data->full_render.window)->window);
