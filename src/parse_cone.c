@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 12:18:52 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 18:08:01 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/11 15:33:31 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static int	parse_diameter(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.')
+			&& !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
@@ -39,7 +40,8 @@ static int	parse_height(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.')
+			&& !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
@@ -76,7 +78,8 @@ int	parse_cone(t_scene_info *scene_info, char *string,
 	if (count_items_in_split(split, 6) == 1
 		|| parse_coordinates(&scene_info->cones[id_count->co_count].apex,
 			split[1]) == 1
-		|| parse_orientation_vector(&scene_info->cones[id_count->co_count].vector,
+		|| parse_orientation_vector(
+			&scene_info->cones[id_count->co_count].vector,
 			split[2], -1) == 1 || parse_diameter(scene_info, split[3],
 			id_count->co_count) == 1 || parse_height(scene_info, split[4],
 			id_count->co_count) == 1)
