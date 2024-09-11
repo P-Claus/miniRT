@@ -6,33 +6,17 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 08:57:40 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 09:09:03 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/11 22:16:49 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-static int	atof_check_sign(const char *str, int *iter)
-{
-	int	sign;
-
-	sign = 1;
-	if (str[*iter] == '-' || str[*iter] == '+')
-	{
-		if (str[*iter] == '-')
-		{
-			sign = -1;
-			(*iter)++;
-		}
-	}
-	return (sign);
-}
-
 bool	count_digits(const char *str)
 {
-	int	count_b_dot;
-	int	count_a_dot;
-	int	iter;
+	int		count_b_dot;
+	int		count_a_dot;
+	int		iter;
 	bool	passed_dot;
 
 	count_b_dot = 0;
@@ -57,35 +41,6 @@ bool	count_digits(const char *str)
 		return (true);
 }
 
-float	ft_atof(const char *str, int decimal_nb)
-{
-	float	result;
-	int		sign;
-	int		iter;
-	float	fraction;
-	int		count;
-
-	result = 0.0;
-	iter = 0;
-	fraction = 0.1;
-	count = 0;
-	sign = atof_check_sign(str, &iter);
-	while (str[iter] >= '0' && str[iter] <= '9')
-		result = result * 10.0 + (str[iter++] - '0');
-	if (str[iter] == '.')
-	{
-		iter++;
-		while (str[iter] >= '0' && str[iter] <= '9' && count < decimal_nb)
-		{
-			result = result + (str[iter] - '0') * fraction;
-			fraction /= 10.0;
-			iter++;
-			count++;
-		}
-	}
-	return (result * sign);
-}
-
 int	count_items_in_split(char **split, int nb_needed)
 {
 	int	iter;
@@ -99,17 +54,29 @@ int	count_items_in_split(char **split, int nb_needed)
 		return (1);
 }
 
-int	check_digits_in_coordinates(char **split)
+static void	init_data(int *iter, int *word_iter, int *dec_nb, bool *passed_dot)
 {
-	int	iter;
-	int	word_iter;
-	bool	passed_dot;
-	int		dec_nb;
-
 	iter = 0;
 	dec_nb = 0;
 	word_iter = 0;
 	passed_dot = false;
+}
+
+static void	reset_data(int *word_iter, int *dec_nb, bool *passed_dot)
+{
+	passed_dot = false;
+	dec_nb = 0;
+	word_iter = 0;
+}
+
+int	check_digits_in_coordinates(char **split)
+{
+	int		iter;
+	int		word_iter;
+	bool	passed_dot;
+	int		dec_nb;
+
+	init_data(&iter, &word_iter, &dec_nb, &passed_dot);
 	while (split[iter])
 	{
 		while (split[iter][word_iter] && split[iter][word_iter] != '\0')
@@ -118,7 +85,7 @@ int	check_digits_in_coordinates(char **split)
 				&& !(split[iter][word_iter] == '.')
 				&& !(split[iter][word_iter] == '-'))
 				|| dec_nb > 2)
-					return (1);
+				return (1);
 			if (passed_dot == true)
 				dec_nb++;
 			if (split[iter][word_iter] == '.')
@@ -126,9 +93,7 @@ int	check_digits_in_coordinates(char **split)
 			word_iter++;
 		}
 		iter++;
-		passed_dot = false;
-		dec_nb = 0;
-		word_iter = 0;
+		reset_data(&iter, &word_iter, &passed_dot);
 	}
 	return (0);
 }

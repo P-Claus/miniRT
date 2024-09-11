@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 10:24:12 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/24 09:42:02 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/11 20:10:48 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	parse_rgb(t_rgb *rgb, char *string)
 {
 	char	**rgb_split;
 	int		rgb_values[3];
-	
+
 	rgb_split = ft_split(string, ',');
 	if (count_items_in_split(rgb_split, 3) == 1
 		|| check_digits_in_rgb(rgb_split) == 1 || fill_rgb_struct(rgb_split,

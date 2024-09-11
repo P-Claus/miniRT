@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:23:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 10:34:23 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/11 22:18:40 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static int	parse_diameter(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.')
+			&& !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
@@ -39,7 +40,8 @@ static int	parse_height(t_scene_info *scene_info, char *string, int index)
 	iter = 0;
 	while (string[iter] && string[iter] != '\0')
 	{
-		if (!ft_isdigit(string[iter]) && !(string[iter] == '.') && !(string[iter] == '-'))
+		if (!ft_isdigit(string[iter]) && !(string[iter] == '.')
+			&& !(string[iter] == '-'))
 			return (1);
 		iter++;
 	}
