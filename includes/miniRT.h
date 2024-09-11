@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 13:04:42 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/11 15:28:11 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,15 @@ typedef struct s_light
 	t_rgb			rgb;
 }					t_light;
 
+typedef struct s_material
+{
+	t_rgb	albedo;
+	float	k_s;
+	float	alpha;
+	float	k_d;
+	float	k_a;
+}	t_material;
+
 typedef struct s_sphere
 {
 	t_coordinates	coordinates;
@@ -183,6 +192,21 @@ typedef struct s_scene_info
 	int				nb_of_planes;
 	int				nb_of_cylinders;
 }					t_scene_info;
+
+typedef struct s_phong_help_struct
+{
+	float	light_dist2;
+	t_rgb	ambient;
+	t_rgb	specular;
+	t_rgb	diffuse;
+	t_material	hit_material;
+	t_rgb	i_d;
+	t_rgb	i_s;
+	t_coordinates	light_dir;
+	t_coordinates	hit_normal;
+	t_coordinates	reflect_dir;
+	t_coordinates	view_dir;
+}	t_phong_help_struct;
 
 typedef struct s_identifier_count
 {

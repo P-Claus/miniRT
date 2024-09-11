@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/06 15:10:20 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/11 15:27:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,57 +183,47 @@ t_coordinates	get_obj_normal(t_hit_info hit, t_scene_info scene)
 	return ((t_coordinates){0, 0, 0,});
 }
 
+t_material	default_material()
+{
+	t_material ret;
+
+	ret.albedo = (t_rgb){0.18, 0.18, 0.18};
+	ret.k_s = 0.8;
+	ret.alpha = 7;
+	ret.k_d = 1;
+	ret.k_a = 0.05;
+	return (ret);
+}
+
+t_material	get_obj_material(t_hit_info hit, t_scene_info scene)
+{
+	(void)hit, (void)scene;
+	return (default_material());
+}
+
 t_rgb	phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene)
 {
-	float light_dist2 = vec3_dot2(vec3_diff(scene.light.coordinates, hit.coordinates));
-
-	t_rgb ambient = {0};
-	t_rgb specular = {0};
-	t_rgb diffuse = {0};
-
-	/* material has these attributes so maybe as a struct? */
-	/* These are empirical, so no real world equivalent and have to be changed to what look you want to achieve */
-	t_rgb obj_color = get_obj_color(hit, scene);
-	float k_s = 0.9; /* how much does specular reflection contribute ? */
-	float alpha = 8; /* how spread out is the specular reflection ? */
-	float k_d = 1; /* how much does diffuse reflection contribute ? */
-	float k_a = 0.05; /* how much does ambient lighting contribute ? */
-
-	/* each light has these attributes defining their intensities for diffuse and specular reflection */
-#if 1
-	/* Should include inverse square law */
-	t_rgb i_d = color_scalar(scene.light.rgb, scene.light.brightness / (4 * M_PI * light_dist2));
-#else
-	/* Ignore inverse square law */
-	t_rgb i_d = color_scalar(scene.light.rgb, scene.light.brightness);
-#endif
-	t_rgb i_s = i_d; /* could be a different value, but for simplicity make it the same as diffuse */
-
-	/* normalized vectors */
-	t_coordinates light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
-	t_coordinates hit_normal = get_obj_normal(hit, scene);
-	t_coordinates reflect_dir = vec3_normalize(vec3_diff(vec3_scalar(hit_normal, 2 * vec3_dot(light_dir, hit_normal)), light_dir));
-	t_coordinates view_dir = vec3_neg(ray.dir);
-
-	/* PHONG reflection model */
-	/* Ip = k_a * i_a + sum_lights(k_d * dot(light_dir, hit_normal) * i_d + k_s * dot(reflect_dir, view_dir) ^ alpha * i_s) */
-
-	/* Ambient light */
-	ambient = color_hadamard(obj_color, color_scalar(scene.a_lighting.rgb, scene.a_lighting.ambient_lighting));
-
-# if 1
-	/* Don't cast shadow ray if light direction is not in the same hemisphere as the surface normal */
-	if (!(vec3_dot(hit_normal, light_dir) < 0 || cast_shadow_ray((t_ray){hit.coordinates, light_dir}, scene, sqrt(light_dist2))))
-#else
-	/* use a bias to reduce shadow acne */
-	if (!cast_shadow_ray((t_ray){vec3_sum(hit.coordinates, vec3_scalar(hit_normal, 1e-4)), light_dir}, scene, sqrt(light_dist2)))
-#endif
+	t_phong_help_struct phong;
+	phong.light_dist2 = vec3_dot2(vec3_diff(scene.light.coordinates, hit.coordinates));
+	phong.ambient = (t_rgb){0, 0, 0};
+	phong.specular = (t_rgb){0, 0 , 0};
+	phong.diffuse = (t_rgb){0, 0, 0};
+	phong.hit_material = get_obj_material(hit, scene);
+	phong.hit_material.albedo = get_obj_color(hit, scene);
+	phong.i_d = color_scalar(scene.light.rgb, scene.light.brightness / (4 * M_PI * phong.light_dist2));
+	phong.i_s = phong.i_d;
+	phong.light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
+	phong.hit_normal = get_obj_normal(hit, scene);
+	phong.reflect_dir = vec3_normalize(vec3_diff(vec3_scalar(phong.hit_normal, 2 * vec3_dot(phong.light_dir, phong.hit_normal)), phong.light_dir));
+	phong.view_dir = vec3_neg(ray.dir);
+	phong.ambient = color_hadamard(phong.hit_material.albedo, color_scalar(scene.a_lighting.rgb, scene.a_lighting.ambient_lighting));
+	if (!(vec3_dot(phong.hit_normal, phong.light_dir) < 0 || cast_shadow_ray((t_ray){hit.coordinates, phong.light_dir}, scene, sqrt(phong.light_dist2))))
 	{
-		diffuse = color_hadamard(obj_color, color_scalar(i_d, fmax(vec3_dot(light_dir, hit_normal), 0.0f)));
-		specular = color_scalar(i_s, pow(fmax(vec3_dot(reflect_dir, view_dir), 0.0f), alpha));
+		phong.diffuse = color_hadamard(phong.hit_material.albedo, color_scalar(phong.i_d, fmax(vec3_dot(phong.light_dir, phong.hit_normal), 0.0f)));
+		phong.specular = color_scalar(phong.i_s, pow(fmax(vec3_dot(phong.reflect_dir, phong.view_dir), 0.0f), phong.hit_material.alpha));
 	}
 	t_rgb hit_color;
-	hit_color = color_add(color_scalar(ambient, k_a), color_add(color_scalar(diffuse, k_d), color_scalar(specular, k_s)));
+	hit_color = color_add(color_scalar(phong.ambient, phong.hit_material.k_a), color_add(color_scalar(phong.diffuse, phong.hit_material.k_d), color_scalar(phong.specular, phong.hit_material.k_s)));
 	return (hit_color);
 }
 
