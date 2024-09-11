@@ -20,7 +20,8 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  print_parsing_result.c identifier_error_check.c\
 				  print_parsing_result_shapes.c mlx_events.c draw_utils.c render.c \
 				  time_utils.c vector_utils.c sphere_utils.c color_utils.c plane_utils.c \
-				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c
+				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c \
+				  cast_ray.c shading.c
 
 
 SOURCES_DIR		= src

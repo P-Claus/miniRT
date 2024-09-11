@@ -6,13 +6,14 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/04 17:01:00 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/11 16:04:35 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
+void	rotate_camera(
+		t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 {
 	t_quat	q_yaw;
 	t_quat	q_pitch;
@@ -22,17 +23,20 @@ void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 	(void)frame_time;
 	yaw_diff = mouse_diff.x * DEG2RAD;
 	pitch_diff = mouse_diff.y * DEG2RAD;
-	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD) || 90 * DEG2RAD <= camera->pitch + pitch_diff)
+	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD)
+		|| 90 * DEG2RAD <= camera->pitch + pitch_diff)
 		pitch_diff = 0;
 	camera->yaw += yaw_diff;
 	camera->pitch += pitch_diff;
 	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, camera->yaw);
 	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, camera->pitch);
 	camera->rotation = quat_mult(q_yaw, q_pitch);
-
-	camera->vector = vec3_normalize(quat_rotate_point((t_coordinates){0, 0, -1}, camera->rotation));
-	camera->right = vec3_normalize(quat_rotate_point((t_coordinates){1, 0, 0}, camera->rotation));
-	camera->up = vec3_normalize(quat_rotate_point((t_coordinates){0, 1, 0}, camera->rotation));
+	camera->vector = vec3_normalize(
+			quat_rotate_point((t_coordinates){0, 0, -1}, camera->rotation));
+	camera->right = vec3_normalize(
+			quat_rotate_point((t_coordinates){1, 0, 0}, camera->rotation));
+	camera->up = vec3_normalize(
+			quat_rotate_point((t_coordinates){0, 1, 0}, camera->rotation));
 }
 
 void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
@@ -46,7 +50,6 @@ void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
 	(void)frame_time;
 	if (data->selected.obj_type == OBJ_SPHERE)
 		return;
-
 	if (data->key_input_state & KEY_CTRL)
 	{
 		rot_diffs.x = 0;
@@ -59,13 +62,11 @@ void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
 		rot_diffs.y = -mouse_diff.y * DEG2RAD;
 		rot_diffs.z = 0;
 	}
-
 	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, rot_diffs.x);
 	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, rot_diffs.y);
 	q_roll = quat_axis_rot((t_coordinates){0, 0, 1}, rot_diffs.z);
 	q = quat_mult(q_yaw, q_pitch);
 	q = quat_mult(q, q_roll);
-
 	if (data->selected.obj_type == OBJ_PLANE)
 		data->scene.planes[data->selected.obj_index].vector = vec3_normalize(quat_rotate_point(data->scene.planes[data->selected.obj_index].vector, q));
 	else if (data->selected.obj_type == OBJ_CYLINDER)
@@ -133,7 +134,8 @@ void	move_obj(t_mlx_data *data, long key_state, float frame_time)
 void	key_inputs(t_mlx_data *data)
 {
 	if (data->selected.obj_type == OBJ_NONE)
-		move_camera(&data->scene.camera, data->key_input_state, data->frame_time);
+		move_camera(&data->scene.camera, data->key_input_state,
+			data->frame_time);
 	else
 		move_obj(data, data->key_input_state, data->frame_time);
 }
@@ -181,7 +183,7 @@ int	handle_no_event(t_mlx_data *data)
 		gettimeofday(&start, NULL);
 		if (data->full_res == REND_HIGH)
 		{
-			data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
+			data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
 			printf("Rendering scene ...\n");
 			render(data);
 			gettimeofday(&end, NULL);
@@ -227,7 +229,8 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 		mlx_loop_end(data->mlx);
 	else if (handle_move_keys(keysym, &data->key_input_state))
 		data->full_res = REND_LOW;
-	else if (keysym == XK_r && !data->key_input_state && !data->mouse_input_state)
+	else if (keysym == XK_r
+		&& !data->key_input_state && !data->mouse_input_state)
 		data->full_res = !(data->full_res);
 	return (0);
 }
@@ -256,15 +259,20 @@ void	select_obj(t_mlx_data *data)
 {
 	t_hit_info	hit;
 
-	hit = cast_ray(calc_ray(data->scene.camera, data, data->mouse_last_pos), data->scene);
-	if (hit.obj_type == OBJ_NONE || (data->selected.obj_type == hit.obj_type && data->selected.obj_index == hit.obj_index))
+	hit = cast_ray(calc_ray(
+				data->scene.camera, data, data->mouse_last_pos), data->scene);
+	if (hit.obj_type == OBJ_NONE
+		|| (data->selected.obj_type == hit.obj_type
+			&& data->selected.obj_index == hit.obj_index))
 	{
-		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
-		data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
+		printf("De-selected obj: %s #%zu\n", 
+			get_obj_name(data->selected.obj_type), data->selected.obj_index);
+		data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
 		return ;
 	}
 	data->selected = hit;
-	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
+	printf("Selected obj: %s #%zu\n",
+		get_obj_name(data->selected.obj_type), data->selected.obj_index);
 }
 
 int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
