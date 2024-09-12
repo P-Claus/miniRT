@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 08:57:40 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/11 22:16:49 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/12 19:46:27 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,37 +54,27 @@ int	count_items_in_split(char **split, int nb_needed)
 		return (1);
 }
 
-static void	init_data(int *iter, int *word_iter, int *dec_nb, bool *passed_dot)
+static int	is_valid_character(char c)
 {
-	iter = 0;
-	dec_nb = 0;
-	word_iter = 0;
-	passed_dot = false;
+	if (!ft_isdigit(c) && !(c == '.') && !(c == '-'))
+		return (1);
+	return (0);
 }
 
-static void	reset_data(int *word_iter, int *dec_nb, bool *passed_dot)
+int	check_digits_in_coordinates(char **split, int iter)
 {
-	passed_dot = false;
-	dec_nb = 0;
-	word_iter = 0;
-}
-
-int	check_digits_in_coordinates(char **split)
-{
-	int		iter;
 	int		word_iter;
 	bool	passed_dot;
 	int		dec_nb;
 
-	init_data(&iter, &word_iter, &dec_nb, &passed_dot);
+	dec_nb = 0;
+	word_iter = 0;
+	passed_dot = false;
 	while (split[iter])
 	{
 		while (split[iter][word_iter] && split[iter][word_iter] != '\0')
 		{
-			if ((!ft_isdigit(split[iter][word_iter])
-				&& !(split[iter][word_iter] == '.')
-				&& !(split[iter][word_iter] == '-'))
-				|| dec_nb > 2)
+			if (is_valid_character(split[iter][word_iter]) || dec_nb > 2)
 				return (1);
 			if (passed_dot == true)
 				dec_nb++;
@@ -93,7 +83,9 @@ int	check_digits_in_coordinates(char **split)
 			word_iter++;
 		}
 		iter++;
-		reset_data(&iter, &word_iter, &passed_dot);
+		dec_nb = 0;
+		word_iter = 0;
+		passed_dot = false;
 	}
 	return (0);
 }

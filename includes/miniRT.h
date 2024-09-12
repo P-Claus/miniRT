@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 21:39:56 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/12 19:46:51 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ void				free_split(char **split);
 void				free_split_and_trimmed_rgb(char **split,
 						char *trimmed_rgb);
 void				free_shape_arrays(t_scene_info *scene_info);
-int					check_digits_in_coordinates(char **split);
+int					check_digits_in_coordinates(char **split, int iter);
 void				init_scene_info(t_scene_info *scene_info, t_identifier_count *id_count);
 void				print_parsing_result(t_scene_info *scene_info);
 void				print_spheres(t_scene_info *scene_info);
@@ -275,6 +275,10 @@ void				print_cones(t_scene_info *scene_info, int iter);
 int					count_identifiers_for_initialization(int fd, t_identifier_count *id_count,
 						char *buffer);
 bool				count_digits(const char *str);
+void				init_cone(t_scene_info *scene_info, t_identifier_count *id_count);
+void				init_cylinder(t_scene_info *scene_info,	t_identifier_count *id_count);
+void				init_plane(t_scene_info *scene_info, t_identifier_count *id_count);
+void				init_sphere(t_scene_info *scene_info, t_identifier_count *id_count);
 
 /*	UTILS	*/
 int					exit_handler(char *error);

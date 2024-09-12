@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/03 22:19:56 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/12 19:55:09 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,6 @@ int	main(int argc, char **argv)
 	free(mlx_data.scene.spheres);
 	free(mlx_data.scene.planes);
 	free(mlx_data.scene.cylinders);
+	free(mlx_data.scene.cones);
 	close(fd);
 }

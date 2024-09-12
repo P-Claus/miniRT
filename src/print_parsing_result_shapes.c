@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 14:19:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/06 18:10:19 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/12 20:04:18 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	print_spheres(t_scene_info *scene_info)
 	{
 		printf(" --------------------------------------------- \n");
 		printf("|                 Sphere #%d                   |\n", iter);
-		printf("|                                             |\n");
 		printf("|                 Coordinates:                |\n");
 		printf("|             %6.3f,%6.3f,%6.3f            |\n",
 			scene_info->spheres[iter].coordinates.x,
@@ -47,7 +46,6 @@ void	print_planes(t_scene_info *scene_info)
 	{
 		printf(" --------------------------------------------- \n");
 		printf("|                  Plane #%d                   |\n", iter);
-		printf("|                                             |\n");
 		printf("|                 Coordinates:                |\n");
 		printf("|             %6.3f,%6.3f,%6.3f            |\n",
 			scene_info->planes[iter].coordinates.x,
@@ -73,7 +71,6 @@ void	print_cylinders(t_scene_info *scene_info, int iter)
 	{
 		printf(" --------------------------------------------- \n");
 		printf("|                 Cylinder #%d                 |\n", iter);
-		printf("|                                             |\n");
 		printf("|                Coordinates:                 |\n");
 		printf("|           %3.3f,%6.3f,%6.3f             |\n",
 			scene_info->cylinders[iter].coordinates.x,
@@ -103,7 +100,6 @@ void	print_cones(t_scene_info *scene_info, int iter)
 	{
 		printf(" --------------------------------------------- \n");
 		printf("|                   Cone #%d                   |\n", iter);
-		printf("|                                             |\n");
 		printf("|                 Coordinates:                |\n");
 		printf("|            %6.3f,%6.3f,%6.3f             |\n",
 			scene_info->cones[iter].apex.x,
