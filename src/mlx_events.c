@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/11 16:04:35 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/12 23:50:44 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ void	rotate_camera(
 
 void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
 {
-	t_quat	q_yaw;
-	t_quat	q_pitch;
-	t_quat	q_roll;
-	t_quat	q;
+	t_quat			q_yaw;
+	t_quat			q_pitch;
+	t_quat			q_roll;
+	t_quat			q;
 	t_coordinates	rot_diffs;
 
 	(void)frame_time;
 	if (data->selected.obj_type == OBJ_SPHERE)
-		return;
+		return ;
 	if (data->key_input_state & KEY_CTRL)
 	{
 		rot_diffs.x = 0;
@@ -197,8 +197,6 @@ int	handle_no_event(t_mlx_data *data)
 		data->frame_time = frame_time(start, end);
 		image_add_frametime(data);
 	}
-	else
-		return (0);
 	return (0);
 }
 
@@ -265,7 +263,7 @@ void	select_obj(t_mlx_data *data)
 		|| (data->selected.obj_type == hit.obj_type
 			&& data->selected.obj_index == hit.obj_index))
 	{
-		printf("De-selected obj: %s #%zu\n", 
+		printf("De-selected obj: %s #%zu\n",
 			get_obj_name(data->selected.obj_type), data->selected.obj_index);
 		data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
 		return ;
