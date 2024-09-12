@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/12 19:46:51 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/09/13 00:22:34 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,15 @@ typedef struct s_light
 	t_rgb			rgb;
 }					t_light;
 
+typedef struct s_material
+{
+	t_rgb	albedo;
+	float	k_s;
+	float	alpha;
+	float	k_d;
+	float	k_a;
+}	t_material;
+
 typedef struct s_sphere
 {
 	t_coordinates	coordinates;
@@ -202,6 +211,21 @@ typedef struct s_scene_info
 	int				nb_of_cylinders;
 	int				nb_of_cones;
 }					t_scene_info;
+
+typedef struct s_phong_help_struct
+{
+	float	light_dist2;
+	t_rgb	ambient;
+	t_rgb	specular;
+	t_rgb	diffuse;
+	t_material	hit_material;
+	t_rgb	i_d;
+	t_rgb	i_s;
+	t_coordinates	light_dir;
+	t_coordinates	hit_normal;
+	t_coordinates	reflect_dir;
+	t_coordinates	view_dir;
+}	t_phong_help_struct;
 
 typedef struct s_identifier_count
 {
@@ -295,8 +319,9 @@ void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_ti
 
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
-t_rgb				color_from_hit(t_hit_info hit, t_scene_info scene);
+bool				cast_shadow_ray(t_ray ray, t_scene_info scene, float light_dist);
 t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
+t_rgb				phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene);
 
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
@@ -310,8 +335,8 @@ bool				cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist);
 t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
 
 /* CONE UTILS */
-t_coordinates cone_normal(t_hit_info hit, t_cone cone);
-bool	cone_hit(t_ray ray, t_cone cone, float *dist);
+t_coordinates		cone_normal(t_hit_info hit, t_cone cone);
+bool				cone_hit(t_ray ray, t_cone cone, float *dist);
 
 
 /* DISK UTILS */
@@ -325,6 +350,7 @@ t_coordinates		vec3_scalar(t_coordinates a, float scalar);
 float				vec3_norm(t_coordinates a);
 t_coordinates		vec3_normalize(t_coordinates a);
 float				vec3_dot(t_coordinates a, t_coordinates b);
+float				vec3_dot2(t_coordinates a);
 t_coordinates		vec3_cross(t_coordinates a, t_coordinates b);
 
 /* QUATERNION MATH */
@@ -334,7 +360,10 @@ t_quat				quat_mult(t_quat a, t_quat b);
 t_coordinates		quat_rotate_point(t_coordinates p, t_quat q);
 
 /* COLOR MATH STUFF */
+t_rgb				color_add(t_rgb a, t_rgb b);
 t_rgb				color_scalar(t_rgb c, float scale);
+float				color_dot(t_rgb a, t_rgb b);
+t_rgb				color_hadamard(t_rgb a, t_rgb b);
 int					color_to_int(t_rgb c);
 
 /*  MLX_EVENTS  */

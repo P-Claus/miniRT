@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/05 16:51:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/13 00:23:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	render(t_mlx_data *data)
 	errno = 0;
 }
 
-void	set_pixels(t_mlx_data *data, int color, t_pixel_coord p, t_pixel_coord dp)
+void	set_pixels(
+		t_mlx_data *data, int color, t_pixel_coord p, t_pixel_coord dp)
 {
 	int				j;
 	int				i;
@@ -76,112 +77,6 @@ void	render_low_res(t_mlx_data *data, int dx, int dy)
 	errno = 0;
 }
 
-t_hit_info	cast_ray(t_ray ray, t_scene_info scene)
-{
-	t_hit_info	hit;
-	float		dist;
-	int			i;
-
-
-	hit.dist = INFINITY;
-	hit.obj_index = 0;
-	hit.obj_type = OBJ_NONE;
-	i = 0;
-	while (i < scene.nb_of_spheres)
-	{
-		if (sphere_hit(ray, scene.spheres[i], &dist) && dist > 0)
-		{
-			if (dist < hit.dist)
-			{
-				hit.dist = dist;
-				hit.obj_index = i;
-				hit.obj_type = OBJ_SPHERE;
-			}
-		}
-		i++;
-	}
-	i = 0;
-	while(i < scene.nb_of_planes)
-	{
-		if (plane_hit(ray, scene.planes[i], &dist) && dist > 0)
-		{
-			if (dist < hit.dist)
-			{
-				hit.dist = dist;
-				hit.obj_index = i;
-				hit.obj_type = OBJ_PLANE;
-			}
-		}
-		i++;
-	}
-	i = 0;
-	while (i < scene.nb_of_cylinders)
-	{
-		if (cylinder_hit(ray, scene.cylinders[i], &dist) && dist > 0)
-		{
-			if (dist < hit.dist)
-			{
-				hit.dist = dist;
-				hit.obj_index = i;
-				hit.obj_type = OBJ_CYLINDER;
-			}
-		}
-		i++;
-	}
-	i = 0;
-	while(i < scene.nb_of_cones)
-	{
-		if (cone_hit(ray, scene.cones[i], &dist) && dist > 0)
-		{
-			if (dist < hit.dist)
-			{
-				hit.dist = dist;
-				hit.obj_index = i;
-				hit.obj_type = OBJ_CONE;
-			}
-		}
-		i++;
-	}
-	if (hit.obj_type != OBJ_NONE)
-		hit.coordinates = vec3_sum(ray.origin, vec3_scalar(ray.dir, hit.dist));
-	return (hit);
-}
-
-t_rgb	color_from_hit(t_hit_info hit, t_scene_info scene)
-{
-	t_rgb			color;
-	t_coordinates	hit_normal;
-	t_coordinates	light_dir;
-	float	light;
-
-	light_dir = vec3_normalize(vec3_diff(scene.light.coordinates, hit.coordinates));
-	if (hit.obj_type == OBJ_SPHERE)
-	{
-		color = scene.spheres[hit.obj_index].rgb;
-		hit_normal = sphere_normal(hit, scene.spheres[hit.obj_index]);
-	}
-	else if (hit.obj_type == OBJ_PLANE)
-	{
-		color = scene.planes[hit.obj_index].rgb;
-		hit_normal = scene.planes[hit.obj_index].vector;
-	}
-	else if (hit.obj_type == OBJ_CYLINDER)
-	{
-		color = scene.cylinders[hit.obj_index].rgb;
-		hit_normal = cylinder_normal(hit, scene.cylinders[hit.obj_index]);
-	}
-	else if (hit.obj_type == OBJ_CONE)
-	{
-		color = scene.cones[hit.obj_index].rgb;
-		hit_normal = cone_normal(hit, scene.cones[hit.obj_index]);
-	}
-	else
-		return ((t_rgb){0, 0, 0,});
-	light = fmax(vec3_dot(hit_normal,light_dir), 0.);
-	color = color_scalar(color, light);
-	return (color);
-}
-
 t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 {
 	t_coordinates	ray_dir_screen;
@@ -190,7 +85,8 @@ t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 	float			scale;
 
 	scale = tan(DEG2RAD * camera.fov * 0.5);
-	uv = (t_pixel_uv){(p.x + 0.5) / data->width, (data->height - p.y - 0.5) / data->height};
+	uv = (t_pixel_uv){(p.x + 0.5) / data->width,
+		(data->height - p.y - 0.5) / data->height};
 	uv.x = (uv.x * 2. - 1.) * scale * data->aspect;
 	uv.y = (uv.y * 2. - 1.) * scale;
 	ray.origin = camera.coordinates;
@@ -204,14 +100,14 @@ t_ray	calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p)
 
 int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 {
-	t_ray	ray;
+	t_ray		ray;
+	t_hit_info	hit;
+	t_rgb		color_coord;
 
 	ray = calc_ray(data->scene.camera, data, p);
-
-	t_hit_info	hit = cast_ray(ray, data->scene);
+	hit = cast_ray(ray, data->scene);
 	if (hit.obj_type == OBJ_NONE)
 		return (0x0087CEEB);
-
-	t_rgb color_coord = color_from_hit(hit, data->scene);
+	color_coord = phong_shading(ray, hit, data->scene);
 	return (color_to_int(color_coord));
 }

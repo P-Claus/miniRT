@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:19:26 by efret             #+#    #+#             */
-/*   Updated: 2024/09/05 16:41:39 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/13 01:01:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool	solve_quadratic2(float a, float b, float c, float *dist)
 	{
 		d[0] = -0.5 * (b + sqrt(discr)) / a;
 		d[1] = -0.5 * (b - sqrt(discr)) / a;
-		if (d[1] > 0 && d[0] < d[1])
+		if (d[0] && d[0] < d[1])
 			*dist = d[1];
 		else
 			*dist = d[0];
