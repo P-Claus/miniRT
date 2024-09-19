@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/13 00:22:34 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/19 20:22:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,6 +323,9 @@ bool				cast_shadow_ray(t_ray ray, t_scene_info scene, float light_dist);
 t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
 t_rgb				phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene);
 
+/* MATERIAL UTILS */
+t_material			default_material(void);
+
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
 t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
@@ -337,7 +340,6 @@ t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
 /* CONE UTILS */
 t_coordinates		cone_normal(t_hit_info hit, t_cone cone);
 bool				cone_hit(t_ray ray, t_cone cone, float *dist);
-
 
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);

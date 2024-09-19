@@ -22,7 +22,7 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  time_utils.c vector_utils.c sphere_utils.c color_utils.c plane_utils.c \
 				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c parse_cone.c \
 				  cone_utils.c vector_norm_utils.c ft_atof.c init_shapes.c \
-				  cast_ray.c shading.c vector_cross.c
+				  cast_ray.c cast_shadow_ray.c shading.c vector_cross.c material.c
 
 
 SOURCES_DIR		= src
