@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/20 17:42:31 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 21:59:55 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	init_mlx_data(t_mlx_data *data)
 	data->scene.camera.right = (t_coordinates){1, 0, 0};
 	data->scene.camera.up = (t_coordinates){0, 1, 0};
 	data->scene.camera.vector = (t_coordinates){0, 0, -1};
-	data->low_res_lev = 5;
+	data->low_res_lev = 8;
 	data->speed = 0.5;
 
 	return (0);

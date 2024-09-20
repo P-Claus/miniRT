@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 18:39:41 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 22:17:41 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ void	set_pixels(
 	p.x -= dp.x / 2;
 	p.y -= dp.y / 2;
 	j = 0;
-	while (j < dp.y)
+	while (j < dp.y && p.y + j < data->height)
 	{
 		i = 0;
-		while (i < dp.x)
+		while (i < dp.x && p.x + i < data->width)
 		{
 			fast_pixel_put(data, (t_pixel_coord){p.x + i, p.y + j}, color);
 			i++;
@@ -62,10 +62,10 @@ void	render_low_res(t_mlx_data *data, int dx, int dy)
 	if (dx < 1 || dy < 1)
 		return (render_low_res(data, 2, 2));
 	p.y = dy / 2;
-	while (p.y < data->height)
+	while (p.y < data->height + dy)
 	{
 		p.x = dx / 2;
-		while (p.x < data->width)
+		while (p.x < data->width + dx)
 		{
 			pixel_color = per_pixel(data, p);
 			set_pixels(data, pixel_color, p, (t_pixel_coord){dx, dy});
