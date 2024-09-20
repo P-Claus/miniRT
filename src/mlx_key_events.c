@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:11:23 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 18:19:47 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 18:36:48 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 		data->speed = fmin(data->speed + 0.1, 1.6);
 	else if (keysym == XK_Down)
 		data->speed = fmax(data->speed - 0.1, 0.1);
+	else if (keysym == XK_g)
+		data->gamma_type = (data->gamma_type + 1) % GAMMA_END;
 	return (0);
 }
 

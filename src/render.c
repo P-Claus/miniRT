@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/13 00:23:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 18:39:41 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,5 @@ int	per_pixel(t_mlx_data *data, t_pixel_coord p)
 	if (hit.obj_type == OBJ_NONE)
 		return (0x0087CEEB);
 	color_coord = phong_shading(ray, hit, data->scene);
-	return (color_to_int(color_coord));
+	return (color_to_int(color_coord, data->gamma_type));
 }

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/20 17:50:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 18:38:07 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,14 @@ typedef enum e_render_state
 	REND_HIGH,
 	REND_DONE
 }	t_render_state;
+
+typedef enum e_gamma_type
+{
+	GAMMA_CORRECT,
+	GAMMA_FAST,
+	GAMMA_NONE,
+	GAMMA_END,
+}	t_gamma_type;
 
 typedef enum e_object_type
 {
@@ -267,6 +275,7 @@ typedef struct s_mlx_data
 	int				low_res_lev;
 	float			speed;
 	t_hit_info		selected;
+	t_gamma_type	gamma_type;
 }	t_mlx_data;
 
 /*	PARSING	*/
@@ -383,7 +392,7 @@ t_rgb				color_add(t_rgb a, t_rgb b);
 t_rgb				color_scalar(t_rgb c, float scale);
 float				color_dot(t_rgb a, t_rgb b);
 t_rgb				color_hadamard(t_rgb a, t_rgb b);
-int					color_to_int(t_rgb c);
+int					color_to_int(t_rgb c, t_gamma_type gamma_type);
 
 /*  MLX_EVENTS  */
 int					handle_no_event(t_mlx_data *data);
