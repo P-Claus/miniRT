@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 13:15:19 by efret             #+#    #+#             */
-/*   Updated: 2024/08/26 13:19:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 12:29:33 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,9 @@ bool	sphere_hit(t_ray ray, t_sphere sphere, float *dist)
 t_coordinates	sphere_normal(t_hit_info hit, t_sphere sphere)
 {
 	return (vec3_normalize(vec3_diff(hit.coordinates, sphere.coordinates)));
+}
+
+void	sphere_move(t_sphere *sphere, t_coordinates move_dir)
+{
+	sphere->coordinates = vec3_sum(sphere->coordinates, move_dir);
 }

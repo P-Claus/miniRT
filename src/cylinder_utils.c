@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:07:09 by efret             #+#    #+#             */
-/*   Updated: 2024/08/26 17:52:48 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 12:54:54 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,14 @@ t_coordinates	cylinder_normal(t_hit_info hit, t_cylinder cylinder)
 	else if (t >= cylinder.height - 1e-4)
 		return (cylinder.vector);
 	return (vec3_normalize(vec3_diff(vec3_diff(hit.coordinates, vec3_scalar(cylinder.vector, t)), b)));
+}
+
+void	cylinder_move(t_cylinder *cylinder, t_coordinates move_dir)
+{
+	cylinder->coordinates = vec3_sum(cylinder->coordinates, move_dir);
+}
+
+void	cylinder_rot(t_cylinder *cylinder, t_quat q)
+{
+	cylinder->vector = vec3_normalize(quat_rotate_point(cylinder->vector, q));
 }

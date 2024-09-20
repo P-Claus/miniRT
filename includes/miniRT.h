@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/19 20:22:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 12:55:35 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,7 @@ bool				solve_quadratic2(float a, float b, float c, float *dist);
 
 /* CAMERA UTILS */
 void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
+void				move_camera(t_camera *camera, long key_state, float frame_time);
 
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
@@ -326,20 +327,31 @@ t_rgb				phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene);
 /* MATERIAL UTILS */
 t_material			default_material(void);
 
+/* OBJECT UTILS */
+void				rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time);
+void				move_obj(t_mlx_data *data, long key_state, float frame_time);
+
 /* SPHERE UTILS */
 bool				sphere_hit(t_ray ray, t_sphere sphere, float *dist);
 t_coordinates		sphere_normal(t_hit_info hit, t_sphere sphere);
+void				sphere_move(t_sphere *sphere, t_coordinates move_dir);
 
 /* PLANE UTILS */
 bool				plane_hit(t_ray ray, t_plane plane, float *dist);
+void				plane_move(t_plane *plane, t_coordinates move_dir);
+void				plane_rot(t_plane *plane, t_quat q);
 
 /* CYLINDER UTILS */
 bool				cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist);
 t_coordinates		cylinder_normal(t_hit_info hit, t_cylinder cylinder);
+void				cylinder_move(t_cylinder *cylinder, t_coordinates move_dir);
+void				cylinder_rot(t_cylinder *cylinder, t_quat q);
 
 /* CONE UTILS */
 t_coordinates		cone_normal(t_hit_info hit, t_cone cone);
 bool				cone_hit(t_ray ray, t_cone cone, float *dist);
+void				cone_move(t_cone *cone, t_coordinates move_dir);
+void				cone_rot(t_cone *cone, t_quat q);
 
 /* DISK UTILS */
 bool				disk_hit(t_ray ray, t_disk disk, float *dist);

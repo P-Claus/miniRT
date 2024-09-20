@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/05 16:52:15 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 12:55:26 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,14 @@ t_coordinates	cone_normal(t_hit_info hit, t_cone cone)
 		normal = vec3_normalize(cross2);
 	}
 	return (normal);
+}
+
+void	cone_move(t_cone *cone, t_coordinates move_dir)
+{
+	cone->apex = vec3_sum(cone->apex, move_dir);
+}
+
+void	cone_rot(t_cone *cone, t_quat q)
+{
+	cone->vector = vec3_normalize(quat_rotate_point(cone->vector, q));
 }
