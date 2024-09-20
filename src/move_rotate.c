@@ -6,44 +6,44 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:09:29 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 12:56:25 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 17:59:44 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-void	move_camera(t_camera *camera, long key_state, float frame_time)
+void	move_camera(t_camera *camera, long key_state, float speed)
 {
 	t_coordinates	move_dir;
 	t_coordinates	world_move_dir;
 
 	if (!key_state)
 		return ;
-	move_dir.x = ((key_state & KEY_D) > 0) - ((key_state & KEY_A) > 0);
-	move_dir.y = ((key_state & KEY_E) > 0) - ((key_state & KEY_Q) > 0);
-	move_dir.z = ((key_state & KEY_W) > 0) - ((key_state & KEY_S) > 0);
+	move_dir.x = ((key_state & KEY_D) != 0) - ((key_state & KEY_A) != 0);
+	move_dir.y = ((key_state & KEY_E) != 0) - ((key_state & KEY_Q) != 0);
+	move_dir.z = ((key_state & KEY_W) != 0) - ((key_state & KEY_S) != 0);
 	if (vec3_norm(move_dir) < 1e-6)
 		return ;
 	world_move_dir.x = vec3_dot(camera->right, move_dir);
 	world_move_dir.y = vec3_dot(camera->up, move_dir);
 	world_move_dir.z = vec3_dot(camera->vector, move_dir);
 	world_move_dir = vec3_normalize(world_move_dir);
-	world_move_dir = vec3_scalar(world_move_dir, 0.01 * frame_time);
+	world_move_dir = vec3_scalar(world_move_dir, 0.01 * speed);
 	camera->coordinates = vec3_sum(camera->coordinates, world_move_dir);
 }
 
-void	move_obj(t_mlx_data *data, long key_state, float frame_time)
+void	move_obj(t_mlx_data *data, long key_state, float speed)
 {
 	t_coordinates	move_dir;
 
 	if (!key_state)
 		return ;
-	move_dir.x = ((key_state & KEY_D) > 0) - ((key_state & KEY_A) > 0);
-	move_dir.y = ((key_state & KEY_E) > 0) - ((key_state & KEY_Q) > 0);
-	move_dir.z = ((key_state & KEY_S) > 0) - ((key_state & KEY_W) > 0);
+	move_dir.x = ((key_state & KEY_D) != 0) - ((key_state & KEY_A) != 0);
+	move_dir.y = ((key_state & KEY_E) != 0) - ((key_state & KEY_Q) != 0);
+	move_dir.z = ((key_state & KEY_S) != 0) - ((key_state & KEY_W) != 0);
 	if (vec3_norm(move_dir) < 1e-6)
 		return ;
-	move_dir = vec3_scalar(vec3_normalize(move_dir), 0.01 * frame_time);
+	move_dir = vec3_scalar(vec3_normalize(move_dir), 0.01 * speed);
 	if (data->selected.obj_type == OBJ_SPHERE)
 		sphere_move(&data->scene.spheres[data->selected.obj_index], move_dir);
 	else if (data->selected.obj_type == OBJ_PLANE)
@@ -56,15 +56,15 @@ void	move_obj(t_mlx_data *data, long key_state, float frame_time)
 }
 
 void	rotate_camera(
-		t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
+		t_camera *camera, t_pixel_coord mouse_diff, float speed)
 {
 	t_quat	q_yaw;
 	t_quat	q_pitch;
 	float	yaw_diff;
 	float	pitch_diff;
 
-	yaw_diff = mouse_diff.x * DEG2RAD * 0.005 * frame_time;
-	pitch_diff = mouse_diff.y * DEG2RAD * 0.005 * frame_time;
+	yaw_diff = mouse_diff.x * DEG2RAD * 2 * speed;
+	pitch_diff = mouse_diff.y * DEG2RAD * 2 * speed;
 	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD)
 		|| 90 * DEG2RAD <= camera->pitch + pitch_diff)
 		pitch_diff = 0;
@@ -81,7 +81,7 @@ void	rotate_camera(
 			quat_rotate_point((t_coordinates){0, 1, 0}, camera->rotation));
 }
 
-void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
+void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float speed)
 {
 	t_quat			q_yaw;
 	t_quat			q_pitch;
@@ -92,12 +92,12 @@ void	rotate_obj(t_mlx_data *data, t_pixel_coord mouse_diff, float frame_time)
 	if (data->selected.obj_type == OBJ_SPHERE)
 		return ;
 	rot_diffs.x = 0;
-	rot_diffs.y = -mouse_diff.y * DEG2RAD * 0.005 * frame_time;
+	rot_diffs.y = -mouse_diff.y * DEG2RAD * 2 * speed;
 	rot_diffs.z = 0;
-	if (data->key_input_state & KEY_CTRL)
-		rot_diffs.z = mouse_diff.x * DEG2RAD * 0.005 * frame_time;
+	if (data->key_input_state & KEY_ALT)
+		rot_diffs.z = mouse_diff.x * DEG2RAD * 2 * speed;
 	else
-		rot_diffs.x = mouse_diff.x * DEG2RAD * 0.005 * frame_time;
+		rot_diffs.x = mouse_diff.x * DEG2RAD * 2 * speed;
 	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, rot_diffs.x);
 	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, rot_diffs.y);
 	q_roll = quat_axis_rot((t_coordinates){0, 0, 1}, rot_diffs.z);

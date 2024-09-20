@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/20 12:55:35 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/20 17:50:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,16 @@
 # define RAD2DEG (180. / M_PI)
 
 /* KEY_INPUT_STATE BIT MASKS */
+# define KEY_SPACE (1 << 1)
 # define KEY_W (1 << 2)
 # define KEY_A (1 << 3)
 # define KEY_S (1 << 4)
 # define KEY_D (1 << 5)
 # define KEY_Q (1 << 6)
 # define KEY_E (1 << 7)
-# define KEY_CTRL (1 << 8)
+# define KEY_ALT (1 << 8)
+# define KEY_CTRL (1 << 9)
+# define KEY_SHIFT (1 << 10)
 
 /* MOUSE_INPUT_STATE BIT MASKS */
 # define BTN_LEFT (1 << 0)
@@ -261,6 +264,8 @@ typedef struct s_mlx_data
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
 	int				full_res;
+	int				low_res_lev;
+	float			speed;
 	t_hit_info		selected;
 }	t_mlx_data;
 
