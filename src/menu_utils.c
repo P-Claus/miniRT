@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/21 17:44:42 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/21 19:24:03 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,24 @@ int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 	(void)self;
 	(void)data;
 	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
-	if (self->data_type == UI_DATA_INT)
-		box_text = ft_itoa(*((int *)self->data));
-	else if (self->data_type == UI_DATA_FLOAT)
-		box_text = ft_ftoa(*((float *)self->data), 3);
-	else
-		box_text = NULL;
-	if (box_text)
+	if (data->menu.curr_input_elem == self)
 	{
-		if (data->menu.curr_input_elem == self)
+		box_text = data->menu.curr_input_str;
+		if (box_text)
 			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x00FF12FF, box_text);
-		else
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x00FFFFFF, box_text);
 	}
-	free(box_text);
+	else
+	{
+		if (self->data_type == UI_DATA_INT)
+			box_text = ft_itoa(*((int *)self->data));
+		else if (self->data_type == UI_DATA_FLOAT)
+			box_text = ft_ftoa(*((float *)self->data), 3);
+		else
+			box_text = NULL;
+		if (box_text)
+			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x00FFFFFF, box_text);
+		free(box_text);
+	}
 	return (0);
 }
 
@@ -110,13 +114,7 @@ int	menu_btn_reset_cam(t_ui_menu_elem *self, t_mlx_data *data)
 int	menu_nbox_get_input(t_ui_menu_elem *self, t_mlx_data *data)
 {
 	data->menu.curr_input_elem = self;
-	if (self->data_type == UI_DATA_INT)
-		data->menu.curr_input_str = ft_itoa(*((int *)self->data));
-	else if (self->data_type == UI_DATA_FLOAT)
-		data->menu.curr_input_str = ft_ftoa(*((float *)self->data), 3);
-	else
-		data->menu.curr_input_str = NULL;
-	printf("curr input str: %s\n", data->menu.curr_input_str);
+	data->menu.curr_input_str = NULL;
 	return (0);
 }
 
@@ -144,6 +142,12 @@ int	menu_page_click(t_mlx_data *data)
 		return (0);
 	elem = &data->menu.curr_page.elements[elem_index];
 	printf("Element #%i click: %s\n", elem_index, elem->str);
+	if (data->menu.curr_input_elem)
+	{
+		if (data->menu.curr_input_str)
+			free(data->menu.curr_input_str);
+		data->menu.curr_input_elem = NULL;
+	}
 	if (elem->func && data->mouse_input_state & BTN_LEFT)
 		data->menu.curr_page.elements[elem_index].func(elem, data);
 	return (0);

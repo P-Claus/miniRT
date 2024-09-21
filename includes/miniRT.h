@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/21 17:40:47 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/21 18:44:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,5 +408,6 @@ int					menu_page_click(t_mlx_data *data);
 
 int					ft_strjoin_char(char **str, char c);
 char				*ft_ftoa(float f, int prec);
+int					ft_strstrip_char(char **str);
 
 #endif

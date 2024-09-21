@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/21 16:56:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/21 19:22:29 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,35 @@ int	handle_no_event(t_mlx_data *data)
 	return (0);
 }
 
+int	handle_menu_keypress(int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_Escape)
+	{
+		data->menu.curr_input_elem = NULL;
+		free(data->menu.curr_input_str);
+		data->menu.curr_input_str = NULL;
+	}
+	else if (keysym == XK_Return)
+	{
+		if (data->menu.curr_input_str == NULL)
+			return (data->menu.curr_input_elem = NULL, data->menu.show = MENU_SHOW, 0);
+		if (data->menu.curr_input_elem->data_type == UI_DATA_FLOAT)
+			*(float *)(data->menu.curr_input_elem->data) = ft_atof(data->menu.curr_input_str, 6);
+		data->menu.curr_input_elem = NULL;
+		free(data->menu.curr_input_str);
+		data->menu.curr_input_str = NULL;
+	}
+	else if (keysym == XK_BackSpace)
+		ft_strstrip_char(&data->menu.curr_input_str);
+	else if (XK_0 <= keysym && keysym <= XK_9)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	else if (keysym == XK_space || keysym == XK_comma || keysym == XK_period
+			|| keysym == XK_plus || keysym == XK_minus)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	data->menu.show = MENU_SHOW;
+	return (0);
+}
+
 int	handle_move_keys(int keysym, long *key_input_state)
 {
 	if (keysym == XK_a)
@@ -231,6 +260,8 @@ int	handle_move_keys(int keysym, long *key_input_state)
 
 int	handle_keypress(int keysym, t_mlx_data *data)
 {
+	if (data->menu.curr_input_elem)
+		return (handle_menu_keypress(keysym, data));
 	if (keysym == XK_Escape)
 		mlx_loop_end(data->mlx);
 	else if (handle_move_keys(keysym, &data->key_input_state))
@@ -246,6 +277,8 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 
 int	handle_keyrelease(int keysym, t_mlx_data *data)
 {
+	if (data->menu.curr_input_elem)
+		return (0);
 	if (keysym == XK_a)
 		data->key_input_state ^= KEY_A;
 	else if (keysym == XK_d)
