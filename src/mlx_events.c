@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/03 14:21:24 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/21 16:56:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ void	check_input_states(t_mlx_data *data)
 {
 	mouse_drag(data);
 	key_inputs(data);
+	if (data->menu.show == MENU_DRAWN && (data->key_input_state || data->mouse_input_state))
+		data->menu.show = MENU_SHOW;
 }
 
 void	image_add_frametime(t_mlx_data *data)
@@ -237,6 +239,8 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 		data->full_res = !(data->full_res);
 	else if (keysym == XK_m && !data->full_res)
 		data->menu.show  = !(data->menu.show);
+	if (data->menu.show == MENU_DRAWN)
+		data->menu.show = MENU_SHOW;
 	return (0);
 }
 

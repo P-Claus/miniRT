@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/03 14:52:36 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/21 17:40:47 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,15 @@ typedef enum e_ui_menu_page_type
 	UI_MENU_PAGE_END,
 }	t_ui_menu_page_type;
 
+typedef enum e_data_type
+{
+	UI_DATA_NONE,
+	UI_DATA_INT,
+	UI_DATA_FLOAT,
+	UI_DATA_COORDS,
+	UI_DATA_RGB,
+}	t_data_type;
+
 # define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
 # define ELEM_HEIGHT 18
 # define ELEM_OFFSET (40 + ELEM_HEIGHT)
@@ -253,7 +262,8 @@ typedef struct s_ui_menu_elem
 {
 	t_ui_menu_elem_type	type;
 	char				*str;
-	int					index;
+	int					data_type;
+	void				*data;
 	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
 	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
 }	t_ui_menu_elem;
@@ -275,6 +285,8 @@ typedef struct s_ui_menu
 	t_pixel_coord	size;
 	t_ui_menu_page	curr_page;
 	t_ui_menu_page	*pages;
+	t_ui_menu_elem	*curr_input_elem;
+	char			*curr_input_str;
 }	t_ui_menu;
 
 typedef struct s_mlx_data
@@ -393,5 +405,8 @@ int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
 int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
 int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
 int					menu_page_click(t_mlx_data *data);
+
+int					ft_strjoin_char(char **str, char c);
+char				*ft_ftoa(float f, int prec);
 
 #endif
