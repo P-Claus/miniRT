@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 13:19:12 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 14:26:55 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 	(void)frame_time;
 	yaw_diff = mouse_diff.x * DEG2RAD;
 	pitch_diff = mouse_diff.y * DEG2RAD;
-	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD) || 90 * DEG2RAD <= camera->pitch + pitch_diff)
+	if (camera->pitch + pitch_diff <= -M_PI_2 || M_PI_2 <= camera->pitch + pitch_diff)
 		pitch_diff = 0;
 	camera->yaw -= yaw_diff;
 	camera->yaw = camera->yaw - M_PI * 2 * floor(camera->yaw / (M_PI * 2));
-	camera->pitch += pitch_diff;
+	camera->pitch -= pitch_diff;
 	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, -camera->yaw);
-	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, camera->pitch);
+	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, -camera->pitch);
 	camera->rotation = quat_mult(q_yaw, q_pitch);
 
 	camera->vector = vec3_normalize(quat_rotate_point((t_coordinates){0, 0, -1}, camera->rotation));

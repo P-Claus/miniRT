@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 13:21:46 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 14:33:39 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,16 @@ int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 
 	(void)self;
 	(void)data;
-	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
 	if (data->menu.curr_input_elem == self)
 	{
+		mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x0000d9ff, self->str);
 		box_text = data->menu.curr_input_str;
 		if (box_text)
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x00FF12FF, box_text);
+			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x0000d9ff, box_text);
 	}
 	else
 	{
+		mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
 		if (self->data_type == UI_DATA_INT)
 			box_text = ft_itoa(*((int *)self->data));
 		else if (self->data_type == UI_DATA_FLOAT)
