@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 14:42:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 14:58:06 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,7 +338,8 @@ void	select_obj(t_mlx_data *data)
 	}
 	data->selected = hit;
 	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
-	data->menu.show = MENU_SHOW;
+	if (data->menu.show)
+		data->menu.show = MENU_SHOW;
 }
 
 int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
