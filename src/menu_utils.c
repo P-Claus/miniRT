@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 18:11:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:11:52 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,22 @@ int	menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data)
 	return (0);
 }
 
+int	menu_nbox_apply_fov(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	int	new_val;
+
+	if (self->data_type != UI_DATA_INT)
+		return (1);
+	new_val = ft_atoi(data->menu.curr_input_str);
+	if (new_val < 5 || new_val > 175)
+	{
+		printf("Invalid input: fov should be int in [5, 175] range.\n");
+		return (1);
+	}
+	*(int *)self->data = new_val;
+	return (0);
+}
+
 int	menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data)
 {
 	float	new_val;
@@ -176,7 +192,7 @@ int	menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data)
 	else
 		new_val = ft_atof(data->menu.curr_input_str, 6);
 	if (new_val < 0. || 1. < new_val)
-		return (printf("Invalid input: color channel value between [0, 1]"), 1);
+		return (printf("Invalid input: color channel value between [0, 1]\n"), 1);
 	*(float *)self->data = new_val;
 	return (0);
 }
@@ -192,7 +208,7 @@ int	menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data)
 	else
 		new_val = ft_atof(data->menu.curr_input_str, 6);
 	if (new_val < 0. || 1. < new_val)
-		return (printf("Invalid input: percent value between [0, 1]"), 1);
+		return (printf("Invalid input: percent value between [0, 1]\n"), 1);
 	*(float *)self->data = new_val;
 	return (0);
 }
@@ -242,7 +258,7 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	(void)data;
 	t_ui_menu_elem	*elems;
 
-	page->n_elems = 29;
+	page->n_elems = 30;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	page->elements = elems;
 	if (!elems)
@@ -264,21 +280,22 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	elems[11] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, menu_draw_nbox, NULL};
 	elems[12] = (t_ui_menu_elem){UI_MENU_NBOX, "yaw:", UI_DATA_FLOAT, &data->scene.camera.yaw, menu_draw_nbox, menu_nbox_apply_yaw};
 	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "pitch:", UI_DATA_FLOAT, &data->scene.camera.pitch, menu_draw_nbox, menu_nbox_apply_pitch};
-	elems[14] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
-	elems[15] = (t_ui_menu_elem){UI_MENU_TEXT, "Ambient", 0, NULL, menu_draw_text, NULL};
-	elems[16] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.a_lighting.ambient_lighting, menu_draw_nbox, menu_nbox_apply_perc};
-	elems[17] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
-	elems[18] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
-	elems[19] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
-	elems[20] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
-	elems[21] = (t_ui_menu_elem){UI_MENU_TEXT, "Point Light", 0, NULL, menu_draw_text, NULL};
-	elems[22] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &data->scene.light.coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
-	elems[23] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &data->scene.light.coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
-	elems[24] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &data->scene.light.coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
-	elems[25] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.light.brightness, menu_draw_nbox, menu_nbox_apply_perc};
-	elems[26] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.light.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
-	elems[27] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
-	elems[28] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[14] = (t_ui_menu_elem){UI_MENU_NBOX, "fov:", UI_DATA_INT, &data->scene.camera.fov, menu_draw_nbox, menu_nbox_apply_fov};
+	elems[15] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[16] = (t_ui_menu_elem){UI_MENU_TEXT, "Ambient", 0, NULL, menu_draw_text, NULL};
+	elems[17] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.a_lighting.ambient_lighting, menu_draw_nbox, menu_nbox_apply_perc};
+	elems[18] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[19] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[20] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[21] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[22] = (t_ui_menu_elem){UI_MENU_TEXT, "Point Light", 0, NULL, menu_draw_text, NULL};
+	elems[23] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &data->scene.light.coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
+	elems[24] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &data->scene.light.coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
+	elems[25] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &data->scene.light.coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
+	elems[26] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.light.brightness, menu_draw_nbox, menu_nbox_apply_perc};
+	elems[27] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.light.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[28] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[29] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 	return (0);
 }
@@ -374,7 +391,7 @@ void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)
 	menu->curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_SPHERE];
 	page = menu->curr_page;
 	free(page->elements);
-	page->n_elems = 7;
+	page->n_elems = 14;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	page->elements = elems;
 	if (!elems)
@@ -389,6 +406,13 @@ void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)
 	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
 	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
 	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[7] = (t_ui_menu_elem){UI_MENU_TEXT, "Color", 0, NULL, menu_draw_text, NULL};
+	elems[8] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[9] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[10] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[11] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[12] = (t_ui_menu_elem){UI_MENU_TEXT, "Attributes", 0, NULL, menu_draw_text, NULL};
+	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "diameter:", UI_DATA_FLOAT, &obj->diameter, menu_draw_nbox, menu_nbox_apply_float};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 }
 
@@ -402,7 +426,7 @@ void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
 	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_CYLINDER];
 	page = data->menu.curr_page;
 	free(page->elements);
-	page->n_elems = 7;
+	page->n_elems = 20;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	if (!elems)
 		return (page->title = NULL, (void)0);
@@ -416,6 +440,19 @@ void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
 	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
 	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
 	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[7] = (t_ui_menu_elem){UI_MENU_BTN, "Reset direction", UI_DATA_COORDS, &obj->vector, menu_draw_btn, menu_btn_reset_dir};
+	elems[8] = (t_ui_menu_elem){UI_MENU_NBOX, "dir x:", UI_DATA_FLOAT, &obj->vector.x, menu_draw_nbox, NULL};
+	elems[9] = (t_ui_menu_elem){UI_MENU_NBOX, "dir y:", UI_DATA_FLOAT, &obj->vector.y, menu_draw_nbox, NULL};
+	elems[10] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &obj->vector.z, menu_draw_nbox, NULL};
+	elems[11] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[12] = (t_ui_menu_elem){UI_MENU_TEXT, "Color", 0, NULL, menu_draw_text, NULL};
+	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[14] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[15] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[16] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[17] = (t_ui_menu_elem){UI_MENU_TEXT, "Attributes", 0, NULL, menu_draw_text, NULL};
+	elems[18] = (t_ui_menu_elem){UI_MENU_NBOX, "height:", UI_DATA_FLOAT, &obj->height, menu_draw_nbox, menu_nbox_apply_float};
+	elems[19] = (t_ui_menu_elem){UI_MENU_NBOX, "diameter:", UI_DATA_FLOAT, &obj->diameter, menu_draw_nbox, menu_nbox_apply_float};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 	page->elements = elems;
 }
@@ -430,7 +467,7 @@ void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
 	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_PLANE];
 	page = data->menu.curr_page;
 	free(page->elements);
-	page->n_elems = 7;
+	page->n_elems = 18;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	if (!elems)
 		return (page->title = NULL, (void)0);
@@ -444,6 +481,17 @@ void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
 	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
 	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
 	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[7] = (t_ui_menu_elem){UI_MENU_BTN, "Reset direction", UI_DATA_COORDS, &obj->vector, menu_draw_btn, menu_btn_reset_dir};
+	elems[8] = (t_ui_menu_elem){UI_MENU_NBOX, "dir x:", UI_DATA_FLOAT, &obj->vector.x, menu_draw_nbox, NULL};
+	elems[9] = (t_ui_menu_elem){UI_MENU_NBOX, "dir y:", UI_DATA_FLOAT, &obj->vector.y, menu_draw_nbox, NULL};
+	elems[10] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &obj->vector.z, menu_draw_nbox, NULL};
+	elems[11] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[12] = (t_ui_menu_elem){UI_MENU_TEXT, "Color", 0, NULL, menu_draw_text, NULL};
+	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[14] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[15] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[16] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[17] = (t_ui_menu_elem){UI_MENU_TEXT, "Attributes", 0, NULL, menu_draw_text, NULL};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 	page->elements = elems;
 }
