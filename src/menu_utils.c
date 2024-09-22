@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 15:22:52 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:11:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	menu_draw_text(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 	(void)data;
 	if (!self->str)
 		return (1);
-	pos.x += data->menu.curr_page.size.x / 2 - 4 * ft_strlen(self->str);
+	pos.x += data->menu.curr_page->size.x / 2 - 4 * ft_strlen(self->str);
 	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
 	return (0);
 }
@@ -37,7 +37,7 @@ int	menu_draw_btn(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 	(void)data;
 	if (!self->str)
 		return (1);
-	pos.x += data->menu.curr_page.size.x / 2 - 4 * ft_strlen(self->str);
+	pos.x += data->menu.curr_page->size.x / 2 - 4 * ft_strlen(self->str);
 	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x0000d9ff, self->str);
 	return (0);
 }
@@ -53,7 +53,7 @@ int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 		mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x0000d9ff, self->str);
 		box_text = data->menu.curr_input_str;
 		if (box_text)
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x0000d9ff, box_text);
+			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, 0x0000d9ff, box_text);
 	}
 	else
 	{
@@ -65,7 +65,7 @@ int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 		else
 			box_text = NULL;
 		if (box_text)
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page.size.x - 10 * ft_strlen(box_text), pos.y, 0x00FFFFFF, box_text);
+			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, 0x00FFFFFF, box_text);
 		free(box_text);
 	}
 	return (0);
@@ -212,14 +212,14 @@ int	menu_page_click(t_mlx_data *data)
 	int				elem_index;
 	t_ui_menu_elem	*elem;
 
-	if (box_is_clicked(data->menu.curr_page.pos, data->menu.curr_page.size, data->mouse_last_pos))
+	if (box_is_clicked(data->menu.curr_page->pos, data->menu.curr_page->size, data->mouse_last_pos))
 			printf("PAGE CLICK\n");
-	if (data->mouse_last_pos.y < data->menu.curr_page.pos.y + ELEM_OFFSET)
+	if (data->mouse_last_pos.y < data->menu.curr_page->pos.y + ELEM_OFFSET)
 		return (0);
-	elem_index = (data->mouse_last_pos.y - data->menu.curr_page.pos.y - ELEM_OFFSET) / ELEM_HEIGHT;
-	if (elem_index < 0 || elem_index >= data->menu.curr_page.n_elems)
+	elem_index = (data->mouse_last_pos.y - data->menu.curr_page->pos.y - ELEM_OFFSET) / ELEM_HEIGHT;
+	if (elem_index < 0 || elem_index >= data->menu.curr_page->n_elems)
 		return (0);
-	elem = &data->menu.curr_page.elements[elem_index];
+	elem = &data->menu.curr_page->elements[elem_index];
 	printf("Element #%i click: %s\n", elem_index, elem->str);
 	if (data->menu.curr_input_elem)
 	{
@@ -231,7 +231,6 @@ int	menu_page_click(t_mlx_data *data)
 		menu_nbox_get_input(elem, data);
 	else if (elem->func && data->mouse_input_state & BTN_LEFT)
 		elem->func(elem, data);
-		//data->menu.curr_page.elements[elem_index].func(elem, data);
 	return (0);
 }
 
@@ -245,6 +244,7 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 
 	page->n_elems = 29;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	page->elements = elems;
 	if (!elems)
 		return (page->title = NULL, 1);
 	page->title = "HOME";
@@ -280,7 +280,60 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	elems[27] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
 	elems[28] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	return (0);
+}
+
+int	menu_init_page_sphere(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+{
+	(void)data;
+	t_ui_menu_elem	*elems;
+
+	page->n_elems = 1;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	page->elements = elems;
+	if (!elems)
+		return (page->title = NULL, 1);
+	page->title = "___";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "___", 0, NULL, menu_draw_text, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	return (0);
+}
+
+int	menu_init_page_cylinder(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+{
+	(void)data;
+	t_ui_menu_elem	*elems;
+
+	page->n_elems = 1;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	page->elements = elems;
+	if (!elems)
+		return (page->title = NULL, 1);
+	page->title = "___";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "___", 0, NULL, menu_draw_text, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	return (0);
+}
+
+int	menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+{
+	(void)data;
+	t_ui_menu_elem	*elems;
+
+	page->n_elems = 1;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	page->elements = elems;
+	if (!elems)
+		return (page->title = NULL, 1);
+	page->title = "___";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "___", 0, NULL, menu_draw_text, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 	return (0);
 }
 
@@ -299,16 +352,112 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 	pages = malloc((UI_MENU_PAGE_END + 1) * sizeof(t_ui_menu_page));
 	if (!pages)
 		return (1);
+	menu->pages = pages;
 	menu_init_page_home(data, menu, &pages[UI_MENU_PAGE_HOME]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_SELECT]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_ADD]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_REMOVE]);
-	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_OBJ_SPHERE]);
-	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_OBJ_CYLINDER]);
-	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_OBJ_PLANE]);
+	menu_init_page_sphere(data, menu, &pages[UI_MENU_PAGE_OBJ_SPHERE]);
+	menu_init_page_cylinder(data, menu, &pages[UI_MENU_PAGE_OBJ_CYLINDER]);
+	menu_init_page_plane(data, menu, &pages[UI_MENU_PAGE_OBJ_PLANE]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_END]);
-	menu->pages = pages;
 	return (0);
+}
+
+void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)
+{
+	t_ui_menu_elem	*elems;
+	t_ui_menu_page	*page;
+	t_sphere		*obj;
+
+	obj = &data->scene.spheres[data->selected.obj_index];
+	menu->curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_SPHERE];
+	page = menu->curr_page;
+	free(page->elements);
+	page->n_elems = 7;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	page->elements = elems;
+	if (!elems)
+		return (page->title = NULL, (void)0);
+	page->title = "SPHERE";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "sphere", 0, NULL, menu_draw_text, NULL};
+	elems[1] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[2] = (t_ui_menu_elem){UI_MENU_BTN, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_draw_btn, menu_btn_reset_pos};
+	elems[3] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
+	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
+	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
+	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+}
+
+void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
+{
+	t_ui_menu_elem	*elems;
+	t_ui_menu_page	*page;
+	t_cylinder		*obj;
+
+	obj = &data->scene.cylinders[data->selected.obj_index];
+	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_CYLINDER];
+	page = data->menu.curr_page;
+	free(page->elements);
+	page->n_elems = 7;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	if (!elems)
+		return (page->title = NULL, (void)0);
+	page->title = "CYLINDER";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "cylinder", 0, NULL, menu_draw_text, NULL};
+	elems[1] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[2] = (t_ui_menu_elem){UI_MENU_BTN, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_draw_btn, menu_btn_reset_pos};
+	elems[3] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
+	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
+	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
+	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	page->elements = elems;
+}
+
+void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
+{
+	t_ui_menu_elem	*elems;
+	t_ui_menu_page	*page;
+	t_plane			*obj;
+
+	obj = &data->scene.planes[data->selected.obj_index];
+	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_OBJ_PLANE];
+	page = data->menu.curr_page;
+	free(page->elements);
+	page->n_elems = 7;
+	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
+	if (!elems)
+		return (page->title = NULL, (void)0);
+	page->title = "PLANE";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "plane", 0, NULL, menu_draw_text, NULL};
+	elems[1] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[2] = (t_ui_menu_elem){UI_MENU_BTN, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_draw_btn, menu_btn_reset_pos};
+	elems[3] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
+	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
+	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
+	elems[6] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	page->elements = elems;
+}
+
+void	set_menu_page(t_mlx_data *data)
+{
+	if (data->selected.obj_type == OBJ_NONE)
+		data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_HOME];
+	else if (data->selected.obj_type == OBJ_SPHERE)
+		set_menu_sphere_page(data, &data->menu);
+	else if (data->selected.obj_type == OBJ_CYLINDER)
+		set_menu_cylinder_page(data, &data->menu);
+	else if (data->selected.obj_type == OBJ_PLANE)
+		set_menu_plane_page(data, &data->menu);
 }
 
 /* Drawing the menu and pages */
@@ -346,11 +495,7 @@ int	menu_draw(t_mlx_data *data, t_ui_menu *menu)
 {
 	mlx_put_image_to_window(data->mlx, data->mlx_win, menu->bg.img, menu->pos.x, menu->pos.y);
 	mlx_string_put(data->mlx, data->mlx_win, menu->pos.x + menu->size.x / 2 - 4 * 4, menu->pos.y + 10 + 5, 0x00CCCCCC, "MENU");
-	if (data->selected.obj_type == OBJ_NONE)
-		menu->curr_page = menu->pages[UI_MENU_PAGE_HOME];
-	else if (data->selected.obj_type == OBJ_PLANE)
-		menu->curr_page = menu->pages[UI_MENU_PAGE_OBJ_PLANE];
-	menu_draw_page(data, menu->curr_page);
+	menu_draw_page(data, *menu->curr_page);
 	menu->show = MENU_DRAWN;
 	return (0);
 }

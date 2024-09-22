@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/03 14:18:44 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:10:42 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 	memset(menu->bg.addr, 0x28, menu->size.x * menu->size.y * 4);
 	menu->show = MENU_SHOW;
 	menu_init_pages(data, menu);
-	menu->curr_page = menu->pages[UI_MENU_PAGE_HOME];
+	menu->curr_page = &menu->pages[UI_MENU_PAGE_HOME];
 	usleep(80000); // Is because shared memory image would be black if we dont wait a bit. (Solve it by opening the program with a loading animation !)
 	return (0);
 }
@@ -108,10 +108,10 @@ int	main(int argc, char **argv)
 	read_from_scene(&mlx_data->scene, fd, &id_count);
 
 	mlx_loop(mlx_data->mlx);
-	free_mlx(mlx_data);
 
 	free(mlx_data->scene.spheres);
 	free(mlx_data->scene.planes);
 	free(mlx_data->scene.cylinders);
+	free_mlx(mlx_data);
 	close(fd);
 }

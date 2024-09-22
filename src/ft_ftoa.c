@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 16:34:21 by efret             #+#    #+#             */
-/*   Updated: 2024/09/21 23:18:46 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:00:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	ft_strstrip_char(char **str)
 	return (0);
 }
 
-int	ft_strjoin2(char **s, char const *add)
+int	ft_strjoin2(char **s, char *add)
 {
 	size_t	len1;
 	size_t	len2;
@@ -71,6 +71,8 @@ int	ft_strjoin2(char **s, char const *add)
 	ft_memcpy(*s, tmp, len1);
 	ft_memcpy(&(*s)[len1], add, len2);
 	(*s)[len1 + len2] = 0;
+	free(tmp);
+	free(add);
 	return (0);
 }
 

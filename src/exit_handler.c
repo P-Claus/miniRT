@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/02 10:57:23 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:02:17 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@ int	exit_handler(char *error)
 	exit(1);
 }
 
+void	free_menu(t_ui_menu *menu)
+{
+	if (!menu || !menu->pages)
+		return ;
+	for (int p = 0; p <= UI_MENU_PAGE_END; p++)
+	{
+		if (menu->pages[p].elements)
+			free(menu->pages[p].elements);
+	}
+	free(menu->pages);
+}
+
 void	free_mlx(t_mlx_data *mlx_data)
 {
 	if (mlx_data->mlx_win)
@@ -26,11 +38,15 @@ void	free_mlx(t_mlx_data *mlx_data)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->full_render.render.img);
 	if (mlx_data->viewport.render.img)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->viewport.render.img);
+	if (mlx_data->menu.bg.img)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->menu.bg.img);
+	free_menu(&mlx_data->menu);
 	if (mlx_data->mlx)
 	{
 		mlx_destroy_display(mlx_data->mlx);
 		free(mlx_data->mlx);
 	}
+	free(mlx_data);
 }
 
 int	check_extension(char *string)

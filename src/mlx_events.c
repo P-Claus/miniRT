@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 14:58:06 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:28:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,11 +332,13 @@ void	select_obj(t_mlx_data *data)
 	{
 		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
 		data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
+		set_menu_page(data);
 		if (data->menu.show)
 			data->menu.show = MENU_SHOW;
 		return ;
 	}
 	data->selected = hit;
+	set_menu_page(data);
 	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
 	if (data->menu.show)
 		data->menu.show = MENU_SHOW;

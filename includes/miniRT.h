@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/22 14:40:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:08:58 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,7 +283,7 @@ typedef struct s_ui_menu
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
-	t_ui_menu_page	curr_page;
+	t_ui_menu_page	*curr_page;
 	t_ui_menu_page	*pages;
 	t_ui_menu_elem	*curr_input_elem;
 	char			*curr_input_str;
@@ -405,6 +405,8 @@ int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
 int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
 int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
 int					menu_page_click(t_mlx_data *data);
+
+void				set_menu_page(t_mlx_data *data);
 
 int					ft_strjoin_char(char **str, char c);
 char				*ft_ftoa(float f, int prec);
