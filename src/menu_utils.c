@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 14:41:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:22:52 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,11 +155,45 @@ int	menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data)
 		new_val = ft_atof(data->menu.curr_input_str, 6);
 	if (new_val < -M_PI_2 || new_val > M_PI_2)
 	{
-		printf("Invalid input, pitch should be in [-pi/2, pi/2] range.\n");
+		printf("Invalid input: pitch should be in [-pi/2, pi/2] range.\n");
 		return (1);
 	}
 	*(float *)self->data = new_val;
 	rotate_camera(&data->scene.camera, (t_pixel_coord){0, 0}, 0);
+	return (0);
+}
+
+int	menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	float	new_val;
+
+	if (self->data_type != UI_DATA_FLOAT)
+		return (1);
+	if (data->menu.curr_input_str[0] == 'i')
+		new_val = ft_atoi(&data->menu.curr_input_str[1]) / 255.;
+	else if (data->menu.curr_input_str[0] == '0' && data->menu.curr_input_str[1] == 'x')
+		new_val = ft_atoi_base(&data->menu.curr_input_str[2], "0123456789abcdef") / 255.;
+	else
+		new_val = ft_atof(data->menu.curr_input_str, 6);
+	if (new_val < 0. || 1. < new_val)
+		return (printf("Invalid input: color channel value between [0, 1]"), 1);
+	*(float *)self->data = new_val;
+	return (0);
+}
+
+int	menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	float	new_val;
+
+	if (self->data_type != UI_DATA_FLOAT)
+		return (1);
+	if (data->menu.curr_input_str[0] == 'p')
+		new_val = ft_atoi(&data->menu.curr_input_str[1]) / 100.;
+	else
+		new_val = ft_atof(data->menu.curr_input_str, 6);
+	if (new_val < 0. || 1. < new_val)
+		return (printf("Invalid input: percent value between [0, 1]"), 1);
+	*(float *)self->data = new_val;
 	return (0);
 }
 
@@ -209,7 +243,7 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	(void)data;
 	t_ui_menu_elem	*elems;
 
-	page->n_elems = 14;
+	page->n_elems = 29;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	if (!elems)
 		return (page->title = NULL, 1);
@@ -230,6 +264,21 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	elems[11] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, menu_draw_nbox, NULL};
 	elems[12] = (t_ui_menu_elem){UI_MENU_NBOX, "yaw:", UI_DATA_FLOAT, &data->scene.camera.yaw, menu_draw_nbox, menu_nbox_apply_yaw};
 	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "pitch:", UI_DATA_FLOAT, &data->scene.camera.pitch, menu_draw_nbox, menu_nbox_apply_pitch};
+	elems[14] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[15] = (t_ui_menu_elem){UI_MENU_TEXT, "Ambient", 0, NULL, menu_draw_text, NULL};
+	elems[16] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.a_lighting.ambient_lighting, menu_draw_nbox, menu_nbox_apply_perc};
+	elems[17] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[18] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[19] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[20] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
+	elems[21] = (t_ui_menu_elem){UI_MENU_TEXT, "Point Light", 0, NULL, menu_draw_text, NULL};
+	elems[22] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &data->scene.light.coordinates.x, menu_draw_nbox, menu_nbox_apply_float};
+	elems[23] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &data->scene.light.coordinates.y, menu_draw_nbox, menu_nbox_apply_float};
+	elems[24] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &data->scene.light.coordinates.z, menu_draw_nbox, menu_nbox_apply_float};
+	elems[25] = (t_ui_menu_elem){UI_MENU_NBOX, "intensity:", UI_DATA_FLOAT, &data->scene.light.brightness, menu_draw_nbox, menu_nbox_apply_perc};
+	elems[26] = (t_ui_menu_elem){UI_MENU_NBOX, "red:", UI_DATA_FLOAT, &data->scene.light.rgb.r, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[27] = (t_ui_menu_elem){UI_MENU_NBOX, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, menu_draw_nbox, menu_nbox_apply_color_float};
+	elems[28] = (t_ui_menu_elem){UI_MENU_NBOX, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, menu_draw_nbox, menu_nbox_apply_color_float};
 	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
 	page->elements = elems;
 	return (0);
