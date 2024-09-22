@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/21 19:24:03 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 13:21:46 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,50 @@ int	menu_nbox_get_input(t_ui_menu_elem *self, t_mlx_data *data)
 	return (0);
 }
 
+int	menu_nbox_apply_float(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	if (self->data_type != UI_DATA_FLOAT)
+		return (1);
+	*(float *)self->data = ft_atof(data->menu.curr_input_str, 6);
+	return (0);
+}
+
+int	menu_nbox_apply_yaw(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	float	new_val;
+
+	if (self->data_type != UI_DATA_FLOAT)
+		return (1);
+	if (data->menu.curr_input_str[0] == 'd')
+		new_val = ft_atof(&data->menu.curr_input_str[1], 6) * DEG2RAD;
+	else
+		new_val = ft_atof(data->menu.curr_input_str, 6);
+	new_val = new_val - M_PI * 2 * floor(new_val / (M_PI * 2));
+	*(float *)self->data = new_val;
+	rotate_camera(&data->scene.camera, (t_pixel_coord){0, 0}, 0);
+	return (0);
+}
+
+int	menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	float	new_val;
+
+	if (self->data_type != UI_DATA_FLOAT)
+		return (1);
+	if (data->menu.curr_input_str[0] == 'd')
+		new_val = ft_atof(&data->menu.curr_input_str[1], 6) * DEG2RAD;
+	else
+		new_val = ft_atof(data->menu.curr_input_str, 6);
+	if (new_val < -M_PI_2 || new_val > M_PI_2)
+	{
+		printf("Invalid input, pitch should be in [-pi/2, pi/2] range.\n");
+		return (1);
+	}
+	*(float *)self->data = new_val;
+	rotate_camera(&data->scene.camera, (t_pixel_coord){0, 0}, 0);
+	return (0);
+}
+
 /* Event utilities */
 int	box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse)
 {
@@ -149,7 +193,8 @@ int	menu_page_click(t_mlx_data *data)
 		data->menu.curr_input_elem = NULL;
 	}
 	if (elem->func && data->mouse_input_state & BTN_LEFT)
-		data->menu.curr_page.elements[elem_index].func(elem, data);
+		elem->func(elem, data);
+		//data->menu.curr_page.elements[elem_index].func(elem, data);
 	return (0);
 }
 
@@ -161,26 +206,28 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	(void)data;
 	t_ui_menu_elem	*elems;
 
-	page->n_elems = 12;
+	page->n_elems = 14;
 	elems = malloc((page->n_elems + 1) * sizeof(t_ui_menu_elem));
 	if (!elems)
 		return (page->title = NULL, 1);
 	page->title = "HOME";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
 	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
-	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "Camera", 0, NULL, menu_draw_text, NULL};
-	elems[1] = (t_ui_menu_elem){UI_MENU_BTN, "Reset camera", 0, NULL, menu_draw_btn, menu_btn_reset_cam};
-	elems[2] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
-	elems[3] = (t_ui_menu_elem){UI_MENU_BTN, "Reset position", UI_DATA_COORDS, &data->scene.camera.coordinates, menu_draw_btn, menu_btn_reset_cam_pos};
-	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &data->scene.camera.coordinates.x, menu_draw_nbox, menu_nbox_get_input};
-	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &data->scene.camera.coordinates.y, menu_draw_nbox, menu_nbox_get_input};
-	elems[6] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &data->scene.camera.coordinates.z, menu_draw_nbox, menu_nbox_get_input};
-	elems[7] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL};
-	elems[8] = (t_ui_menu_elem){UI_MENU_BTN, "Reset direction", UI_DATA_COORDS, &data->scene.camera.vector, menu_draw_btn, menu_btn_reset_cam_dir};
-	elems[9] = (t_ui_menu_elem){UI_MENU_NBOX, "dir x:", UI_DATA_FLOAT, &data->scene.camera.vector.x, menu_draw_nbox, menu_nbox_get_input};
-	elems[10] = (t_ui_menu_elem){UI_MENU_NBOX, "dir y:", UI_DATA_FLOAT, &data->scene.camera.vector.y, menu_draw_nbox, menu_nbox_get_input};
-	elems[11] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, menu_draw_nbox, menu_nbox_get_input};
-	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL};
+	elems[0] = (t_ui_menu_elem){UI_MENU_TEXT, "Camera", 0, NULL, menu_draw_text, NULL, NULL};
+	elems[1] = (t_ui_menu_elem){UI_MENU_BTN, "Reset camera", 0, NULL, menu_draw_btn, menu_btn_reset_cam, NULL};
+	elems[2] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL, NULL};
+	elems[3] = (t_ui_menu_elem){UI_MENU_BTN, "Reset position", UI_DATA_COORDS, &data->scene.camera.coordinates, menu_draw_btn, menu_btn_reset_cam_pos, NULL};
+	elems[4] = (t_ui_menu_elem){UI_MENU_NBOX, "pos x:", UI_DATA_FLOAT, &data->scene.camera.coordinates.x, menu_draw_nbox, menu_nbox_get_input, menu_nbox_apply_float};
+	elems[5] = (t_ui_menu_elem){UI_MENU_NBOX, "pos y:", UI_DATA_FLOAT, &data->scene.camera.coordinates.y, menu_draw_nbox, menu_nbox_get_input, menu_nbox_apply_float};
+	elems[6] = (t_ui_menu_elem){UI_MENU_NBOX, "pos z:", UI_DATA_FLOAT, &data->scene.camera.coordinates.z, menu_draw_nbox, menu_nbox_get_input, menu_nbox_apply_float};
+	elems[7] = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL, NULL};
+	elems[8] = (t_ui_menu_elem){UI_MENU_BTN, "Reset direction", UI_DATA_COORDS, &data->scene.camera.vector, menu_draw_btn, menu_btn_reset_cam_dir, NULL};
+	elems[9] = (t_ui_menu_elem){UI_MENU_NBOX, "dir x:", UI_DATA_FLOAT, &data->scene.camera.vector.x, menu_draw_nbox, NULL, NULL};
+	elems[10] = (t_ui_menu_elem){UI_MENU_NBOX, "dir y:", UI_DATA_FLOAT, &data->scene.camera.vector.y, menu_draw_nbox, NULL, NULL};
+	elems[11] = (t_ui_menu_elem){UI_MENU_NBOX, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, menu_draw_nbox, NULL, NULL};
+	elems[12] = (t_ui_menu_elem){UI_MENU_NBOX, "yaw:", UI_DATA_FLOAT, &data->scene.camera.yaw, menu_draw_nbox, menu_nbox_get_input, menu_nbox_apply_yaw};
+	elems[13] = (t_ui_menu_elem){UI_MENU_NBOX, "pitch:", UI_DATA_FLOAT, &data->scene.camera.pitch, menu_draw_nbox, menu_nbox_get_input, menu_nbox_apply_pitch};
+	elems[page->n_elems] = (t_ui_menu_elem){UI_MENU_END, "END", 0, NULL, NULL, NULL, NULL};
 	page->elements = elems;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/21 18:44:56 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 13:02:08 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,7 @@ typedef struct s_ui_menu_elem
 	void				*data;
 	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
 	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
+	int					(*apply)(struct s_ui_menu_elem *self, t_mlx_data *data);
 }	t_ui_menu_elem;
 
 typedef struct s_ui_menu_page
@@ -409,5 +410,7 @@ int					menu_page_click(t_mlx_data *data);
 int					ft_strjoin_char(char **str, char c);
 char				*ft_ftoa(float f, int prec);
 int					ft_strstrip_char(char **str);
+
+void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/21 19:33:00 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 13:19:12 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ void	rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time)
 	pitch_diff = mouse_diff.y * DEG2RAD;
 	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD) || 90 * DEG2RAD <= camera->pitch + pitch_diff)
 		pitch_diff = 0;
-	camera->yaw += yaw_diff;
+	camera->yaw -= yaw_diff;
+	camera->yaw = camera->yaw - M_PI * 2 * floor(camera->yaw / (M_PI * 2));
 	camera->pitch += pitch_diff;
-	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, camera->yaw);
+	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, -camera->yaw);
 	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, camera->pitch);
 	camera->rotation = quat_mult(q_yaw, q_pitch);
 
@@ -220,8 +221,8 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 	{
 		if (data->menu.curr_input_str == NULL)
 			return (data->menu.curr_input_elem = NULL, data->menu.show = MENU_SHOW, 0);
-		if (data->menu.curr_input_elem->data_type == UI_DATA_FLOAT)
-			*(float *)(data->menu.curr_input_elem->data) = ft_atof(data->menu.curr_input_str, 6);
+		if (data->menu.curr_input_elem->apply)
+			data->menu.curr_input_elem->apply(data->menu.curr_input_elem, data);
 		data->menu.curr_input_elem = NULL;
 		free(data->menu.curr_input_str);
 		data->menu.curr_input_str = NULL;
@@ -229,6 +230,8 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 	else if (keysym == XK_BackSpace)
 		ft_strstrip_char(&data->menu.curr_input_str);
 	else if (XK_0 <= keysym && keysym <= XK_9)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	else if (XK_a <= keysym && keysym <= XK_z)
 		ft_strjoin_char(&data->menu.curr_input_str, keysym);
 	else if (keysym == XK_space || keysym == XK_comma || keysym == XK_period
 			|| keysym == XK_plus || keysym == XK_minus)
