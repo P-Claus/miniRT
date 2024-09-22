@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 14:26:55 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 14:42:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,8 +221,8 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 	{
 		if (data->menu.curr_input_str == NULL)
 			return (data->menu.curr_input_elem = NULL, data->menu.show = MENU_SHOW, 0);
-		if (data->menu.curr_input_elem->apply)
-			data->menu.curr_input_elem->apply(data->menu.curr_input_elem, data);
+		if (data->menu.curr_input_elem->func)
+			data->menu.curr_input_elem->func(data->menu.curr_input_elem, data);
 		data->menu.curr_input_elem = NULL;
 		free(data->menu.curr_input_str);
 		data->menu.curr_input_str = NULL;
