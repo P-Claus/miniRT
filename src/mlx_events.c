@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 19:23:37 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:31:27 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ int	handle_no_event(t_mlx_data *data)
 		gettimeofday(&start, NULL);
 		if (data->full_res == REND_HIGH)
 		{
+			data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_HOME];
 			data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
 			printf("Rendering scene ...\n");
 			render(data, data->full_render);
