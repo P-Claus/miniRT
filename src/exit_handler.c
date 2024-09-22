@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/22 18:02:17 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 23:10:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ void	free_menu(t_ui_menu *menu)
 	if (!menu || !menu->pages)
 		return ;
 	for (int p = 0; p <= UI_MENU_PAGE_END; p++)
-	{
-		if (menu->pages[p].elements)
-			free(menu->pages[p].elements);
-	}
+		free_elements(&menu->pages[p].elements);
 	free(menu->pages);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/22 18:08:58 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/22 23:11:29 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,7 @@ typedef enum e_data_type
 typedef struct s_mlx_data t_mlx_data;
 typedef struct s_ui_menu_page t_ui_menu_page;
 typedef struct s_ui_menu t_ui_menu;
+typedef struct s_ui_menu_elem t_ui_menu_elem;
 
 typedef struct s_ui_menu_elem
 {
@@ -266,6 +267,7 @@ typedef struct s_ui_menu_elem
 	void				*data;
 	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
 	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
+	t_ui_menu_elem		*next;
 }	t_ui_menu_elem;
 
 typedef struct s_ui_menu_page
@@ -407,6 +409,7 @@ int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mous
 int					menu_page_click(t_mlx_data *data);
 
 void				set_menu_page(t_mlx_data *data);
+void				free_elements(t_ui_menu_elem **elems);
 
 int					ft_strjoin_char(char **str, char c);
 char				*ft_ftoa(float f, int prec);
