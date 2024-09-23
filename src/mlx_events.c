@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 19:31:27 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/23 16:12:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,22 @@ void	mouse_drag(t_mlx_data *data)
 	t_pixel_coord	mouse;
 	t_pixel_coord	diff;
 
-	if (!(data->mouse_input_state & BTN_RIGHT))
+	if (!(data->mouse_input_state & BTN_RIGHT
+				|| data->mouse_input_state & BTN_LEFT))
 		return ;
 	mlx_mouse_get_pos(data->mlx, data->mlx_win, &mouse.x, &mouse.y);
 	diff.x = mouse.x - data->mouse_last_pos.x;
 	diff.y = mouse.y - data->mouse_last_pos.y;
 	data->mouse_last_pos.x = mouse.x;
 	data->mouse_last_pos.y = mouse.y;
-	if (data->selected.obj_type == OBJ_NONE)
+	if (data->mouse_input_state & BTN_LEFT
+			&& data->menu.curr_input_elem
+			&& data->menu.curr_input_elem->type == UI_MENU_NBOX)
+		menu_nbox_slide(data, data->menu.curr_input_elem, diff);
+	else if (data->mouse_input_state & BTN_RIGHT
+			&& data->selected.obj_type == OBJ_NONE)
 		rotate_camera(&data->scene.camera, diff, data->frame_time);
-	else
+	else if (data->mouse_input_state & BTN_RIGHT)
 		rotate_obj(data, diff, data->frame_time);
 }
 
@@ -228,7 +234,11 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 		data->menu.curr_input_str = NULL;
 	}
 	else if (keysym == XK_BackSpace)
+	{
+		if (data->menu.curr_input_str == NULL)
+			data->menu.curr_input_str = ft_calloc(1, 1);
 		ft_strstrip_char(&data->menu.curr_input_str);
+	}
 	else if (XK_0 <= keysym && keysym <= XK_9)
 		ft_strjoin_char(&data->menu.curr_input_str, keysym);
 	else if (XK_a <= keysym && keysym <= XK_z)
@@ -358,6 +368,11 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 	else if (button == 3)
 	{
 		data->mouse_input_state ^= BTN_RIGHT;
+		if (data->menu.curr_input_elem)
+		{
+			free(data->menu.curr_input_str);
+			data->menu.curr_input_elem = NULL;
+		}
 	}
 	else if (button == 4)
 	{

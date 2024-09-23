@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/22 23:31:09 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/23 15:51:04 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,29 +45,27 @@ int	menu_draw_btn(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 int	menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data)
 {
 	char	*box_text;
+	int		color;
+	bool	is_curr_input;
 
-	(void)self;
-	(void)data;
-	if (data->menu.curr_input_elem == self)
-	{
-		mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x0000d9ff, self->str);
-		box_text = data->menu.curr_input_str;
-		if (box_text)
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, 0x0000d9ff, box_text);
-	}
+	is_curr_input = (data->menu.curr_input_elem == self);
+	if (is_curr_input)
+		color = 0x0000d9ff;
 	else
-	{
-		mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, 0x00FFFFFF, self->str);
-		if (self->data_type == UI_DATA_INT)
-			box_text = ft_itoa(*((int *)self->data));
-		else if (self->data_type == UI_DATA_FLOAT)
-			box_text = ft_ftoa(*((float *)self->data), 3);
-		else
-			box_text = NULL;
-		if (box_text)
-			mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, 0x00FFFFFF, box_text);
-		free(box_text);
-	}
+		color = 0x00FFFFFF;
+	mlx_string_put(data->mlx, data->mlx_win, pos.x, pos.y, color, self->str);
+	box_text = data->menu.curr_input_str;
+	if (is_curr_input && box_text)
+		return (mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, color, box_text), 0);
+	else if (self->data_type == UI_DATA_INT)
+		box_text = ft_itoa(*((int *)self->data));
+	else if (self->data_type == UI_DATA_FLOAT)
+		box_text = ft_ftoa(*((float *)self->data), 3);
+	else
+		box_text = NULL;
+	if (box_text)
+		mlx_string_put(data->mlx, data->mlx_win, pos.x + data->menu.curr_page->size.x - 10 * ft_strlen(box_text), pos.y, color, box_text);
+	free(box_text);
 	return (0);
 }
 
@@ -121,9 +119,14 @@ int	menu_nbox_get_input(t_ui_menu_elem *self, t_mlx_data *data)
 
 int	menu_nbox_apply_float(t_ui_menu_elem *self, t_mlx_data *data)
 {
+	float	new_val;
+
 	if (self->data_type != UI_DATA_FLOAT)
 		return (1);
-	*(float *)self->data = ft_atof(data->menu.curr_input_str, 6);
+	new_val = ft_atof(data->menu.curr_input_str, 6);
+	if (new_val < self->data_min || self->data_max < new_val)
+		return (printf("Invalid input: color channel value between [%f, %f]\n", self->data_min, self->data_max), 1);
+	*(float *)self->data = new_val;
 	return (0);
 }
 
@@ -170,9 +173,9 @@ int	menu_nbox_apply_fov(t_ui_menu_elem *self, t_mlx_data *data)
 	if (self->data_type != UI_DATA_INT)
 		return (1);
 	new_val = ft_atoi(data->menu.curr_input_str);
-	if (new_val < 5 || new_val > 175)
+	if (new_val < self->data_min || self->data_max < new_val)
 	{
-		printf("Invalid input: fov should be int in [5, 175] range.\n");
+		printf("Invalid input: fov should be int in [%f, %f] range.\n", self->data_min, self->data_max);
 		return (1);
 	}
 	*(int *)self->data = new_val;
@@ -191,8 +194,8 @@ int	menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data)
 		new_val = ft_atoi_base(&data->menu.curr_input_str[2], "0123456789abcdef") / 255.;
 	else
 		new_val = ft_atof(data->menu.curr_input_str, 6);
-	if (new_val < 0. || 1. < new_val)
-		return (printf("Invalid input: color channel value between [0, 1]\n"), 1);
+	if (new_val < self->data_min || self->data_max < new_val)
+		return (printf("Invalid input: color channel value between [%f, %f]\n", self->data_min, self->data_max), 1);
 	*(float *)self->data = new_val;
 	return (0);
 }
@@ -207,13 +210,23 @@ int	menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data)
 		new_val = ft_atoi(&data->menu.curr_input_str[1]) / 100.;
 	else
 		new_val = ft_atof(data->menu.curr_input_str, 6);
-	if (new_val < 0. || 1. < new_val)
-		return (printf("Invalid input: percent value between [0, 1]\n"), 1);
+	if (new_val < self->data_min || self->data_max < new_val)
+		return (printf("Invalid input: percent value between [%f, %f]\n", self->data_min, self->data_max), 1);
 	*(float *)self->data = new_val;
 	return (0);
 }
 
 /* Event utilities */
+int	menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff)
+{
+	if (elem->data_type == UI_DATA_INT)
+		*(int *)elem->data = fmin(fmax(*(int *)elem->data + diff.x * elem->step, elem->data_min), elem->data_max);
+	else if (elem->data_type == UI_DATA_FLOAT)
+		*(float *)elem->data = fmin(fmax(*(float *)elem->data + diff.x * elem->step, elem->data_min), elem->data_max);
+	rotate_camera(&data->scene.camera, (t_pixel_coord){0, 0}, 0);
+	return (0);
+}
+
 int	box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse)
 {
 	mouse.x -= pos.x;
@@ -261,7 +274,7 @@ t_ui_menu_elem	*create_elem_text(char *str)
 	new_elem = malloc(sizeof(t_ui_menu_elem));
 	if (!new_elem)
 		return (NULL);
-	*new_elem = (t_ui_menu_elem){UI_MENU_TEXT, str, 0, NULL, menu_draw_text, NULL, NULL};
+	*new_elem = (t_ui_menu_elem){UI_MENU_TEXT, str, 0, NULL, 0, 0, 0, menu_draw_text, NULL, NULL};
 	return (new_elem);
 }
 
@@ -272,7 +285,7 @@ t_ui_menu_elem	*create_elem_space(void)
 	new_elem = malloc(sizeof(t_ui_menu_elem));
 	if (!new_elem)
 		return (NULL);
-	*new_elem = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, menu_draw_space, NULL, NULL};
+	*new_elem = (t_ui_menu_elem){UI_MENU_SPACE, NULL, 0, NULL, 0, 0, 0, menu_draw_space, NULL, NULL};
 	return (new_elem);
 }
 
@@ -283,18 +296,18 @@ t_ui_menu_elem	*create_elem_btn(char *str, int data_type, void *data, int (*func
 	new_elem = malloc(sizeof(t_ui_menu_elem));
 	if (!new_elem)
 		return (NULL);
-	*new_elem = (t_ui_menu_elem){UI_MENU_BTN, str, data_type, data, menu_draw_btn, func, NULL};
+	*new_elem = (t_ui_menu_elem){UI_MENU_BTN, str, data_type, data, 0, 0, 0, menu_draw_btn, func, NULL};
 	return (new_elem);
 }
 
-t_ui_menu_elem	*create_elem_nbox(char *str, int data_type, void *data, int (*func)(t_ui_menu_elem *, t_mlx_data *))
+t_ui_menu_elem	*create_elem_nbox(char *str, int data_type, void *data, float min, float max, float step, int (*func)(t_ui_menu_elem *, t_mlx_data *))
 {
 	t_ui_menu_elem	*new_elem;
 
 	new_elem = malloc(sizeof(t_ui_menu_elem));
 	if (!new_elem)
 		return (NULL);
-	*new_elem = (t_ui_menu_elem){UI_MENU_NBOX, str, data_type, data, menu_draw_nbox, func, NULL};
+	*new_elem = (t_ui_menu_elem){UI_MENU_NBOX, str, data_type, data, min, max, step, menu_draw_nbox, func, NULL};
 	return (new_elem);
 }
 
@@ -352,12 +365,12 @@ int	add_elem_btn(t_ui_menu_page *page, char *str, int data_type, void *data, int
 	return (0);
 }
 
-int	add_elem_nbox(t_ui_menu_page *page, char *str, int data_type, void *data, int (*func)(t_ui_menu_elem *, t_mlx_data *))
+int	add_elem_nbox(t_ui_menu_page *page, char *str, int data_type, void *data, float min, float max, float step, int (*func)(t_ui_menu_elem *, t_mlx_data *))
 {
 	t_ui_menu_elem	*new_elem;
 	t_ui_menu_elem	*page_elem;
 
-	new_elem = create_elem_nbox(str, data_type, data, func);
+	new_elem = create_elem_nbox(str, data_type, data, min, max, step, func);
 	if (!new_elem)
 		return (1);
 	page->n_elems++;
@@ -398,32 +411,32 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	add_elem_btn(page, "Reset camera", 0, NULL, menu_btn_reset_cam);
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &data->scene.camera.coordinates, menu_btn_reset_cam_pos);
-	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &data->scene.camera.coordinates.x, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &data->scene.camera.coordinates.y, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &data->scene.camera.coordinates.z, menu_nbox_apply_float);
+	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &data->scene.camera.coordinates.x, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &data->scene.camera.coordinates.y, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &data->scene.camera.coordinates.z, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
 	add_elem_space(page);
 	add_elem_btn(page, "Reset direction", UI_DATA_COORDS, &data->scene.camera.vector, menu_btn_reset_cam_dir);
-	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &data->scene.camera.vector.x, NULL);
-	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &data->scene.camera.vector.y, NULL);
-	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, NULL);
-	add_elem_nbox(page, "yaw:", UI_DATA_FLOAT, &data->scene.camera.yaw, menu_nbox_apply_yaw);
-	add_elem_nbox(page, "pitch:", UI_DATA_FLOAT, &data->scene.camera.pitch, menu_nbox_apply_pitch);
-	add_elem_nbox(page, "fov:", UI_DATA_INT, &data->scene.camera.fov, menu_nbox_apply_fov);
+	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &data->scene.camera.vector.x, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &data->scene.camera.vector.y, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &data->scene.camera.vector.z, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "yaw:", UI_DATA_FLOAT, &data->scene.camera.yaw, -INFINITY, INFINITY, 1 * DEG2RAD, menu_nbox_apply_yaw);
+	add_elem_nbox(page, "pitch:", UI_DATA_FLOAT, &data->scene.camera.pitch, -INFINITY, INFINITY, 1 * DEG2RAD, menu_nbox_apply_pitch);
+	add_elem_nbox(page, "fov:", UI_DATA_INT, &data->scene.camera.fov, 5, 175, 1, menu_nbox_apply_fov);
 	add_elem_space(page);
 	add_elem_text(page, "Ambient");
-	add_elem_nbox(page, "intensity:", UI_DATA_FLOAT, &data->scene.a_lighting.ambient_lighting, menu_nbox_apply_perc);
-	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.r, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.g, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.b, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "intensity:", UI_DATA_FLOAT, &data->scene.a_lighting.ambient_lighting, 0, 1., 0.01, menu_nbox_apply_perc);
+	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.r, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.g, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &data->scene.a_lighting.rgb.b, 0, 1., 1. / 255, menu_nbox_apply_color_float);
 	add_elem_space(page);
 	add_elem_text(page, "Point Light");
-	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &data->scene.light.coordinates.x, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &data->scene.light.coordinates.y, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &data->scene.light.coordinates.z, menu_nbox_apply_float);
-	add_elem_nbox(page, "intensity:", UI_DATA_FLOAT, &data->scene.light.brightness, menu_nbox_apply_perc);
-	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &data->scene.light.rgb.r, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &data->scene.light.coordinates.x, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &data->scene.light.coordinates.y, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &data->scene.light.coordinates.z, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "intensity:", UI_DATA_FLOAT, &data->scene.light.brightness, 0, 1., 0.01, menu_nbox_apply_perc);
+	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &data->scene.light.rgb.r, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &data->scene.light.rgb.g, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &data->scene.light.rgb.b, 0, 1., 1. / 255, menu_nbox_apply_color_float);
 	return (0);
 }
 
@@ -506,17 +519,17 @@ void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)
 	add_elem_text(page, "sphere");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
-	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_nbox_apply_float);
+	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
 	add_elem_space(page);
 	add_elem_text(page, "Color");
-	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, 0, 1., 1. / 255, menu_nbox_apply_color_float);
 	add_elem_space(page);
 	add_elem_text(page, "Attributes");
-	add_elem_nbox(page, "diameter:", UI_DATA_FLOAT, &obj->diameter, menu_nbox_apply_float);
+	add_elem_nbox(page, "diameter:", UI_DATA_FLOAT, &obj->diameter, 0., INFINITY, 1., menu_nbox_apply_float);
 }
 
 void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
@@ -535,23 +548,23 @@ void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
 	add_elem_text(page, "cylinder");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
-	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_nbox_apply_float);
+	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
 	add_elem_space(page);
 	add_elem_btn(page, "Reset direction", UI_DATA_COORDS, &obj->vector, menu_btn_reset_dir);
-	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &obj->vector.x, NULL);
-	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &obj->vector.y, NULL);
-	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &obj->vector.z, NULL);
+	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &obj->vector.x, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &obj->vector.y, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &obj->vector.z, -INFINITY, INFINITY, 1., NULL);
 	add_elem_space(page);
 	add_elem_text(page, "Color");
-	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, 0, 1., 1. / 255, menu_nbox_apply_color_float);
 	add_elem_space(page);
 	add_elem_text(page, "Attributes");
-	add_elem_nbox(page, "height:", UI_DATA_FLOAT, &obj->height, menu_nbox_apply_float);
-	add_elem_nbox(page, "diameter:", UI_DATA_FLOAT, &obj->diameter, menu_nbox_apply_float);
+	add_elem_nbox(page, "height:", UI_DATA_FLOAT, &obj->height, 0., INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "diameter:", UI_DATA_FLOAT, &obj->diameter, 0., INFINITY, 1., menu_nbox_apply_float);
 }
 
 void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
@@ -570,19 +583,19 @@ void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
 	add_elem_text(page, "plane");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
-	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, menu_nbox_apply_float);
-	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, menu_nbox_apply_float);
+	add_elem_nbox(page, "pos x:", UI_DATA_FLOAT, &obj->coordinates.x, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos y:", UI_DATA_FLOAT, &obj->coordinates.y, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
+	add_elem_nbox(page, "pos z:", UI_DATA_FLOAT, &obj->coordinates.z, -INFINITY, INFINITY, 1., menu_nbox_apply_float);
 	add_elem_space(page);
 	add_elem_btn(page, "Reset direction", UI_DATA_COORDS, &obj->vector, menu_btn_reset_dir);
-	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &obj->vector.x, NULL);
-	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &obj->vector.y, NULL);
-	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &obj->vector.z, NULL);
+	add_elem_nbox(page, "dir x:", UI_DATA_FLOAT, &obj->vector.x, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir y:", UI_DATA_FLOAT, &obj->vector.y, -INFINITY, INFINITY, 1., NULL);
+	add_elem_nbox(page, "dir z:", UI_DATA_FLOAT, &obj->vector.z, -INFINITY, INFINITY, 1., NULL);
 	add_elem_space(page);
 	add_elem_text(page, "Color");
-	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, menu_nbox_apply_color_float);
-	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "red:", UI_DATA_FLOAT, &obj->rgb.r, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "green:", UI_DATA_FLOAT, &obj->rgb.g, 0, 1., 1. / 255, menu_nbox_apply_color_float);
+	add_elem_nbox(page, "blue:", UI_DATA_FLOAT, &obj->rgb.b, 0, 1., 1. / 255, menu_nbox_apply_color_float);
 	add_elem_space(page);
 	add_elem_text(page, "Attributes");
 }
