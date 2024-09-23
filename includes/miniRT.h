@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/23 15:40:24 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/23 20:21:59 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,9 @@ typedef enum e_data_type
 	UI_DATA_INT,
 	UI_DATA_FLOAT,
 	UI_DATA_COORDS,
+	UI_DATA_SPHERE,
+	UI_DATA_CYLINDER,
+	UI_DATA_PLANE,
 }	t_data_type;
 
 # define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
@@ -410,6 +413,7 @@ int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
 int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
 int					menu_page_click(t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
+int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
 
 void				set_menu_page(t_mlx_data *data);
 void				free_elements(t_ui_menu_elem **elems);

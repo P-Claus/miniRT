@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/22 18:10:42 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/23 20:22:47 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	init_scene_info(&mlx_data->scene, &id_count);
 	read_from_scene(&mlx_data->scene, fd, &id_count);
+	menu_set_select_page(mlx_data, &mlx_data->menu);
 
 	mlx_loop(mlx_data->mlx);
 

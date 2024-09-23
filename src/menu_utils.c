@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/23 15:51:04 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/23 20:33:34 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,69 @@ int	menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data)
 	return (0);
 }
 
+int	menu_btn_home_page(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	(void)self;
+	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_HOME];
+	data->selected.obj_type = OBJ_NONE;
+	return (0);
+}
+
+int	menu_btn_select_page(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	(void)self;
+	data->menu.curr_page = &data->menu.pages[UI_MENU_PAGE_SELECT];
+	return (0);
+}
+
+int	menu_btn_select_sphere(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->scene.nb_of_spheres)
+	{
+		if (&data->scene.spheres[i] == self->data)
+			break;
+		i++;
+	}
+	data->selected = (t_hit_info){OBJ_SPHERE, i, 0, {0, 0, 0}};
+	set_menu_page(data);
+	return (0);
+}
+
+int	menu_btn_select_cylinder(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->scene.nb_of_cylinders)
+	{
+		if (&data->scene.cylinders[i] == self->data)
+			break;
+		i++;
+	}
+	data->selected = (t_hit_info){OBJ_CYLINDER, i, 0, {0, 0, 0}};
+	set_menu_page(data);
+	return (0);
+}
+
+int	menu_btn_select_plane(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->scene.nb_of_planes)
+	{
+		if (&data->scene.planes[i] == self->data)
+			break;
+		i++;
+	}
+	data->selected = (t_hit_info){OBJ_PLANE, i, 0, {0, 0, 0}};
+	set_menu_page(data);
+	return (0);
+}
+
 /* Event utilities */
 int	menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff)
 {
@@ -243,6 +306,12 @@ int	menu_page_click(t_mlx_data *data)
 
 	if (box_is_clicked(data->menu.curr_page->pos, data->menu.curr_page->size, data->mouse_last_pos))
 			printf("PAGE CLICK\n");
+	if (data->menu.curr_input_elem)
+	{
+		if (data->menu.curr_input_str)
+			free(data->menu.curr_input_str);
+		data->menu.curr_input_elem = NULL;
+	}
 	if (data->mouse_last_pos.y < data->menu.curr_page->pos.y + ELEM_OFFSET)
 		return (0);
 	elem_index = (data->mouse_last_pos.y - data->menu.curr_page->pos.y - ELEM_OFFSET) / ELEM_HEIGHT;
@@ -252,12 +321,6 @@ int	menu_page_click(t_mlx_data *data)
 	while (elem_index--)
 		elem = elem->next;
 	printf("Element click: %s\n", elem->str);
-	if (data->menu.curr_input_elem)
-	{
-		if (data->menu.curr_input_str)
-			free(data->menu.curr_input_str);
-		data->menu.curr_input_elem = NULL;
-	}
 	if (elem->func && elem->type == UI_MENU_NBOX)
 		menu_nbox_get_input(elem, data);
 	else if (elem->func && data->mouse_input_state & BTN_LEFT)
@@ -406,7 +469,9 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 	page->elements = NULL;
 	page->title = "HOME";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Select obj page", 0, NULL, menu_btn_select_page);
+	add_elem_space(page);
 	add_elem_text(page, "Camera");
 	add_elem_btn(page, "Reset camera", 0, NULL, menu_btn_reset_cam);
 	add_elem_space(page);
@@ -447,8 +512,8 @@ int	menu_init_page_sphere(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *pag
 	page->elements = NULL;
 	page->title = "___";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
-	add_elem_text(page, "___");
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
 	return (0);
 }
 
@@ -459,8 +524,8 @@ int	menu_init_page_cylinder(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *p
 	page->elements = NULL;
 	page->title = "___";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
-	add_elem_text(page, "___");
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
 	return (0);
 }
 
@@ -471,8 +536,80 @@ int	menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page
 	page->elements = NULL;
 	page->title = "___";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
-	add_elem_text(page, "___");
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	return (0);
+}
+
+void	select_page_add_spheres(t_mlx_data *data, t_ui_menu_page *page)
+{
+	int	i;
+
+	if (!data->scene.nb_of_spheres)
+		return ;
+	add_elem_space(page);
+	add_elem_text(page, "Spheres");
+	i = 0;
+	while (i < data->scene.nb_of_spheres)
+		add_elem_btn(page, "sphere", UI_DATA_SPHERE, &data->scene.spheres[i++], menu_btn_select_sphere);
+}
+
+void	select_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
+{
+	int	i;
+
+	if (!data->scene.nb_of_cylinders)
+		return ;
+	add_elem_space(page);
+	add_elem_text(page, "Cylinders");
+	i = 0;
+	while (i < data->scene.nb_of_cylinders)
+		add_elem_btn(page, "cylinder", UI_DATA_CYLINDER, &data->scene.cylinders[i++], menu_btn_select_cylinder);
+}
+
+void	select_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
+{
+	int	i;
+
+	if (!data->scene.nb_of_planes)
+		return ;
+	add_elem_space(page);
+	add_elem_text(page, "Planes");
+	i = 0;
+	while (i < data->scene.nb_of_planes)
+		add_elem_btn(page, "plane", UI_DATA_PLANE, &data->scene.planes[i++], menu_btn_select_plane);
+}
+
+int	menu_init_page_select(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+{
+	(void)data;
+	page->n_elems = 0;
+	page->elements = NULL;
+	page->title = "SELECT";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	select_page_add_spheres(data, page);
+	select_page_add_cylinders(data, page);
+	select_page_add_planes(data, page);
+	return (0);
+}
+
+int	menu_set_select_page(t_mlx_data *data, t_ui_menu *menu)
+{
+	t_ui_menu_page *page;
+
+	page = &data->menu.pages[UI_MENU_PAGE_SELECT];
+	free_elements(&page->elements);
+	page->n_elems = 0;
+	page->elements = NULL;
+	page->title = "SELECT";
+	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	select_page_add_spheres(data, page);
+	select_page_add_cylinders(data, page);
+	select_page_add_planes(data, page);
 	return (0);
 }
 
@@ -493,7 +630,7 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 		return (1);
 	menu->pages = pages;
 	menu_init_page_home(data, menu, &pages[UI_MENU_PAGE_HOME]);
-	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_SELECT]);
+	menu_init_page_select(data, menu, &pages[UI_MENU_PAGE_SELECT]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_ADD]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_REMOVE]);
 	menu_init_page_sphere(data, menu, &pages[UI_MENU_PAGE_OBJ_SPHERE]);
@@ -515,7 +652,9 @@ void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)
 	page->n_elems = 0;
 	page->title = "SPHERE";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	add_elem_space(page);
 	add_elem_text(page, "sphere");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
@@ -544,7 +683,9 @@ void	set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu)
 	page->n_elems = 0;
 	page->title = "CYLINDER";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	add_elem_space(page);
 	add_elem_text(page, "cylinder");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
@@ -579,7 +720,9 @@ void	set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu)
 	page->n_elems = 0;
 	page->title = "PLANE";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 200};
+	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
+	add_elem_btn(page, "Home page", 0, NULL, menu_btn_home_page);
+	add_elem_space(page);
 	add_elem_text(page, "plane");
 	add_elem_space(page);
 	add_elem_btn(page, "Reset position", UI_DATA_COORDS, &obj->coordinates, menu_btn_reset_pos);
