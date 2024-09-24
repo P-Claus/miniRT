@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/23 20:21:59 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/24 11:49:13 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ typedef enum e_ui_menu_page_type
 	UI_MENU_PAGE_HOME,
 	UI_MENU_PAGE_SELECT,
 	UI_MENU_PAGE_ADD,
-	UI_MENU_PAGE_REMOVE,
+	UI_MENU_PAGE_DEL,
 	UI_MENU_PAGE_OBJ_SPHERE,
 	UI_MENU_PAGE_OBJ_CYLINDER,
 	UI_MENU_PAGE_OBJ_PLANE,
@@ -414,6 +414,7 @@ int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mous
 int					menu_page_click(t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
 
 void				set_menu_page(t_mlx_data *data);
 void				free_elements(t_ui_menu_elem **elems);

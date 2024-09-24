@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/23 16:12:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/24 13:59:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void	check_input_states(t_mlx_data *data)
 	mouse_drag(data);
 	key_inputs(data);
 	if (data->menu.show == MENU_DRAWN && (data->key_input_state || data->mouse_input_state))
-		data->menu.show = MENU_SHOW;
+			data->menu.show = MENU_SHOW;
 }
 
 void	image_add_frametime(t_mlx_data *data)
@@ -343,21 +343,19 @@ void	select_obj(t_mlx_data *data)
 		printf("De-selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
 		data->selected = (t_hit_info){OBJ_NONE, 0, 0, (t_coordinates){0, 0, 0}};
 		set_menu_page(data);
-		if (data->menu.show)
-			data->menu.show = MENU_SHOW;
 		return ;
 	}
 	data->selected = hit;
 	set_menu_page(data);
 	printf("Selected obj: %s #%zu\n", get_obj_name(data->selected.obj_type), data->selected.obj_index);
-	if (data->menu.show)
-		data->menu.show = MENU_SHOW;
 }
 
 int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 {
 	if (button > 5)
 		return (0);
+	if (data->menu.show)
+		data->menu.show = MENU_SHOW;
 	data->mouse_last_pos.x = x;
 	data->mouse_last_pos.y = y;
 	if (button == 1)
@@ -380,8 +378,6 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 			;
 		else
 			data->scene.camera.fov = fmax(data->scene.camera.fov - 1, 5);
-		if (data->menu.show)
-			data->menu.show = MENU_SHOW;
 	}
 	else if (button == 5)
 	{
@@ -389,8 +385,6 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 			;
 		else
 			data->scene.camera.fov = fmin(data->scene.camera.fov + 1, 175);
-		if (data->menu.show)
-			data->menu.show = MENU_SHOW;
 	}
 	data->full_res = REND_LOW;
 	return (0);
