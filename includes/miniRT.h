@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/24 11:49:13 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/24 16:15:03 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ typedef enum e_data_type
 }	t_data_type;
 
 # define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
-# define ELEM_HEIGHT 18
+# define ELEM_HEIGHT 22
 # define ELEM_OFFSET (40 + ELEM_HEIGHT)
 
 typedef struct s_mlx_data t_mlx_data;
@@ -282,6 +282,7 @@ typedef struct s_ui_menu_page
 	int				n_elems;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
+	int				scroll;
 }	t_ui_menu_page;
 
 typedef struct s_ui_menu
