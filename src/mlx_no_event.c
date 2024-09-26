@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:09:01 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 17:59:15 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 21:31:35 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	mouse_drag(t_mlx_data *data)
 	t_pixel_coord	diff;
 	float			speed;
 
-	if (!(data->mouse_input_state & BTN_RIGHT))
+	if (!(data->mouse_input_state & BTN_RIGHT
+			|| data->mouse_input_state & BTN_LEFT))
 		return ;
 	mlx_mouse_get_pos(data->mlx, data->mlx_win, &mouse.x, &mouse.y);
 	diff.x = mouse.x - data->mouse_last_pos.x;
@@ -28,9 +29,14 @@ void	mouse_drag(t_mlx_data *data)
 	speed = data->speed
 		* (1 + ((data->key_input_state & KEY_SHIFT) != 0))
 		/ (1 + ((data->key_input_state & KEY_CTRL) != 0));
-	if (data->selected.obj_type == OBJ_NONE)
+	if (data->mouse_input_state & BTN_LEFT
+		&& data->menu.curr_input_elem
+		&& data->menu.curr_input_elem->type == UI_MENU_NBOX)
+		menu_nbox_slide(data, data->menu.curr_input_elem, diff);
+	if (data->mouse_input_state & BTN_RIGHT
+		&& data->selected.obj_type == OBJ_NONE)
 		rotate_camera(&data->scene.camera, diff, speed);
-	else
+	else if (data->mouse_input_state & BTN_RIGHT)
 		rotate_obj(data, diff, speed);
 }
 
@@ -51,6 +57,8 @@ void	check_input_states(t_mlx_data *data)
 {
 	mouse_drag(data);
 	key_inputs(data);
+	if (data->menu.show && (data->key_input_state || data->mouse_input_state))
+		data->menu.show = MENU_SHOW;
 }
 
 void	image_add_frametime(t_mlx_data *data)
@@ -91,15 +99,21 @@ int	handle_no_event(t_mlx_data *data)
 		if (data->full_res == REND_HIGH)
 		{
 			data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
+			set_menu_page(data);
 			printf("Rendering scene ...\n");
-			render(data);
+			render(data, data->full_render);
 			gettimeofday(&end, NULL);
 			printf("Rendered in: %.3f ms\n", frame_time(start, end));
 			data->full_res = REND_DONE;
 			return (0);
 		}
 		check_input_states(data);
-		render_low_res(data, data->low_res_lev, data->low_res_lev);
+		if (data->menu.show == MENU_SHOW)
+			menu_draw(data, &data->menu);
+		if (!data->menu.show)
+			render_low_res(data, data->full_render, data->low_res_lev);
+		else
+			render_low_res(data, data->viewport, data->low_res_lev);
 		gettimeofday(&end, NULL);
 		data->frame_time = frame_time(start, end);
 		image_add_frametime(data);

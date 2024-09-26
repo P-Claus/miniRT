@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*   menu_page_end.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 16:39:59 by efret             #+#    #+#             */
-/*   Updated: 2024/09/02 11:02:59 by efret            ###   ########.fr       */
+/*   Created: 2024/09/26 18:26:16 by efret             #+#    #+#             */
+/*   Updated: 2024/09/26 18:35:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-void	fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color)
+int	menu_init_page_end(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 {
-	int	i;
-
-	if (!ui.render.img)
-		return ;
-	i = (p.y * ui.render.line_len + p.x * (ui.render.bpp / 8));
-	*(unsigned int *)(ui.render.addr + i) = color;
+	(void)data;
+	(void)menu;
+	*page = (t_ui_menu_page){NULL, NULL, 0, {0, 0}, {0, 0}, 0};
+	return (0);
 }

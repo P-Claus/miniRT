@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/20 18:38:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 21:15:57 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # ifndef SCREEN_HEIGHT
 #  define SCREEN_HEIGHT 900
 # endif
+
+# define MENU_WIDTH 240
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
@@ -70,6 +72,14 @@ typedef enum e_gamma_type
 	GAMMA_NONE,
 	GAMMA_END,
 }	t_gamma_type;
+
+typedef enum e_menu_draw_state
+{
+	MENU_NO_SHOW,
+	MENU_SHOW,
+	MENU_DRAWN
+}	t_menu_draw_state;
+
 
 typedef enum e_object_type
 {
@@ -258,16 +268,118 @@ typedef struct s_my_img
 	int		endian;
 }	t_my_img;
 
+typedef struct s_ui_viewport
+{
+	t_my_img		render;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	float			aspect;
+}	t_ui_viewport;
+
+typedef enum e_ui_menu_elem_type
+{
+	UI_MENU_SPACE,
+	UI_MENU_TEXT,
+	UI_MENU_BTN,
+	UI_MENU_NBOX,
+	UI_MENU_END
+}	t_ui_menu_elem_type;
+
+typedef enum e_ui_menu_page_type
+{
+	UI_MENU_PAGE_HOME,
+	UI_MENU_PAGE_SELECT,
+	UI_MENU_PAGE_ADD,
+	UI_MENU_PAGE_DEL,
+	UI_MENU_PAGE_OBJ_SPHERE,
+	UI_MENU_PAGE_OBJ_CYLINDER,
+	UI_MENU_PAGE_OBJ_PLANE,
+	UI_MENU_PAGE_END,
+}	t_ui_menu_page_type;
+
+typedef enum e_data_type
+{
+	UI_DATA_NONE,
+	UI_DATA_INT,
+	UI_DATA_FLOAT,
+	UI_DATA_COORDS,
+	UI_DATA_SPHERE,
+	UI_DATA_CYLINDER,
+	UI_DATA_PLANE,
+}	t_data_type;
+
+# define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+# define ELEM_HEIGHT 22
+# define ELEM_OFFSET (40 + ELEM_HEIGHT)
+
+typedef struct s_mlx_data t_mlx_data;
+typedef struct s_ui_menu_page t_ui_menu_page;
+typedef struct s_ui_menu t_ui_menu;
+typedef struct s_ui_menu_elem t_ui_menu_elem;
+
+typedef struct s_elem_data
+{
+	int		data_type;
+	void	*data;
+}	t_elem_data;
+
+typedef struct s_elem_range
+{
+	float	data_min;
+	float	data_max;
+	float	step;
+}	t_elem_range;
+
+typedef struct s_nbox_norm_bs
+{
+	char			*str;
+	t_elem_data		data;
+	t_elem_range	range;
+	int				(*func)(t_ui_menu_elem *self, t_mlx_data *data);
+}	t_nbox_norm_bs;
+
+typedef struct s_ui_menu_elem
+{
+	t_ui_menu_elem_type	type;
+	char				*str;
+	t_elem_data			data;
+	t_elem_range		range;
+	int					(*draw)(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+	int					(*func)(t_ui_menu_elem *self, t_mlx_data *data);
+	t_ui_menu_elem		*next;
+}	t_ui_menu_elem;
+
+typedef struct s_ui_menu_page
+{
+	char			*title;
+	t_ui_menu_elem	*elements;
+	int				n_elems;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	int				scroll;
+}	t_ui_menu_page;
+
+typedef struct s_ui_menu
+{
+	int				show;
+	t_my_img		bg;
+	t_pixel_coord	pos;
+	t_pixel_coord	size;
+	t_ui_menu_page	*curr_page;
+	t_ui_menu_page	*pages;
+	t_ui_menu_elem	*curr_input_elem;
+	char			*curr_input_str;
+}	t_ui_menu;
+
 typedef struct s_mlx_data
 {
 	void			*mlx;
 	void			*mlx_win;
-	t_my_img		render;
-	float			frame_time;
+	t_ui_viewport	full_render;
+	t_ui_viewport	viewport;
+	t_ui_menu		menu;
 	t_scene_info	scene;
-	int				width;
-	int				height;
-	float			aspect;
+	float			frame_time;
 	long			key_input_state;
 	int				mouse_input_state;
 	t_pixel_coord	mouse_last_pos;
@@ -321,7 +433,7 @@ void				init_sphere(t_scene_info *scene_info, t_identifier_count *id_count);
 /*	UTILS	*/
 int					exit_handler(char *error);
 void				free_mlx(t_mlx_data *data);
-void				fast_pixel_put(t_mlx_data *data, t_pixel_coord p, int color);
+void				fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 int					check_extension(char *string);
@@ -335,7 +447,7 @@ void				move_camera(t_camera *camera, long key_state, float frame_time);
 /* RAY TRACING */
 t_hit_info			cast_ray(t_ray ray, t_scene_info scene);
 bool				cast_shadow_ray(t_ray ray, t_scene_info scene, float light_dist);
-t_ray				calc_ray(t_camera camera, t_mlx_data *data, t_pixel_coord p);
+t_ray				calc_ray(t_camera camera, t_ui_viewport ui, t_pixel_coord p);
 t_rgb				phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene);
 
 /* MATERIAL UTILS */
@@ -406,7 +518,91 @@ int					handle_window_destroy(t_mlx_data *data);
 /*	SRC	*/
 int					main(int argc, char **argv);
 int					read_from_scene(t_scene_info *scene_info, int fd, t_identifier_count *id_count);
-void				render(t_mlx_data *data);
-void				render_low_res(t_mlx_data *data, int dx, int dy);
+void				render(t_mlx_data *data, t_ui_viewport ui);
+void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int lvl);
+
+/* MENU UTILS */
+int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
+int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
+int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
+int					menu_page_click(t_mlx_data *data);
+int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
+int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+
+/* SETTING UP PAGES */
+int					menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_select(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_add(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_del(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_end(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_sphere(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_cylinder(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu);
+
+/* CREATE ELEMS */
+t_ui_menu_elem		*create_elem_text(char *str);
+t_ui_menu_elem		*create_elem_space(void);
+t_ui_menu_elem		*create_elem_btn(char *str, t_elem_data, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+t_ui_menu_elem		*create_elem_nbox(char *str, t_elem_data data, t_elem_range range, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+
+/* ADD ELEMS (calls create elems) */
+int					add_elem_text(t_ui_menu_page *page, char *str);
+int					add_elem_space(t_ui_menu_page *page);
+int					add_elem_btn(t_ui_menu_page *page, char *str, t_elem_data data, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+int					add_elem_nbox_bs(t_ui_menu_page *page, t_nbox_norm_bs nbox);
+
+/* DRAW ELEMS */
+int					menu_draw_space(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_text(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_btn(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+
+/* BTN FUNCS */
+int					menu_btn_reset_pos(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_dir(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam_dir(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam_pos(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_home_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_page(t_ui_menu_elem *self, t_mlx_data *data);
+
+
+int					menu_btn_select_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_plane(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_plane(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_plane(t_ui_menu_elem *self, t_mlx_data *data);
+
+/* NBOX APPLY FUNCS */
+int					menu_nbox_apply_yaw(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_float(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_fov(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
+int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
+int					menu_page_click(t_mlx_data *data);
+
+void				set_menu_page(t_mlx_data *data);
+void				free_elements(t_ui_menu_elem **elems);
+
+int					ft_strjoin_char(char **str, char c);
+char				*ft_ftoa(float f, int prec);
+int					ft_strstrip_char(char **str);
+
+void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
 
 #endif
