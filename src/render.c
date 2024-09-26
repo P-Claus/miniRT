@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 20:49:16 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 22:51:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ void	render(t_mlx_data *data, t_ui_viewport ui)
 		}
 		p.y++;
 	}
-	mlx_put_image_to_window(data->mlx, data->mlx_win, ui.render.img, ui.pos.x, ui.pos.y);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, ui.render.img,
+		ui.pos.x, ui.pos.y);
 	errno = 0;
 }
 
-void	set_pixels(t_ui_viewport ui, int color, t_pixel_coord p, t_pixel_coord dp)
+void	set_pixels(
+		t_ui_viewport ui, int color, t_pixel_coord p, t_pixel_coord dp)
 {
 	int				j;
 	int				i;
@@ -72,7 +74,8 @@ void	render_low_res(t_mlx_data *data, t_ui_viewport ui, int lvl)
 		}
 		p.y += lvl;
 	}
-	mlx_put_image_to_window(data->mlx, data->mlx_win, ui.render.img, ui.pos.x, ui.pos.y);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, ui.render.img,
+		ui.pos.x, ui.pos.y);
 	errno = 0;
 }
 

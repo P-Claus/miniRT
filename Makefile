@@ -24,7 +24,7 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  cone_utils.c vector_norm_utils.c ft_atof.c init_shapes.c \
 				  cast_ray.c cast_shadow_ray.c shading.c vector_cross.c material.c \
 				  move_rotate.c mlx_no_event.c mlx_key_events.c color_convert.c ft_ftoa.c \
-				  menu_utils.c \
+				  menu_utils.c menu_page_helper.c\
 				  menu_btn_goto_page.c menu_btn_resets.c menu_draw_elem.c \
 				  menu_event_utils.c menu_nbox_apply_1.c menu_nbox_apply_2.c \
 				  menu_sphere.c menu_cylinder.c menu_plane.c \

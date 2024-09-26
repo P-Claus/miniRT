@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/26 21:15:57 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 23:41:43 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -529,6 +529,11 @@ int					menu_page_click(t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+
+/* HELPERS FOR SETTING PAGES */
+void				page_add_rgb_block(t_ui_menu_page *page, t_rgb *rgb);
+void				page_add_pos_block(t_ui_menu_page *page, t_coordinates *coords);
+void				page_add_dir_block(t_ui_menu_page *page, t_coordinates *dir, bool cam);
 
 /* SETTING UP PAGES */
 int					menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);

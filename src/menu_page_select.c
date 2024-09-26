@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:24:13 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 18:33:34 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 00:04:20 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	select_page_add_spheres(t_mlx_data *data, t_ui_menu_page *page)
 	add_elem_text(page, "Spheres");
 	i = 0;
 	while (i < data->scene.nb_of_spheres)
-		add_elem_btn(page, "sphere", (t_elem_data){UI_DATA_SPHERE, &data->scene.spheres[i++]}, menu_btn_select_sphere);
+		add_elem_btn(page, "sphere",
+			(t_elem_data){UI_DATA_SPHERE, &data->scene.spheres[i++]},
+			menu_btn_select_sphere);
 }
 
 void	select_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
@@ -35,7 +37,9 @@ void	select_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
 	add_elem_text(page, "Cylinders");
 	i = 0;
 	while (i < data->scene.nb_of_cylinders)
-		add_elem_btn(page, "cylinder", (t_elem_data){UI_DATA_CYLINDER, &data->scene.cylinders[i++]}, menu_btn_select_cylinder);
+		add_elem_btn(page, "cylinder",
+			(t_elem_data){UI_DATA_CYLINDER, &data->scene.cylinders[i++]},
+			menu_btn_select_cylinder);
 }
 
 void	select_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
@@ -48,10 +52,13 @@ void	select_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
 	add_elem_text(page, "Planes");
 	i = 0;
 	while (i < data->scene.nb_of_planes)
-		add_elem_btn(page, "plane", (t_elem_data){UI_DATA_PLANE, &data->scene.planes[i++]}, menu_btn_select_plane);
+		add_elem_btn(page, "plane",
+			(t_elem_data){UI_DATA_PLANE, &data->scene.planes[i++]},
+			menu_btn_select_plane);
 }
 
-int	menu_init_page_select(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+int	menu_init_page_select(
+		t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 {
 	(void)data;
 	page->n_elems = 0;
@@ -69,7 +76,7 @@ int	menu_init_page_select(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *pag
 
 int	menu_set_select_page(t_mlx_data *data, t_ui_menu *menu)
 {
-	t_ui_menu_page *page;
+	t_ui_menu_page	*page;
 
 	page = &data->menu.pages[UI_MENU_PAGE_SELECT];
 	if (!page)

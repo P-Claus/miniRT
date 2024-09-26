@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:09:29 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 17:59:44 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 23:58:59 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ void	rotate_camera(
 	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD)
 		|| 90 * DEG2RAD <= camera->pitch + pitch_diff)
 		pitch_diff = 0;
-	camera->yaw += yaw_diff;
-	camera->pitch += pitch_diff;
-	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, camera->yaw);
-	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, camera->pitch);
+	camera->yaw -= yaw_diff;
+	camera->pitch -= pitch_diff;
+	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, -camera->yaw);
+	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, -camera->pitch);
 	camera->rotation = quat_mult(q_yaw, q_pitch);
 	camera->vector = vec3_normalize(
 			quat_rotate_point((t_coordinates){0, 0, -1}, camera->rotation));

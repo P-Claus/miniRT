@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:11:23 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 20:37:36 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 00:21:38 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 	else if (keysym == XK_Return)
 	{
 		if (data->menu.curr_input_str == NULL)
-			return (data->menu.curr_input_elem = NULL, data->menu.show = MENU_SHOW, 0);
+			return (data->menu.curr_input_elem = NULL,
+				data->menu.show = MENU_SHOW, 0);
 		if (data->menu.curr_input_elem->func)
 			data->menu.curr_input_elem->func(data->menu.curr_input_elem, data);
 		data->menu.curr_input_elem = NULL;
@@ -41,7 +42,7 @@ int	handle_menu_keypress(int keysym, t_mlx_data *data)
 	else if (XK_a <= keysym && keysym <= XK_z)
 		ft_strjoin_char(&data->menu.curr_input_str, keysym);
 	else if (keysym == XK_space || keysym == XK_comma || keysym == XK_period
-			|| keysym == XK_plus || keysym == XK_minus)
+		|| keysym == XK_plus || keysym == XK_minus)
 		ft_strjoin_char(&data->menu.curr_input_str, keysym);
 	data->menu.show = MENU_SHOW;
 	return (0);
@@ -96,7 +97,7 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 	else if (keysym == XK_g)
 		data->gamma_type = (data->gamma_type + 1) % GAMMA_END;
 	else if (keysym == XK_m && !data->full_res)
-		data->menu.show  = !(data->menu.show);
+		data->menu.show = !(data->menu.show);
 	if (data->menu.show == MENU_DRAWN)
 		data->menu.show = MENU_SHOW;
 	return (0);
