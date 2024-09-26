@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/24 17:33:10 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 19:55:21 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,12 +328,7 @@ void	select_obj(t_mlx_data *data)
 	t_ui_viewport	ui;
 
 	if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
-		return (printf("Menu click\n"), menu_page_click(data), (void)0);
-	if (data->menu.curr_input_elem)
-	{
-		free(data->menu.curr_input_str);
-		data->menu.curr_input_elem = NULL;
-	}
+		return (menu_page_click(data), (void)0);
 	ui = data->full_render;
 	if (data->menu.show)
 		ui = data->viewport;

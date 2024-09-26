@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/22 23:10:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 18:20:33 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@ int	exit_handler(char *error)
 {
 	ft_putstr_color_fd(RED, error, 2);
 	exit(1);
+}
+
+void	free_elements(t_ui_menu_elem **elems)
+{
+	t_ui_menu_elem	*iter;
+
+	if (!*elems)
+		return ;
+	iter = *elems;
+	while (iter)
+	{
+		iter = (*elems)->next;
+		free(*elems);
+		(*elems) = iter;
+	}
 }
 
 void	free_menu(t_ui_menu *menu)

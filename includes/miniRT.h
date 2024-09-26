@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/24 16:15:03 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/26 18:41:55 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,17 +261,35 @@ typedef struct s_ui_menu_page t_ui_menu_page;
 typedef struct s_ui_menu t_ui_menu;
 typedef struct s_ui_menu_elem t_ui_menu_elem;
 
+typedef struct s_elem_data
+{
+	int		data_type;
+	void	*data;
+}	t_elem_data;
+
+typedef struct s_elem_range
+{
+	float	data_min;
+	float	data_max;
+	float	step;
+}	t_elem_range;
+
+typedef struct s_nbox_norm_bs
+{
+	char			*str;
+	t_elem_data		data;
+	t_elem_range	range;
+	int				(*func)(t_ui_menu_elem *self, t_mlx_data *data);
+}	t_nbox_norm_bs;
+
 typedef struct s_ui_menu_elem
 {
 	t_ui_menu_elem_type	type;
 	char				*str;
-	int					data_type;
-	void				*data;
-	float				data_min;
-	float				data_max;
-	float				step;
-	int					(*draw)(struct s_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
-	int					(*func)(struct s_ui_menu_elem *self, t_mlx_data *data);
+	t_elem_data			data;
+	t_elem_range		range;
+	int					(*draw)(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+	int					(*func)(t_ui_menu_elem *self, t_mlx_data *data);
 	t_ui_menu_elem		*next;
 }	t_ui_menu_elem;
 
@@ -416,6 +434,72 @@ int					menu_page_click(t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+
+/* SETTING UP PAGES */
+int					menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_select(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_add(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_del(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_end(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+int					menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_sphere(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_cylinder(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu);
+
+/* CREATE ELEMS */
+t_ui_menu_elem		*create_elem_text(char *str);
+t_ui_menu_elem		*create_elem_space(void);
+t_ui_menu_elem		*create_elem_btn(char *str, t_elem_data, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+t_ui_menu_elem		*create_elem_nbox(char *str, t_elem_data data, t_elem_range range, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+
+/* ADD ELEMS (calls create elems) */
+int					add_elem_text(t_ui_menu_page *page, char *str);
+int					add_elem_space(t_ui_menu_page *page);
+int					add_elem_btn(t_ui_menu_page *page, char *str, t_elem_data data, int (*func)(t_ui_menu_elem *, t_mlx_data *));
+int					add_elem_nbox_bs(t_ui_menu_page *page, t_nbox_norm_bs nbox);
+
+/* DRAW ELEMS */
+int					menu_draw_space(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_text(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_btn(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+int					menu_draw_nbox(t_ui_menu_elem *self, t_pixel_coord pos, t_mlx_data *data);
+
+/* BTN FUNCS */
+int					menu_btn_reset_pos(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_dir(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam_dir(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam_pos(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_reset_cam(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_home_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_page(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_page(t_ui_menu_elem *self, t_mlx_data *data);
+
+
+int					menu_btn_select_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_sphere(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_plane(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_plane(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_plane(t_ui_menu_elem *self, t_mlx_data *data);
+
+/* NBOX APPLY FUNCS */
+int					menu_nbox_apply_yaw(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_float(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_fov(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
+int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
+int					menu_page_click(t_mlx_data *data);
 
 void				set_menu_page(t_mlx_data *data);
 void				free_elements(t_ui_menu_elem **elems);

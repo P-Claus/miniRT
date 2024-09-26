@@ -20,8 +20,16 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  print_parsing_result.c identifier_error_check.c\
 				  print_parsing_result_shapes.c mlx_events.c draw_utils.c render.c \
 				  time_utils.c vector_utils.c sphere_utils.c color_utils.c plane_utils.c \
-				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c \
-				  menu_utils.c ft_ftoa.c
+				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c ft_ftoa.c \
+				  menu_utils.c \
+				  menu_btn_goto_page.c menu_btn_resets.c menu_draw_elem.c \
+				  menu_event_utils.c menu_nbox_apply_1.c menu_nbox_apply_2.c \
+				  menu_sphere.c menu_cylinder.c menu_plane.c \
+				  menu_create_elem.c menu_add_elem.c\
+				  menu_page_add.c menu_page_cylinder.c menu_page_del.c \
+				  menu_page_end.c menu_page_home.c menu_page_plane.c \
+				  menu_page_select.c menu_page_sphere.c
+
 
 
 SOURCES_DIR		= src
