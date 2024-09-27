@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 15:51:26 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 18:20:12 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 {
 	t_ui_menu_page	*pages;
 
+	errno = 0;
 	pages = malloc((UI_MENU_PAGE_END + 1) * sizeof(t_ui_menu_page));
 	if (!pages)
 		return (1);
@@ -29,6 +30,8 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 	menu_init_page_plane(data, menu, &pages[UI_MENU_PAGE_OBJ_PLANE]);
 	menu_init_page_cone(data, menu, &pages[UI_MENU_PAGE_OBJ_CONE]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_END]);
+	if (errno)
+		return (1);
 	return (0);
 }
 
@@ -70,7 +73,7 @@ void	menu_draw_page(t_mlx_data *data, t_ui_menu_page page)
 	pos = page.pos;
 	pos.y += ELEM_OFFSET + ELEM_HEIGHT + page.scroll;
 	elem = page.elements;
-	while (elem && pos.y <= page.pos.y + page.size.y - ELEM_OFFSET)
+	while (elem && pos.y <= page.pos.y + page.size.y - 20)
 	{
 		if (pos.y - ELEM_HEIGHT >= page.pos.y + ELEM_OFFSET)
 			elem->draw(elem, pos, data);
@@ -84,7 +87,7 @@ void	menu_draw_page(t_mlx_data *data, t_ui_menu_page page)
 	if (elem)
 		mlx_string_put(data->mlx, data->mlx_win,
 			page.pos.x + page.size.x / 2 - 4,
-			page.pos.y + page.size.y - ELEM_OFFSET + ELEM_HEIGHT,
+			page.pos.y + page.size.y,
 			0x00DDDDDD, "v");
 }
 
@@ -93,9 +96,20 @@ int	menu_draw(t_mlx_data *data, t_ui_menu *menu)
 	menu->show = MENU_DRAWN;
 	mlx_put_image_to_window(data->mlx, data->mlx_win, menu->bg.img,
 		menu->pos.x, menu->pos.y);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, menu->page_bg.img,
+		menu->page_pos.x, menu->page_pos.y);
 	mlx_string_put(data->mlx, data->mlx_win,
 		menu->pos.x + menu->size.x / 2 - 4 * 4,
 		menu->pos.y + 10 + 5, 0x00CCCCCC, "MENU");
 	menu_draw_page(data, *menu->curr_page);
 	return (0);
+}
+
+int	box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse)
+{
+	mouse.x -= pos.x;
+	mouse.y -= pos.y;
+	if (mouse.x < 0 || mouse.x > size.x || mouse.y < 0 || mouse.y > size.y)
+		return (0);
+	return (1);
 }

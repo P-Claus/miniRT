@@ -6,11 +6,56 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:38:27 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 16:43:43 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 17:12:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
+
+static int	handle_menu_keypress_nbox_str(int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_BackSpace)
+	{
+		if (data->menu.curr_input_str == NULL)
+			data->menu.curr_input_str = ft_calloc(1, 1);
+		ft_strstrip_char(&data->menu.curr_input_str);
+	}
+	else if (XK_0 <= keysym && keysym <= XK_9)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	else if (XK_a <= keysym && keysym <= XK_z)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	else if (keysym == XK_space || keysym == XK_comma || keysym == XK_period
+		|| keysym == XK_plus || keysym == XK_minus)
+		ft_strjoin_char(&data->menu.curr_input_str, keysym);
+	else
+		return (0);
+	return (1);
+}
+
+int	handle_menu_keypress(int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_Escape)
+	{
+		data->menu.curr_input_elem = NULL;
+		free(data->menu.curr_input_str);
+		data->menu.curr_input_str = NULL;
+	}
+	else if (keysym == XK_Return)
+	{
+		if (data->menu.curr_input_str == NULL)
+			return (data->menu.curr_input_elem = NULL,
+				data->menu.show = MENU_SHOW, 0);
+		if (data->menu.curr_input_elem->func)
+			data->menu.curr_input_elem->func(data->menu.curr_input_elem, data);
+		data->menu.curr_input_elem = NULL;
+		free(data->menu.curr_input_str);
+		data->menu.curr_input_str = NULL;
+	}
+	else if (handle_menu_keypress_nbox_str(keysym, data))
+		;
+	data->menu.show = MENU_SHOW;
+	return (0);
+}
 
 static int	menu_nbox_get_input(t_ui_menu_elem *self, t_mlx_data *data)
 {
@@ -33,15 +78,6 @@ int	menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff)
 				elem->range.data_max);
 	rotate_camera(&data->scene.camera, (t_pixel_coord){0, 0}, 0);
 	return (0);
-}
-
-int	box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse)
-{
-	mouse.x -= pos.x;
-	mouse.y -= pos.y;
-	if (mouse.x < 0 || mouse.x > size.x || mouse.y < 0 || mouse.y > size.y)
-		return (0);
-	return (1);
 }
 
 int	menu_page_click(t_mlx_data *data)

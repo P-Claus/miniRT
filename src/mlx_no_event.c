@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:09:01 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 21:31:35 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 17:21:14 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,29 +61,20 @@ void	check_input_states(t_mlx_data *data)
 		data->menu.show = MENU_SHOW;
 }
 
-void	image_add_frametime(t_mlx_data *data)
+int	handle_no_event_full_render(t_mlx_data *data)
 {
-	char	*tmp;
-	char	*str;
-	char	*ms;
-	char	*decimal;
+	struct timeval	start;
+	struct timeval	end;
 
-	ms = ft_itoa(data->frame_time);
-	decimal = ft_itoa((data->frame_time - floor(data->frame_time)) * 100);
-	if (!ms || !decimal)
-		return (free(ms), free(decimal));
-	str = ft_strjoin(ms, ".");
-	if (!str)
-		return (free(ms), free(decimal));
-	tmp = ft_strjoin(str, decimal);
-	free(str);
-	if (!tmp)
-		return (free(ms), free(decimal));
-	str = ft_strjoin(tmp, "ms");
-	if (!str)
-		return (free(ms), free(decimal), free(tmp));
-	mlx_string_put(data->mlx, data->mlx_win, 15, 15, 0x00FFFFFF, str);
-	return (free(ms), free(decimal), free(tmp), free(str));
+	gettimeofday(&start, NULL);
+	data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
+	set_menu_page(data);
+	printf("Rendering scene ...\n");
+	render(data, data->full_render);
+	gettimeofday(&end, NULL);
+	printf("Rendered in: %.3f ms\n", frame_time(start, end));
+	data->full_res = REND_DONE;
+	return (0);
 }
 
 int	handle_no_event(t_mlx_data *data)
@@ -95,18 +86,9 @@ int	handle_no_event(t_mlx_data *data)
 		return (1);
 	if (data->full_res != REND_DONE)
 	{
-		gettimeofday(&start, NULL);
 		if (data->full_res == REND_HIGH)
-		{
-			data->selected = (t_hit_info){OBJ_NONE, 0, 0, {0, 0, 0}};
-			set_menu_page(data);
-			printf("Rendering scene ...\n");
-			render(data, data->full_render);
-			gettimeofday(&end, NULL);
-			printf("Rendered in: %.3f ms\n", frame_time(start, end));
-			data->full_res = REND_DONE;
-			return (0);
-		}
+			return (handle_no_event_full_render(data));
+		gettimeofday(&start, NULL);
 		check_input_states(data);
 		if (data->menu.show == MENU_SHOW)
 			menu_draw(data, &data->menu);

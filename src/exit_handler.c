@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/26 22:55:40 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 18:00:51 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ void	free_menu(t_ui_menu *menu)
 			free_elements(&menu->pages[p].elements);
 		p++;
 	}
-	if (menu->pages)
-		free(menu->pages);
+	free(menu->pages);
 }
 
 void	free_mlx(t_mlx_data *mlx_data)
 {
+	if (!mlx_data)
+		return ;
 	if (mlx_data->mlx_win)
 		mlx_destroy_window(mlx_data->mlx, mlx_data->mlx_win);
 	if (mlx_data->full_render.render.img)
@@ -60,6 +61,8 @@ void	free_mlx(t_mlx_data *mlx_data)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->viewport.render.img);
 	if (mlx_data->menu.bg.img)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->menu.bg.img);
+	if (mlx_data->menu.page_bg.img)
+		mlx_destroy_image(mlx_data->mlx, mlx_data->menu.page_bg.img);
 	free_menu(&mlx_data->menu);
 	if (mlx_data->mlx)
 	{

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 16:14:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 18:31:58 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,6 +376,9 @@ typedef struct s_ui_menu
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
+	t_my_img		page_bg;
+	t_pixel_coord	page_pos;
+	t_pixel_coord	page_size;
 	t_ui_menu_page	*curr_page;
 	t_ui_menu_page	*pages;
 	t_ui_menu_elem	*curr_input_elem;
@@ -444,9 +447,11 @@ void				init_sphere(t_scene_info *scene_info, t_identifier_count *id_count);
 /*	UTILS	*/
 int					exit_handler(char *error);
 void				free_mlx(t_mlx_data *data);
+void				img_set_color(t_my_img img, t_pixel_coord size, int color);
 void				fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
+void				image_add_frametime(t_mlx_data *data);
 int					check_extension(char *string);
 bool				solve_quadratic(float a, float b, float c, float *dist);
 bool				solve_quadratic2(float a, float b, float c, float *dist);
@@ -518,6 +523,7 @@ t_rgb				color_hadamard(t_rgb a, t_rgb b);
 int					color_to_int(t_rgb c, t_gamma_type gamma_type);
 
 /*  MLX_EVENTS  */
+void				select_obj(t_mlx_data *data);
 int					handle_no_event(t_mlx_data *data);
 int					handle_keypress(int keysym, t_mlx_data *data);
 int					handle_keyrelease(int keysym, t_mlx_data *data);
@@ -540,6 +546,7 @@ int					menu_page_click(t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
+int					handle_menu_keypress(int keysym, t_mlx_data *data);
 
 /* HELPERS FOR SETTING PAGES */
 void				page_add_rgb_block(t_ui_menu_page *page, t_rgb *rgb);
@@ -624,7 +631,5 @@ void				free_elements(t_ui_menu_elem **elems);
 int					ft_strjoin_char(char **str, char c);
 char				*ft_ftoa(float f, int prec);
 int					ft_strstrip_char(char **str);
-
-void				rotate_camera(t_camera *camera, t_pixel_coord mouse_diff, float frame_time);
 
 #endif
