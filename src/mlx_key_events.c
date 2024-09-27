@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:11:23 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 00:21:38 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 15:35:31 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ int	handle_keypress(int keysym, t_mlx_data *data)
 	else if (data->full_res != REND_LOW)
 		return (0);
 	else if (keysym == XK_h)
-		data->low_res_lev = fmax(data->low_res_lev - 2, 4);
+		data->low_res_lev = fmax(data->low_res_lev - RES_STEP, RES_MIN);
 	else if (keysym == XK_l)
-		data->low_res_lev = fmin(data->low_res_lev + 2, 32);
+		data->low_res_lev = fmin(data->low_res_lev + RES_STEP, RES_MAX);
 	else if (keysym == XK_Up)
-		data->speed = fmin(data->speed + 0.1, 1.6);
+		data->speed = fmin(data->speed + SPEED_STEP, SPEED_MAX);
 	else if (keysym == XK_Down)
-		data->speed = fmax(data->speed - 0.1, 0.1);
+		data->speed = fmax(data->speed - SPEED_STEP, SPEED_MIN);
 	else if (keysym == XK_g)
 		data->gamma_type = (data->gamma_type + 1) % GAMMA_END;
 	else if (keysym == XK_m && !data->full_res)

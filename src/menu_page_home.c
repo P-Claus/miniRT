@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:22:58 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 23:55:24 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 15:41:29 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,16 @@ int	menu_init_page_home(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
 		(t_elem_data){0, NULL}, menu_btn_add_page);
 	add_elem_btn(page, "Del obj page",
 		(t_elem_data){0, NULL}, menu_btn_del_page);
+	add_elem_space(page);
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"speed:",
+	{UI_DATA_FLOAT, &data->speed},
+	{SPEED_MIN, SPEED_MAX, SPEED_STEP}, menu_nbox_apply_float});
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"res lvl:",
+	{UI_DATA_INT, &data->low_res_lev},
+	{RES_MIN, RES_MAX, RES_STEP}, menu_nbox_apply_int});
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"gamma corr:",
+	{UI_DATA_INT, &data->gamma_type},
+	{GAMMA_CORRECT, GAMMA_NONE, 1}, menu_nbox_apply_int});
 	menu_init_page_home_cam(data, page);
 	menu_init_page_home_light(data, page);
 	return (0);

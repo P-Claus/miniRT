@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:07 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 16:59:50 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 15:36:56 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,20 @@ int	menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data)
 			printf("Invalid input: percent value between [%f, %f]\n",
 				self->range.data_min, self->range.data_max), 1);
 	*(float *)self->data.data = new_val;
+	return (0);
+}
+
+int	menu_nbox_apply_int(t_ui_menu_elem *self, t_mlx_data *data)
+{
+	int	new_val;
+
+	if (self->data.data_type != UI_DATA_INT)
+		return (1);
+	new_val = ft_atoi(data->menu.curr_input_str);
+	if (new_val < self->range.data_min || self->range.data_max < new_val)
+		return (
+			printf("Invalid input: expected value between [%i, %i]\n",
+				(int)self->range.data_min, (int)self->range.data_max), 1);
+	*(int *)self->data.data = new_val;
 	return (0);
 }

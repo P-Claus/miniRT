@@ -6,13 +6,13 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:25:06 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 22:57:14 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:17:22 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-void	del_page_add_spheres(t_mlx_data *data, t_ui_menu_page *page)
+static void	del_page_add_spheres(t_mlx_data *data, t_ui_menu_page *page)
 {
 	int	i;
 
@@ -27,7 +27,7 @@ void	del_page_add_spheres(t_mlx_data *data, t_ui_menu_page *page)
 			menu_btn_del_sphere);
 }
 
-void	del_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
+static void	del_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
 {
 	int	i;
 
@@ -42,7 +42,7 @@ void	del_page_add_cylinders(t_mlx_data *data, t_ui_menu_page *page)
 			menu_btn_del_cylinder);
 }
 
-void	del_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
+static void	del_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
 {
 	int	i;
 
@@ -57,20 +57,19 @@ void	del_page_add_planes(t_mlx_data *data, t_ui_menu_page *page)
 			menu_btn_del_plane);
 }
 
-int	menu_init_page_del(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page)
+static void	del_page_add_cones(t_mlx_data *data, t_ui_menu_page *page)
 {
-	(void)data;
-	page->n_elems = 0;
-	page->elements = NULL;
-	page->title = "DELETE";
-	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
-	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
-	page->scroll = 0;
-	add_elem_btn(page, "Home page", (t_elem_data){0, NULL}, menu_btn_home_page);
-	del_page_add_spheres(data, page);
-	del_page_add_cylinders(data, page);
-	del_page_add_planes(data, page);
-	return (0);
+	int	i;
+
+	if (!data->scene.nb_of_cones)
+		return ;
+	add_elem_space(page);
+	add_elem_text(page, "cones");
+	i = 0;
+	while (i < data->scene.nb_of_cones)
+		add_elem_btn(page, "cone",
+			(t_elem_data){UI_DATA_CONE, &data->scene.cones[i++]},
+			menu_btn_del_cone);
 }
 
 int	menu_set_del_page(t_mlx_data *data, t_ui_menu *menu)
@@ -92,5 +91,6 @@ int	menu_set_del_page(t_mlx_data *data, t_ui_menu *menu)
 	del_page_add_spheres(data, page);
 	del_page_add_cylinders(data, page);
 	del_page_add_planes(data, page);
+	del_page_add_cones(data, page);
 	return (0);
 }

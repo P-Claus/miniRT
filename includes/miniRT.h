@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/26 23:41:43 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:14:07 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,16 @@
 #  define SCREEN_HEIGHT 900
 # endif
 
-# define MENU_WIDTH 240
+# define SPEED_MIN 0.1
+# define SPEED_MAX 10
+# define SPEED_STEP 0.1
+# define RES_MIN 2
+# define RES_MAX 64
+# define RES_STEP 2
+# define ATTR_STEP 0.01
+# define COORD_STEP 0.01
+
+# define MENU_WIDTH 280
 
 # define DEG2RAD (M_PI / 180.)
 # define RAD2DEG (180. / M_PI)
@@ -294,6 +303,7 @@ typedef enum e_ui_menu_page_type
 	UI_MENU_PAGE_OBJ_SPHERE,
 	UI_MENU_PAGE_OBJ_CYLINDER,
 	UI_MENU_PAGE_OBJ_PLANE,
+	UI_MENU_PAGE_OBJ_CONE,
 	UI_MENU_PAGE_END,
 }	t_ui_menu_page_type;
 
@@ -306,6 +316,7 @@ typedef enum e_data_type
 	UI_DATA_SPHERE,
 	UI_DATA_CYLINDER,
 	UI_DATA_PLANE,
+	UI_DATA_CONE,
 }	t_data_type;
 
 # define FONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
@@ -543,12 +554,14 @@ int					menu_init_page_add(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *pa
 int					menu_init_page_del(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
 int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_init_page_end(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
-int					menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
-void				set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_init_page_sphere(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
 void				set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_init_page_cylinder(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
 void				set_menu_cylinder_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_plane(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_plane_page(t_mlx_data *data, t_ui_menu *menu);
+int					menu_init_page_cone(t_mlx_data *data, t_ui_menu *menu, t_ui_menu_page *page);
+void				set_menu_cone_page(t_mlx_data *data, t_ui_menu *menu);
 
 /* CREATE ELEMS */
 t_ui_menu_elem		*create_elem_text(char *str);
@@ -589,11 +602,15 @@ int					menu_btn_del_cylinder(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_btn_select_plane(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_btn_add_plane(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_btn_del_plane(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_select_cone(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_add_cone(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_btn_del_cone(t_ui_menu_elem *self, t_mlx_data *data);
 
 /* NBOX APPLY FUNCS */
 int					menu_nbox_apply_yaw(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_pitch(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_float(t_ui_menu_elem *self, t_mlx_data *data);
+int					menu_nbox_apply_int(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_fov(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data);

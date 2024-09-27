@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 18:25:37 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 00:09:44 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:12:05 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	page_add_sphere_attributes(t_ui_menu_page *page, t_sphere *obj)
 	add_elem_text(page, "Attributes");
 	add_elem_nbox_bs(page, (t_nbox_norm_bs){"diameter:",
 	{UI_DATA_FLOAT, &obj->diameter},
-	{0., INFINITY, 1.}, menu_nbox_apply_float});
+	{0., INFINITY, ATTR_STEP}, menu_nbox_apply_float});
 }
 
 void	set_menu_sphere_page(t_mlx_data *data, t_ui_menu *menu)

@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 18:51:45 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 21:15:18 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 15:51:26 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	menu_init_pages(t_mlx_data *data, t_ui_menu *menu)
 	menu_init_page_sphere(data, menu, &pages[UI_MENU_PAGE_OBJ_SPHERE]);
 	menu_init_page_cylinder(data, menu, &pages[UI_MENU_PAGE_OBJ_CYLINDER]);
 	menu_init_page_plane(data, menu, &pages[UI_MENU_PAGE_OBJ_PLANE]);
+	menu_init_page_cone(data, menu, &pages[UI_MENU_PAGE_OBJ_CONE]);
 	menu_init_page_end(data, menu, &pages[UI_MENU_PAGE_END]);
 	return (0);
 }
@@ -50,6 +51,8 @@ void	set_menu_page(t_mlx_data *data)
 		set_menu_cylinder_page(data, &data->menu);
 	else if (data->selected.obj_type == OBJ_PLANE)
 		set_menu_plane_page(data, &data->menu);
+	else if (data->selected.obj_type == OBJ_CONE)
+		set_menu_cone_page(data, &data->menu);
 	if (data->menu.show)
 		data->menu.show = MENU_SHOW;
 }
@@ -87,12 +90,12 @@ void	menu_draw_page(t_mlx_data *data, t_ui_menu_page page)
 
 int	menu_draw(t_mlx_data *data, t_ui_menu *menu)
 {
+	menu->show = MENU_DRAWN;
 	mlx_put_image_to_window(data->mlx, data->mlx_win, menu->bg.img,
 		menu->pos.x, menu->pos.y);
 	mlx_string_put(data->mlx, data->mlx_win,
 		menu->pos.x + menu->size.x / 2 - 4 * 4,
 		menu->pos.y + 10 + 5, 0x00CCCCCC, "MENU");
 	menu_draw_page(data, *menu->curr_page);
-	menu->show = MENU_DRAWN;
 	return (0);
 }

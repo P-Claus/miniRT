@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 21:10:50 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:30:05 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	select_obj(t_mlx_data *data)
 			data->menu.pos, data->menu.size, data->mouse_last_pos))
 		return (menu_page_click(data), (void)0);
 	ui = data->full_render;
-	if (data->menu.show)
+	if (data->menu.show && !data->full_res)
 		ui = data->viewport;
 	hit = cast_ray(calc_ray(
 				data->scene.camera, ui, data->mouse_last_pos), data->scene);
@@ -81,14 +81,14 @@ int	handle_mouse_press(int button, int x, int y, t_mlx_data *data)
 	else if (button == 4)
 	{
 		if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
-			data->menu.curr_page->scroll = fmax(data->menu.curr_page->scroll - ELEM_HEIGHT, fmin(data->menu.curr_page->size.y - data->menu.curr_page->pos.y - ELEM_OFFSET - ELEM_HEIGHT - data->menu.curr_page->n_elems * ELEM_HEIGHT, 0));
+			data->menu.curr_page->scroll = fmin(data->menu.curr_page->scroll + ELEM_HEIGHT, 0);
 		else
 			data->scene.camera.fov = fmax(data->scene.camera.fov - 1, 5);
 	}
 	else if (button == 5)
 	{
 		if (data->menu.show && box_is_clicked(data->menu.pos, data->menu.size, data->mouse_last_pos))
-			data->menu.curr_page->scroll = fmin(data->menu.curr_page->scroll + ELEM_HEIGHT, 0);
+			data->menu.curr_page->scroll = fmax(data->menu.curr_page->scroll - ELEM_HEIGHT, fmin(data->menu.curr_page->size.y - data->menu.curr_page->pos.y - ELEM_OFFSET - ELEM_HEIGHT - data->menu.curr_page->n_elems * ELEM_HEIGHT, 0));
 		else
 			data->scene.camera.fov = fmin(data->scene.camera.fov + 1, 175);
 	}

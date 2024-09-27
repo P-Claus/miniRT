@@ -24,14 +24,14 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  cone_utils.c vector_norm_utils.c ft_atof.c init_shapes.c \
 				  cast_ray.c cast_shadow_ray.c shading.c vector_cross.c material.c \
 				  move_rotate.c mlx_no_event.c mlx_key_events.c color_convert.c ft_ftoa.c \
-				  menu_utils.c menu_page_helper.c\
+				  menu_utils.c menu_page_helper.c menu_init_select_del.c \
 				  menu_btn_goto_page.c menu_btn_resets.c menu_draw_elem.c \
 				  menu_event_utils.c menu_nbox_apply_1.c menu_nbox_apply_2.c \
-				  menu_sphere.c menu_cylinder.c menu_plane.c \
+				  menu_sphere.c menu_cylinder.c menu_plane.c menu_cone.c \
 				  menu_create_elem.c menu_add_elem.c\
 				  menu_page_add.c menu_page_cylinder.c menu_page_del.c \
 				  menu_page_end.c menu_page_home.c menu_page_plane.c \
-				  menu_page_select.c menu_page_sphere.c
+				  menu_page_select.c menu_page_sphere.c menu_page_cone.c \
 
 
 SOURCES_DIR		= src
