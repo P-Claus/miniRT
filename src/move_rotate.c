@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 12:09:29 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 23:58:59 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 22:12:16 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,15 @@ void	rotate_camera(
 	float	yaw_diff;
 	float	pitch_diff;
 
-	yaw_diff = mouse_diff.x * DEG2RAD * 2 * speed;
-	pitch_diff = mouse_diff.y * DEG2RAD * 2 * speed;
-	if (camera->pitch + pitch_diff <= -(90 * DEG2RAD)
-		|| 90 * DEG2RAD <= camera->pitch + pitch_diff)
-		pitch_diff = 0;
-	camera->yaw -= yaw_diff;
-	camera->pitch -= pitch_diff;
+	yaw_diff = -mouse_diff.x * DEG2RAD * 2 * speed;
+	pitch_diff = -mouse_diff.y * DEG2RAD * 2 * speed;
+	if (camera->pitch + pitch_diff <= -M_PI_2)
+		camera->pitch = -M_PI_2;
+	else if (M_PI_2 <= camera->pitch + pitch_diff)
+		camera->pitch = M_PI_2;
+	else
+		camera->pitch += pitch_diff;
+	camera->yaw += yaw_diff;
 	q_yaw = quat_axis_rot((t_coordinates){0, 1, 0}, -camera->yaw);
 	q_pitch = quat_axis_rot((t_coordinates){1, 0, 0}, -camera->pitch);
 	camera->rotation = quat_mult(q_yaw, q_pitch);
