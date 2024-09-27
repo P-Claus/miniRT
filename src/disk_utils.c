@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:55:11 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 19:02:33 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 20:26:26 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	disk_hit(t_ray ray, t_disk disk, float *dist)
 		p = vec3_sum(ray.origin, vec3_scalar(ray.dir, *dist));
 		v = vec3_diff(p, disk.coordinates);
 		d2 = vec3_dot2(v);
-		return (d2 <= pow(disk.diameter / 2., true));
+		return (d2 <= pow(disk.diameter / 2., 2));
 	}
 	return (false);
 }
