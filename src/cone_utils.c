@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 21:43:53 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 23:20:39 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,38 @@ bool	cone_hit_cap(t_ray ray, t_cone cone, float *dist)
 	return (disk_hit(ray, cap, dist));
 }
 
+int	cone_ray_inside(t_cone cone, t_coordinates apex_to_origin)
+{
+	float	t;
+	bool	in_inf;
+
+	in_inf = (fabs(vec3_dot(cone.vector, vec3_normalize(apex_to_origin)))
+			>= cos(atan(cone.diameter / (cone.height * 2))));
+	t = vec3_dot(apex_to_origin, cone.vector);
+	if (in_inf && (0 <= t && t <= cone.height))
+		return (2);
+	else if (in_inf)
+		return (1);
+	return (0);
+}
+
 bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 {
 	float			t;
 	t_q_vars		q_vars;
 	t_coordinates	apex_to_origin;
-	bool			in_inf;
+	int				inside;
 
 	apex_to_origin = vec3_diff(ray.origin, cone.apex);
 	q_vars = calculate_quadratic_variables(ray, cone, apex_to_origin);
-	in_inf = false;
-	if (fabs(vec3_dot(cone.vector, vec3_normalize(apex_to_origin)))
-		>= cos(atan(cone.diameter / (cone.height * 2))))
-		in_inf = true;
-	if (in_inf && vec3_dot(cone.vector, ray.dir) < 0)
-		return (cone_hit_cap(ray, cone, dist));
-	else if (in_inf && !solve_quadratic2(q_vars, dist))
+	inside = cone_ray_inside(cone, apex_to_origin);
+	if (inside == 2)
 		return (false);
-	else if (!in_inf && !solve_quadratic(q_vars, dist))
+	if (inside && vec3_dot(cone.vector, ray.dir) < 0)
+		return (cone_hit_cap(ray, cone, dist));
+	else if (inside && !solve_quadratic2(q_vars, dist))
+		return (false);
+	else if (!inside && !solve_quadratic(q_vars, dist))
 		return (false);
 	t = vec3_dot(cone.vector, vec3_diff(vec3_scalar(ray.dir, *dist),
 				vec3_neg(apex_to_origin)));
