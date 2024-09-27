@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:38:27 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 20:04:24 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:43:43 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ int	menu_page_click(t_mlx_data *data)
 
 	if (data->mouse_last_pos.y < data->menu.curr_page->pos.y + ELEM_OFFSET)
 		return (0);
+	if (data->menu.curr_input_str)
+	{
+		free(data->menu.curr_input_str);
+		data->menu.curr_input_str = NULL;
+	}
+	data->menu.curr_input_elem = NULL;
 	elem_index = (data->mouse_last_pos.y - data->menu.curr_page->pos.y
 			- ELEM_OFFSET - data->menu.curr_page->scroll) / ELEM_HEIGHT;
 	if (elem_index < 0 || elem_index >= data->menu.curr_page->n_elems)
@@ -58,12 +64,6 @@ int	menu_page_click(t_mlx_data *data)
 	elem = data->menu.curr_page->elements;
 	while (elem_index--)
 		elem = elem->next;
-	if (data->menu.curr_input_str)
-	{
-		free(data->menu.curr_input_str);
-		data->menu.curr_input_str = NULL;
-	}
-	data->menu.curr_input_elem = NULL;
 	if (elem->func && elem->type == UI_MENU_NBOX)
 		menu_nbox_get_input(elem, data);
 	else if (elem->func && data->mouse_input_state & BTN_LEFT)
