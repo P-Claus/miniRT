@@ -21,7 +21,7 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  print_parsing_result_shapes.c mlx_events.c draw_utils.c render.c \
 				  time_utils.c vector_utils.c sphere_utils.c color_utils.c plane_utils.c \
 				  quadratic.c cylinder_utils.c disk_utils.c quaternions.c parse_cone.c \
-				  cone_utils.c vector_norm_utils.c ft_atof.c init_shapes.c \
+				  cone_utils.c cone_utils2.c vector_norm_utils.c ft_atof.c init_shapes.c \
 				  cast_ray.c cast_shadow_ray.c shading.c vector_cross.c material.c \
 				  move_rotate.c mlx_no_event.c mlx_key_events.c color_convert.c ft_ftoa.c \
 				  menu_utils.c menu_page_helper.c menu_init_select_del.c \
