@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:01:31 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 23:20:39 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 23:25:25 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ bool	cone_hit(t_ray ray, t_cone cone, float *dist)
 	int				inside;
 
 	apex_to_origin = vec3_diff(ray.origin, cone.apex);
-	q_vars = calculate_quadratic_variables(ray, cone, apex_to_origin);
 	inside = cone_ray_inside(cone, apex_to_origin);
 	if (inside == 2)
 		return (false);
+	q_vars = calculate_quadratic_variables(ray, cone, apex_to_origin);
 	if (inside && vec3_dot(cone.vector, ray.dir) < 0)
 		return (cone_hit_cap(ray, cone, dist));
 	else if (inside && !solve_quadratic2(q_vars, dist))
