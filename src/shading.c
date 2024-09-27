@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:34:19 by efret             #+#    #+#             */
-/*   Updated: 2024/09/19 20:59:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 00:22:08 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_rgb	phong_shading(t_ray ray, t_hit_info hit, t_scene_info scene)
 			color_scalar(scene.a_lighting.rgb,
 				scene.a_lighting.ambient_lighting));
 	shadow = cast_shadow_ray((t_ray){
-			vec3_sum(hit.coordinates, vec3_scalar(phong.hit_normal, 2e-4)),
+			vec3_sum(hit.coordinates, vec3_scalar(phong.hit_normal, 1e-6)),
 			phong.light_dir}, scene, sqrt(phong.light_dist2));
 	if (!(vec3_dot(phong.hit_normal, phong.light_dir) < 0 || shadow))
 	{

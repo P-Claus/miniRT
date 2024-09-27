@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 13:15:19 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 22:34:07 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 00:22:52 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	sphere_hit(t_ray ray, t_sphere sphere, float *dist)
 
 	l = vec3_diff(ray.origin, sphere.coordinates);
 	q_vars.c = vec3_dot(l, l) - pow(sphere.diameter / 2, 2);
-	if (q_vars.c <= 0)
+	if (q_vars.c <= 1e-6)
 		return (false);
 	q_vars.a = vec3_dot(ray.dir, ray.dir);
 	q_vars.b = 2. * vec3_dot(l, ray.dir);
