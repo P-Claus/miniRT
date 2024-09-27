@@ -6,24 +6,33 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:07:09 by efret             #+#    #+#             */
-/*   Updated: 2024/09/20 12:54:54 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 20:18:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/miniRT.h"
 
-bool	cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist)
+typedef struct s_cy_help
 {
-	t_coordinates	base = vec3_diff(cylinder.coordinates, vec3_scalar(cylinder.vector, cylinder.height / 2.));
-	t_coordinates	l = vec3_diff(base, ray.origin);
-	float			r = cylinder.diameter / 2.;
+	t_coordinates	base;
+	float			r;
+	t_coordinates	l;
+}	t_cy_help;
 
-	float	d[2];
-	t_coordinates	nxa = vec3_cross(ray.dir, cylinder.vector);
-	t_coordinates	lxa = vec3_cross(l, cylinder.vector);
+bool	cylinder_inf_hit(
+		t_ray ray, t_cylinder cylinder, t_cy_help help, float *dist)
+{
+	float			discr;
+	float			d[2];
+	t_coordinates	nxa;
+	t_coordinates	lxa;
+
+	nxa = vec3_cross(ray.dir, cylinder.vector);
+	lxa = vec3_cross(help.l, cylinder.vector);
 	if (vec3_norm(nxa) < 1e-6)
 		return (false);
-	float	discr = vec3_dot(nxa, nxa) * r * r - pow(vec3_dot(l, nxa), 2);
+	discr = vec3_dot(nxa, nxa) * help.r * help.r
+		- pow(vec3_dot(help.l, nxa), 2);
 	if (discr < 0)
 		return (false);
 	else if (discr == 0)
@@ -37,14 +46,32 @@ bool	cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist)
 		else
 			*dist = d[1];
 	}
-	float	t = vec3_dot(cylinder.vector, vec3_diff(vec3_scalar(ray.dir, *dist), l));
+	return (true);
+}
+
+bool	cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist)
+{
+	t_cy_help	help;
+	float		t;
+	t_disk		cap;
+
+	help.base = vec3_diff(cylinder.coordinates,
+			vec3_scalar(cylinder.vector, cylinder.height / 2.));
+	help.l = vec3_diff(help.base, ray.origin);
+	help.r = cylinder.diameter / 2.;
+	if (!cylinder_inf_hit(ray, cylinder, help, dist))
+		return (false);
+	t = vec3_dot(cylinder.vector,
+			vec3_diff(vec3_scalar(ray.dir, *dist), help.l));
 	if (t <= 0 || t >= cylinder.height)
 	{
-		t_disk	cap;
 		if (t < 0)
-			cap = (t_disk){base, vec3_neg(cylinder.vector), cylinder.diameter, cylinder.rgb};
+			cap = (t_disk){help.base, vec3_neg(cylinder.vector),
+				cylinder.diameter, cylinder.rgb};
 		else
-			cap = (t_disk){vec3_sum(base, vec3_scalar(cylinder.vector, cylinder.height)), cylinder.vector, cylinder.diameter, cylinder.rgb};
+			cap = (t_disk){vec3_sum(help.base,
+					vec3_scalar(cylinder.vector, cylinder.height)),
+				cylinder.vector, cylinder.diameter, cylinder.rgb};
 		return (disk_hit(ray, cap, dist));
 	}
 	return (true);
@@ -52,14 +79,18 @@ bool	cylinder_hit(t_ray ray, t_cylinder cylinder, float *dist)
 
 t_coordinates	cylinder_normal(t_hit_info hit, t_cylinder cylinder)
 {
-	t_coordinates	b = vec3_diff(cylinder.coordinates, vec3_scalar(cylinder.vector, cylinder.height / 2.));
-	float			t = vec3_dot(cylinder.vector, vec3_diff(hit.coordinates, b));
+	t_coordinates	b;
+	float			t;
 
+	b = vec3_diff(cylinder.coordinates,
+			vec3_scalar(cylinder.vector, cylinder.height / 2.));
+	t = vec3_dot(cylinder.vector, vec3_diff(hit.coordinates, b));
 	if (t <= 1e-4)
 		return (vec3_neg(cylinder.vector));
 	else if (t >= cylinder.height - 1e-4)
 		return (cylinder.vector);
-	return (vec3_normalize(vec3_diff(vec3_diff(hit.coordinates, vec3_scalar(cylinder.vector, t)), b)));
+	return (vec3_normalize(vec3_diff(vec3_diff(hit.coordinates,
+					vec3_scalar(cylinder.vector, t)), b)));
 }
 
 void	cylinder_move(t_cylinder *cylinder, t_coordinates move_dir)
