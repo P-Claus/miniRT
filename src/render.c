@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:36:41 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 22:51:56 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/27 15:05:04 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ void	render_low_res(t_mlx_data *data, t_ui_viewport ui, int lvl)
 	if (lvl < 1)
 		return (render_low_res(data, ui, 2));
 	p.y = lvl / 2;
-	while (p.y < ui.size.y)
+	while (p.y < ui.size.y + lvl)
 	{
 		p.x = lvl / 2;
-		while (p.x < ui.size.x)
+		while (p.x < ui.size.x + lvl)
 		{
 			pixel_color = per_pixel(data, ui, p);
 			set_pixels(ui, pixel_color, p, (t_pixel_coord){lvl, lvl});
