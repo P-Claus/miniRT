@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 20:01:26 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 13:59:50 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,7 +542,7 @@ void				render_low_res(t_mlx_data *data, t_ui_viewport ui, int lvl);
 int					menu_init_pages(t_mlx_data *data, t_ui_menu *menu);
 int					menu_draw(t_mlx_data *data, t_ui_menu *menu);
 int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
-int					menu_page_click(t_mlx_data *data);
+int					menu_page_click(t_mlx_data *data, t_ui_menu_page *page);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					menu_set_select_page(t_mlx_data *data, t_ui_menu *menu);
 int					menu_set_del_page(t_mlx_data *data, t_ui_menu *menu);
@@ -623,7 +623,6 @@ int					menu_nbox_apply_color_float(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_apply_perc(t_ui_menu_elem *self, t_mlx_data *data);
 int					menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff);
 int					box_is_clicked(t_pixel_coord pos, t_pixel_coord size, t_pixel_coord mouse);
-int					menu_page_click(t_mlx_data *data);
 
 void				set_menu_page(t_mlx_data *data);
 void				free_elements(t_ui_menu_elem **elems);

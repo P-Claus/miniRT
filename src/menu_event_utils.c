@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:38:27 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 17:12:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 14:01:41 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,24 +80,25 @@ int	menu_nbox_slide(t_mlx_data *data, t_ui_menu_elem *elem, t_pixel_coord diff)
 	return (0);
 }
 
-int	menu_page_click(t_mlx_data *data)
+int	menu_page_click(t_mlx_data *data, t_ui_menu_page *page)
 {
 	int				elem_index;
 	t_ui_menu_elem	*elem;
 
-	if (data->mouse_last_pos.y < data->menu.curr_page->pos.y + ELEM_OFFSET)
-		return (0);
 	if (data->menu.curr_input_str)
 	{
 		free(data->menu.curr_input_str);
 		data->menu.curr_input_str = NULL;
 	}
 	data->menu.curr_input_elem = NULL;
-	elem_index = (data->mouse_last_pos.y - data->menu.curr_page->pos.y
-			- ELEM_OFFSET - data->menu.curr_page->scroll) / ELEM_HEIGHT;
-	if (elem_index < 0 || elem_index >= data->menu.curr_page->n_elems)
+	if (!box_is_clicked(page->pos, page->size, data->mouse_last_pos)
+		|| data->mouse_last_pos.y < page->pos.y + ELEM_OFFSET)
 		return (0);
-	elem = data->menu.curr_page->elements;
+	elem_index = (data->mouse_last_pos.y - page->pos.y
+			- ELEM_OFFSET - page->scroll) / ELEM_HEIGHT;
+	if (elem_index < 0 || elem_index >= page->n_elems)
+		return (0);
+	elem = page->elements;
 	while (elem_index--)
 		elem = elem->next;
 	if (elem->func && elem->type == UI_MENU_NBOX)
