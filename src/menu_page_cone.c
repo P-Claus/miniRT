@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:50:42 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 16:10:47 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 14:15:24 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	set_menu_cone_page(t_mlx_data *data, t_ui_menu *menu)
 	page = menu->curr_page;
 	free_elements(&page->elements);
 	page->n_elems = 0;
-	page->title = "cone";
+	page->title = "CONE";
 	page->pos = (t_pixel_coord){menu->pos.x + 20, menu->pos.y + 50};
 	page->size = (t_pixel_coord){menu->size.x - 40, SCREEN_HEIGHT - 80};
 	page->scroll = 0;

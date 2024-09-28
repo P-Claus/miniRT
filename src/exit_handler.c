@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 18:00:51 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 14:13:30 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void	free_mlx(t_mlx_data *mlx_data)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->viewport.render.img);
 	if (mlx_data->menu.bg.img)
 		mlx_destroy_image(mlx_data->mlx, mlx_data->menu.bg.img);
-	if (mlx_data->menu.page_bg.img)
-		mlx_destroy_image(mlx_data->mlx, mlx_data->menu.page_bg.img);
 	free_menu(&mlx_data->menu);
 	if (mlx_data->mlx)
 	{

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/28 13:59:50 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 14:10:00 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,9 +376,6 @@ typedef struct s_ui_menu
 	t_my_img		bg;
 	t_pixel_coord	pos;
 	t_pixel_coord	size;
-	t_my_img		page_bg;
-	t_pixel_coord	page_pos;
-	t_pixel_coord	page_size;
 	t_ui_menu_page	*curr_page;
 	t_ui_menu_page	*pages;
 	t_ui_menu_elem	*curr_input_elem;
@@ -447,8 +444,8 @@ void				init_sphere(t_scene_info *scene_info, t_identifier_count *id_count);
 /*	UTILS	*/
 int					exit_handler(char *error);
 void				free_mlx(t_mlx_data *data);
-void				img_set_color(t_my_img img, t_pixel_coord size, int color);
 void				fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);
+void				img_draw_rect(t_my_img img, t_pixel_coord pos, t_pixel_coord size, int color);
 struct timeval		time_diff(struct timeval start, struct timeval end);
 float				frame_time(struct timeval start, struct timeval end);
 void				image_add_frametime(t_mlx_data *data);

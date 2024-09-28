@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 18:41:31 by efret            ###   ########.fr       */
+/*   Updated: 2024/09/28 14:12:41 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	init_image(t_mlx_data *data, t_my_img *img, t_pixel_coord size, int color)
 	img->addr = mlx_get_data_addr(
 			img->img, &img->bpp, &img->line_len, &img->endian);
 	if (color)
-		img_set_color(*img, size, color);
+		img_draw_rect(*img, (t_pixel_coord){0, 0}, size, color);
 	return (0);
 }
 
@@ -40,10 +40,8 @@ int	init_menu(t_mlx_data *data, t_ui_menu *menu)
 	menu->pos.y = 0;
 	if (init_image(data, &menu->bg, menu->size, 0x00282828))
 		return (1);
-	menu->page_size = (t_pixel_coord){menu->size.x - 32, SCREEN_HEIGHT - 72};
-	menu->page_pos = (t_pixel_coord){menu->pos.x + 16, menu->pos.y + 46};
-	if (init_image(data, &menu->page_bg, menu->page_size, 0x001e1e1e))
-		return (1);
+	img_draw_rect(menu->bg, (t_pixel_coord){16, 46},
+		(t_pixel_coord){menu->size.x - 32, SCREEN_HEIGHT - 72}, 0x001e1e1e);
 	menu->show = MENU_SHOW;
 	if (menu_init_pages(data, menu))
 		return (1);
