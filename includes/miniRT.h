@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 22:19:53 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/02 22:25:12 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -601,7 +601,7 @@ void			set_menu_cone_page(t_mlx_data *data, t_ui_menu *menu);
 /* CREATE ELEMS */
 t_ui_menu_elem	*create_elem_text(char *str);
 t_ui_menu_elem	*create_elem_space(void);
-t_ui_menu_elem	*create_elem_btn(char *str, t_elem_data,
+t_ui_menu_elem	*create_elem_btn(char *str, t_elem_data data,
 					int (*func)(t_ui_menu_elem *, t_mlx_data *));
 t_ui_menu_elem	*create_elem_nbox(char *str, t_elem_data data,
 					t_elem_range range, int (*func)(t_ui_menu_elem *,
