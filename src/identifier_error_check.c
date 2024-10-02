@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 09:43:11 by pclaus            #+#    #+#             */
-/*   Updated: 2024/08/31 11:59:51 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:56:12 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	init_identifiers_count(t_identifier_count *id_count)
 {
-	id_count->A_count = 0;
-	id_count->C_count = 0;
-	id_count->L_count = 0;
+	id_count->a_count = 0;
+	id_count->c_count = 0;
+	id_count->l_count = 0;
 	id_count->sp_count = 0;
 	id_count->pl_count = 0;
 	id_count->cy_count = 0;
@@ -25,8 +25,8 @@ static void	init_identifiers_count(t_identifier_count *id_count)
 
 static int	identifiers_error_check(t_identifier_count *id_count)
 {
-	if (id_count->A_count != 1 || id_count->C_count != 1
-		|| id_count->L_count != 1)
+	if (id_count->a_count != 1 || id_count->c_count != 1
+		|| id_count->l_count != 1)
 		return (1);
 	return (0);
 }
@@ -34,11 +34,11 @@ static int	identifiers_error_check(t_identifier_count *id_count)
 static int	check_capital_identifier(t_identifier_count *id_count, char *buffer)
 {
 	if (buffer[0] == 'A')
-		id_count->A_count++;
+		id_count->a_count++;
 	else if (buffer[0] == 'C')
-		id_count->C_count++;
+		id_count->c_count++;
 	else if (buffer[0] == 'L')
-		id_count->L_count++;
+		id_count->l_count++;
 	return (0);
 }
 

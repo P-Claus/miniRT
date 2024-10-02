@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/28 14:12:41 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/02 13:33:55 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,16 @@ int	init_mlx_data(t_mlx_data *data)
 			SCREEN_WIDTH, SCREEN_HEIGHT, "miniRT");
 	if (!data->mlx_win)
 		return (free_mlx(data), 1);
-	if (init_ui_viewport(data, &data->full_render, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH, SCREEN_HEIGHT}))
+	if (init_ui_viewport(data, &data->full_render, (t_pixel_coord){0, 0},
+		(t_pixel_coord){SCREEN_WIDTH, SCREEN_HEIGHT}))
 		return (free_mlx(data), 1);
-	if (init_ui_viewport(data, &data->viewport, (t_pixel_coord){0, 0}, (t_pixel_coord){SCREEN_WIDTH - MENU_WIDTH, SCREEN_HEIGHT}))
+	if (init_ui_viewport(data, &data->viewport, (t_pixel_coord){0, 0},
+		(t_pixel_coord){SCREEN_WIDTH - MENU_WIDTH, SCREEN_HEIGHT}))
 		return (free_mlx(data), 1);
 	if (init_menu(data, &data->menu))
 		return (free_mlx(data), 1);
-	mlx_loop_hook(data->mlx, handle_no_event, data);
-	mlx_hook(data->mlx_win, DestroyNotify, 0L, handle_window_destroy, data);
-	mlx_hook(data->mlx_win, KeyPress, KeyPressMask, handle_keypress, data);
-	mlx_hook(data->mlx_win, KeyRelease, KeyReleaseMask, handle_keyrelease, data);
-	mlx_hook(data->mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press, data);
-	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release, data);
-	mlx_do_key_autorepeatoff(data->mlx);
-	mlx_set_font(data->mlx, data->mlx_win, FONT);
 	errno = 0;
+	init_mlx_functions(data);
 	data->scene.camera.right = (t_coordinates){1, 0, 0};
 	data->scene.camera.up = (t_coordinates){0, 1, 0};
 	data->scene.camera.vector = (t_coordinates){0, 0, -1};
@@ -94,7 +89,7 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		exit_handler("Error\nAdd the .rt file as single argument\n");
 	if (check_extension(argv[1]) == 1)
-		exit_handler("Error\nThe file you tried to open doesn't have the .rt extension\n");
+		exit_handler("Error\nThe file you tried to open doesn't end in .rt\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		exit_handler("Error\nThe file does not exist\n");
@@ -105,17 +100,8 @@ int	main(int argc, char **argv)
 	}
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
-	init_scene_info(&mlx_data->scene, &id_count);
-	read_from_scene(&mlx_data->scene, fd, &id_count);
-	menu_set_select_page(mlx_data, &mlx_data->menu);
-	menu_set_del_page(mlx_data, &mlx_data->menu);
-
+	init_scene_setup_menu(mlx_data, &id_count, fd);
 	mlx_loop(mlx_data->mlx);
-
-	free(mlx_data->scene.spheres);
-	free(mlx_data->scene.planes);
-	free(mlx_data->scene.cylinders);
-	free(mlx_data->scene.cones);
-	free_mlx(mlx_data);
+	free_mlx_data(mlx_data);
 	close(fd);
 }

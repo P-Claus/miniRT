@@ -32,7 +32,7 @@ SOURCE_FILES	= main.c exit_handler.c parse_data.c parse_utils.c\
 				  menu_page_add.c menu_page_cylinder.c menu_page_del.c \
 				  menu_page_end.c menu_page_home.c menu_page_plane.c \
 				  menu_page_select.c menu_page_sphere.c menu_page_cone.c \
-				  select_obj.c add_frame_time.c
+				  select_obj.c add_frame_time.c mlx_utils.c
 
 
 SOURCES_DIR		= src
