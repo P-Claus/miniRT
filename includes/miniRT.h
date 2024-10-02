@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 14:38:47 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/02 22:19:53 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -428,7 +428,10 @@ void			free_split_and_trimmed_rgb(char **split,
 					char *trimmed_rgb);
 void			free_shape_arrays(t_scene_info *scene_info);
 int				check_digits_in_coordinates(char **split, int iter);
-void			init_scene_info(t_scene_info *scene_info,
+void			init_ambient_lightning(t_scene_info *scene_info);
+void			init_camera(t_scene_info *scene_info);
+void			init_light(t_scene_info *scene_info);
+int				init_scene_info(t_scene_info *scene_info,
 					t_identifier_count *id_count);
 void			print_parsing_result(t_scene_info *scene_info);
 void			print_spheres(t_scene_info *scene_info);
@@ -451,7 +454,7 @@ void			init_sphere(t_scene_info *scene_info,
 int				exit_handler(char *error);
 void			free_mlx(t_mlx_data *data);
 void			init_mlx_functions(t_mlx_data *data);
-void			init_scene_setup_menu(t_mlx_data *mlx_data,
+int				init_scene_setup_menu(t_mlx_data *mlx_data,
 					t_identifier_count *id_count, int fd);
 void			free_mlx_data(t_mlx_data *mlx_data);
 void			fast_pixel_put(t_ui_viewport ui, t_pixel_coord p, int color);

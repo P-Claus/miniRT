@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 13:33:55 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/02 21:58:22 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,20 +87,35 @@ int	main(int argc, char **argv)
 	if (!mlx_data || init_mlx_data(mlx_data))
 		exit_handler("Error starting program\n");
 	if (argc != 2)
+	{
+		free_mlx_data(mlx_data);
 		exit_handler("Error\nAdd the .rt file as single argument\n");
+	}
 	if (check_extension(argv[1]) == 1)
+	{
+		free_mlx_data(mlx_data);
 		exit_handler("Error\nThe file you tried to open doesn't end in .rt\n");
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
+	{
+		free_mlx_data(mlx_data);
 		exit_handler("Error\nThe file does not exist\n");
+	}
 	if (count_identifiers_for_initialization(fd, &id_count, "start") == 1)
 	{
 		close(fd);
+		free_mlx_data(mlx_data);
 		exit_handler("Error\nError in A, C or L\n");
 	}
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
-	init_scene_setup_menu(mlx_data, &id_count, fd);
+	if (init_scene_setup_menu(mlx_data, &id_count, fd) == 1)
+	{
+		close(fd);
+		free_mlx(mlx_data);
+		exit_handler("Error\nFormat error\n");
+	}
 	mlx_loop(mlx_data->mlx);
 	free_mlx_data(mlx_data);
 	close(fd);
