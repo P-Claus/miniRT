@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:05:08 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 21:58:22 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:44:58 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,24 +84,7 @@ int	main(int argc, char **argv)
 	t_mlx_data			*mlx_data;
 
 	mlx_data = ft_calloc(1, sizeof(t_mlx_data));
-	if (!mlx_data || init_mlx_data(mlx_data))
-		exit_handler("Error starting program\n");
-	if (argc != 2)
-	{
-		free_mlx_data(mlx_data);
-		exit_handler("Error\nAdd the .rt file as single argument\n");
-	}
-	if (check_extension(argv[1]) == 1)
-	{
-		free_mlx_data(mlx_data);
-		exit_handler("Error\nThe file you tried to open doesn't end in .rt\n");
-	}
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		free_mlx_data(mlx_data);
-		exit_handler("Error\nThe file does not exist\n");
-	}
+	file_error_check(mlx_data, argc, argv, &fd);
 	if (count_identifiers_for_initialization(fd, &id_count, "start") == 1)
 	{
 		close(fd);

@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 22:25:12 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:47:10 by pclaus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -452,6 +452,8 @@ void			init_sphere(t_scene_info *scene_info,
 
 /*	UTILS	*/
 int				exit_handler(char *error);
+void			file_error_check(t_mlx_data *mlx_data, int argc, char **argv,
+					int *fd);
 void			free_mlx(t_mlx_data *data);
 void			init_mlx_functions(t_mlx_data *data);
 int				init_scene_setup_menu(t_mlx_data *mlx_data,
@@ -537,6 +539,7 @@ t_rgb			color_hadamard(t_rgb a, t_rgb b);
 int				color_to_int(t_rgb c, t_gamma_type gamma_type);
 
 /*  MLX_EVENTS  */
+int				init_mlx_data(t_mlx_data *data);
 void			select_obj(t_mlx_data *data);
 int				handle_no_event(t_mlx_data *data);
 int				handle_keypress(int keysym, t_mlx_data *data);
