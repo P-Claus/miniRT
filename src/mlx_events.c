@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 16:17:14 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 17:30:47 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/03 19:55:55 by efret            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,11 @@ int	handle_mouse_release(int button, int x, int y, t_mlx_data *data)
 int	handle_window_destroy(t_mlx_data *data)
 {
 	mlx_loop_end(data->mlx);
+	if (data->menu.curr_input_elem)
+	{
+		if (data->menu.curr_input_str)
+			free(data->menu.curr_input_str);
+		data->menu.curr_input_elem = NULL;
+	}
 	return (0);
 }
