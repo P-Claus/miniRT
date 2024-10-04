@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 13:11:23 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 17:13:56 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:29:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	handle_settings_keys(int keysym, t_mlx_data *data)
 
 int	handle_keypress(int keysym, t_mlx_data *data)
 {
+	if (keysym == XK_Home)
+		data->menu.curr_page->scroll = 0;
 	if (data->menu.curr_input_elem)
 		return (handle_menu_keypress(keysym, data));
 	if (keysym == XK_Escape)

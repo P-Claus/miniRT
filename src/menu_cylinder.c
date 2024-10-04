@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:25:02 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 16:48:06 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:51:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	menu_btn_add_cylinder(t_ui_menu_elem *self, t_mlx_data *data)
 		cylinders[i] = data->scene.cylinders[i];
 		i++;
 	}
-	cylinders[data->scene.nb_of_cylinders++] = 
-		(t_cylinder){{0, 0, 0}, {0, 1, 0}, 2, 1, {1, 1, 1}};
+	cylinders[data->scene.nb_of_cylinders++] = (t_cylinder){{0, 0, 0},
+	{0, 1, 0}, 2, 1, {1, 1, 1}};
 	free(data->scene.cylinders);
 	data->scene.cylinders = cylinders;
 	data->selected = (t_hit_info){OBJ_CYLINDER, i, 0, {0, 0, 0}};

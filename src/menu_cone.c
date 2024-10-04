@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 15:51:00 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 16:04:19 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:47:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	menu_btn_add_cone(t_ui_menu_elem *self, t_mlx_data *data)
 		cones[i] = data->scene.cones[i];
 		i++;
 	}
-	cones[data->scene.nb_of_cones++] = 
-		(t_cone){{0, 0, 0}, {0, 1, 0}, 2, 1, {1, 1, 1}};
+	cones[data->scene.nb_of_cones++] = (t_cone){{0, 0, 0},
+	{0, 1, 0}, 2, 1, {1, 1, 1}};
 	free(data->scene.cones);
 	data->scene.cones = cones;
 	data->selected = (t_hit_info){OBJ_CONE, i, 0, {0, 0, 0}};

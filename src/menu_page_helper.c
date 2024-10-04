@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:11:04 by efret             #+#    #+#             */
-/*   Updated: 2024/09/27 16:14:09 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:48:17 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ void	page_add_pos_block(t_ui_menu_page *page, t_coordinates *coords)
 	add_elem_text(page, "Position");
 	add_elem_btn(page, "Reset position",
 		(t_elem_data){UI_DATA_COORDS, coords}, menu_btn_reset_pos);
-	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos x:", 
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos x:",
 	{UI_DATA_FLOAT, &coords->x},
 	{-INFINITY, INFINITY, COORD_STEP}, menu_nbox_apply_float});
-	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos y:", 
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos y:",
 	{UI_DATA_FLOAT, &coords->y},
 	{-INFINITY, INFINITY, COORD_STEP}, menu_nbox_apply_float});
-	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos z:", 
+	add_elem_nbox_bs(page, (t_nbox_norm_bs){"pos z:",
 	{UI_DATA_FLOAT, &coords->z},
 	{-INFINITY, INFINITY, COORD_STEP}, menu_nbox_apply_float});
 }

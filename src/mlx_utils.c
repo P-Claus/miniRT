@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/02 22:00:07 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:49:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ void	free_mlx_data(t_mlx_data *mlx_data)
 int	init_scene_setup_menu(t_mlx_data *mlx_data,
 			t_identifier_count *id_count, int fd)
 {
-	menu_set_select_page(mlx_data, &mlx_data->menu);
-	menu_set_del_page(mlx_data, &mlx_data->menu);
 	if (init_scene_info(&mlx_data->scene, id_count) == 1)
 	{
 		return (1);
@@ -34,6 +32,8 @@ int	init_scene_setup_menu(t_mlx_data *mlx_data,
 	{
 		return (1);
 	}
+	menu_set_select_page(mlx_data, &mlx_data->menu);
+	menu_set_del_page(mlx_data, &mlx_data->menu);
 	return (0);
 }
 
@@ -49,6 +49,5 @@ void	init_mlx_functions(t_mlx_data *data)
 		handle_mouse_press, data);
 	mlx_hook(data->mlx_win, ButtonRelease, ButtonReleaseMask,
 		handle_mouse_release, data);
-	mlx_do_key_autorepeatoff(data->mlx);
 	mlx_set_font(data->mlx, data->mlx_win, FONT);
 }

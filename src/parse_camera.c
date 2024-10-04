@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:53 by pclaus            #+#    #+#             */
-/*   Updated: 2024/09/27 00:16:36 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:46:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ int	parse_camera(t_scene_info *scene_info, char *string)
 		return (1);
 	}
 	free_split(split);
-	scene_info->camera.yaw = 
-		atan2(-scene_info->camera.vector.x, -scene_info->camera.vector.z);
-	scene_info->camera.pitch = 
-		atan2(vec3_norm((t_coordinates){-scene_info->camera.vector.z,
+	scene_info->camera.yaw = atan2(-scene_info->camera.vector.x,
+			-scene_info->camera.vector.z);
+	scene_info->camera.pitch = atan2(vec3_norm(
+				(t_coordinates){-scene_info->camera.vector.z,
 				-scene_info->camera.vector.x, 0}), scene_info->camera.vector.y)
 		- M_PI_2;
 	rotate_camera(&scene_info->camera, (t_pixel_coord){0, 0}, 0);

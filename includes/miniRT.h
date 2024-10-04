@@ -6,7 +6,7 @@
 /*   By: pclaus <pclaus@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 09:06:26 by pclaus            #+#    #+#             */
-/*   Updated: 2024/10/03 18:47:10 by pclaus           ###   ########.fr       */
+/*   Updated: 2024/10/04 15:00:18 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@
 # include <sys/time.h>
 
 # ifndef SCREEN_WIDTH
-#  define SCREEN_WIDTH 1600
+#  define SCREEN_WIDTH 3200
 # endif
 
 # ifndef SCREEN_HEIGHT
-#  define SCREEN_HEIGHT 900
+#  define SCREEN_HEIGHT 1800
 # endif
 
 # define SPEED_MIN 0.1

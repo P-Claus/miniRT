@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 20:44:29 by efret             #+#    #+#             */
-/*   Updated: 2024/09/19 20:58:00 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 15:01:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ bool	sphere_obstruct(
 	int		i;
 
 	i = 0;
+	dist = 0;
 	while (i < nb_objs)
 	{
 		if (sphere_hit(ray, spheres[i], &dist) && dist > 0 && dist < light_dist)
@@ -35,6 +36,7 @@ bool	plane_obstruct(
 	int		i;
 
 	i = 0;
+	dist = 0;
 	while (i < nb_objs)
 	{
 		if (plane_hit(ray, planes[i], &dist) && dist > 0 && dist < light_dist)
@@ -51,6 +53,7 @@ bool	cylinder_obstruct(
 	int		i;
 
 	i = 0;
+	dist = 0;
 	while (i < nb_objs)
 	{
 		if (cylinder_hit(
@@ -68,6 +71,7 @@ bool	cone_obstruct(
 	int		i;
 
 	i = 0;
+	dist = 0;
 	while (i < nb_objs)
 	{
 		if (cone_hit(ray, cones[i], &dist) && dist > 0 && dist < light_dist)

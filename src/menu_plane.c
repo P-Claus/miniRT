@@ -6,7 +6,7 @@
 /*   By: efret <efret@student.19.be>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 12:30:21 by efret             #+#    #+#             */
-/*   Updated: 2024/09/26 16:47:21 by efret            ###   ########.fr       */
+/*   Updated: 2024/10/04 14:47:30 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	menu_btn_add_plane(t_ui_menu_elem *self, t_mlx_data *data)
 		planes[i] = data->scene.planes[i];
 		i++;
 	}
-	planes[data->scene.nb_of_planes++] = 
-		(t_plane){{0, 0, 0}, {0, 1, 0}, {1, 1, 1}};
+	planes[data->scene.nb_of_planes++] = (t_plane){{0, 0, 0},
+	{0, 1, 0}, {1, 1, 1}};
 	free(data->scene.planes);
 	data->scene.planes = planes;
 	data->selected = (t_hit_info){OBJ_PLANE, i, 0, {0, 0, 0}};
